@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayo Cross</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #ffe0b3, #ffffff);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    transition: background 0.5s ease;
+}
+
+.container {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff8800;
+    margin-bottom: 5px;
+}
+
+#level {
+    font-size: 14px;
+    color: #555;
+}
+
+#coins {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.box {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    margin: 4px;
+    border-radius: 8px;
+    background: #f2f2f2;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.letters button {
+    width: 60px;
+    height: 50px;
+    margin: 5px;
+    border-radius: 10px;
+    border: none;
+    background: #ff9900;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.letters button:hover {
+    background: #ff7700;
+}
+
+.letters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.shuffle { background: #70a1ff; }
+
+@media (max-width: 600px) {
+    .container { max-width: 100%; padding: 10px; }
+    .box, .letters button { width: 48px; height: 48px; margin: 4px; font-size: 18px; }
+    .card { padding: 15px; }
+    .actions button { font-size: 14px; padding: 10px; }
+    input[type="text"] { font-size: 16px; /* Prevents zoom on iOS */ }
+}
+
+.actions button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.hint { background: #ffd966; }
+.ad { background: #66ccff; }
+.skip { background: #ff6666; }
+
+.actions button:hover {
+    opacity: 0.9;
+}
+
+#theme {
+    font-weight: bold;
+    color: #ff8800;
+    margin-bottom: 10px;
+}
+
+#progress {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#timer, #streak, #bonus-info {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+#timer span, #streak span, #bonus-info span {
+    font-weight: bold;
+}
+
+.letters button.selected {
+    background: #c76d00;
+}
+
+.word-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.word-section .clue {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.word-section .answer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.word-section .letters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.win {
+    animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); background: #c8ffcc; }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AYO CROSS</h1>
+<div id="pack-selection"></div>
+<div id="mode-selection"></div>
+<div id="daily"></div>
+<div id="level"></div>
+<div id="coins"></div>
+<div id="timer"></div>
+<div id="streak"></div>
+<div id="bonus-info"></div>
+
+<div class="card">
+    <p id="theme"></p>
+
+    <div id="words-container"></div>
+
+    <div class="actions">
+        <button class="hint" onclick="useHint()">💡 Hint (-5)</button>
+        <button class="ad" onclick="watchAd()">📺 Watch Ad (+10)</button>
+        <button class="shuffle" onclick="shuffleLetters()">🔀 Shuffle</button>
+        <button class="skip" onclick="nextLevel()">⏭ Skip</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+
+const correctSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
+const wrongSound = new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg");
+const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");    
+
+// LEVELS (keep your full 100 here)
+let levels = [
+
+/* 🇳🇬 NIGERIAN — EASY */
+{ theme: "Nigerian Basics", category: "Nigerian", words: [
+    { clue: "Nigerian rice dish", answer: "JOLLOF" },
+    { clue: "Capital of Nigeria", answer: "ABUJA" },
+    { clue: "Nigerian currency", answer: "NAIRA" }
+] },
+{ theme: "Nigerian Cities & Culture", category: "Nigerian", words: [
+    { clue: "Largest city in Nigeria", answer: "LAGOS" },
+    { clue: "Popular Nigerian singer", answer: "WIZKID" },
+    { clue: "Nigerian soup with melon seeds", answer: "EGUSI" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian fried bean cake", answer: "AKARA" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Traditional ruler title", answer: "OBA" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Popular Nigerian drink", answer: "ZOBORO" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian language widely spoken", answer: "YORUBA" }
+] },
+
+/* 🇳🇬 MEDIUM */
+{ theme: "Nigerian Foods", category: "Nigerian", words: [
+    { clue: "Spicy roasted meat skewers", answer: "SUYA" },
+    { clue: "Cassava pudding food", answer: "FUFU" },
+    { clue: "Soup made from melon seeds", answer: "EGUSI" }
+] },
+{ theme: "Nigerian Markets & Culture", category: "Nigerian", words: [
+    { clue: "Famous market in Lagos", answer: "BALOGUN" },
+    { clue: "Nigerian staple from cassava", answer: "GARRI" },
+    { clue: "Traditional cloth from north", answer: "BABARIGA" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian pepper soup protein", answer: "GOATMEAT" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Popular Nigerian snack", answer: "SUYA" }
+] },
+
+/* 🇳🇬 HARD */
+{ theme: "Nigerian History & Politics", category: "Nigerian", words: [
+    { clue: "First Nigerian president", answer: "AZIKIWE" },
+    { clue: "Nigerian oil-rich region", answer: "NIGERDELTA" },
+    { clue: "Famous Nigerian author", answer: "ACHEBE" }
+] },
+{ theme: "Nigerian Infrastructure", category: "Nigerian", words: [
+    { clue: "Nigerian tech city", answer: "YABA" },
+    { clue: "Nigerian airline", answer: "AIRPEACE" },
+    { clue: "Famous Lagos bridge", answer: "THIRDMILANDBRIDGE" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian political party", answer: "APC" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian festival", answer: "ARGUNGU" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Nigerian currency subdivision", answer: "KOBO" }
+] },
+{ theme: "Single", category: "Nigerian", words: [
+    { clue: "Major Nigerian tribe", answer: "HAUSA" }
+] },
+
+/* 📘 ENGLISH — EASY */
+{ theme: "Basic Opposites", category: "English", words: [
+    { clue: "Opposite of hot", answer: "COLD" },
+    { clue: "Opposite of big", answer: "SMALL" },
+    { clue: "Animal that barks", answer: "DOG" }
+] },
+{ theme: "Simple Words", category: "English", words: [
+    { clue: "Flying vehicle", answer: "PLANE" },
+    { clue: "Used to write", answer: "PEN" },
+    { clue: "Opposite of fast", answer: "SLOW" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Color of the sky", answer: "BLUE", category: "English" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Day after Monday", answer: "TUESDAY", category: "English" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Number after five", answer: "SIX", category: "English" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Water falls from sky", answer: "RAIN", category: "English" }
+] },
+
+/* 📘 MEDIUM */
+{ theme: "Single", category: "English", words: [
+    { clue: "Synonym of happy", answer: "JOYFUL" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Opposite of early", answer: "LATE" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Tool to cut paper", answer: "SCISSORS" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Person who teaches", answer: "TEACHER" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Place to borrow books", answer: "LIBRARY" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Vehicle with two wheels", answer: "BICYCLE" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Opposite of strong", answer: "WEAK" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "A baby dog", answer: "PUPPY" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Used to see far", answer: "BINOCULARS" }
+] },
+{ theme: "Single", category: "English", words: [
+    { clue: "Opposite of clean", answer: "DIRTY" }
+] },
+
+/* 📘 HARD */
+{ theme: "Single", words: [
+    { clue: "Fear of heights", answer: "ACROPHOBIA" }
+] },
+{ theme: "Single", words: [
+    { clue: "Study of the mind", answer: "PSYCHOLOGY" }
+] },
+{ theme: "Single", words: [
+    { clue: "Word meaning unclear", answer: "AMBIGUOUS" }
+] },
+{ theme: "Single", words: [
+    { clue: "A person who writes books", answer: "AUTHOR" }
+] },
+{ theme: "Single", words: [
+    { clue: "Opposite of expand", answer: "CONTRACT" }
+] },
+{ theme: "Single", words: [
+    { clue: "Scientific study of life", answer: "BIOLOGY" }
+] },
+{ theme: "Single", words: [
+    { clue: "Measure of temperature", answer: "CELSIUS" }
+] },
+{ theme: "Single", words: [
+    { clue: "Tool for measuring time", answer: "CHRONOMETER" }
+] },
+{ theme: "Single", words: [
+    { clue: "Relating to the moon", answer: "LUNAR" }
+] },
+{ theme: "Single", words: [
+    { clue: "Word for very large", answer: "ENORMOUS" }
+] },
+
+/* 🌍 GLOBAL — EASY */
+{ theme: "Single", category: "Global", words: [
+    { clue: "Largest planet", answer: "JUPITER", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Red planet", answer: "MARS", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Ocean on east of Africa", answer: "INDIAN", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Country with Eiffel Tower", answer: "FRANCE", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Famous tech company", answer: "APPLE", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Video platform", answer: "YOUTUBE" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Continent Nigeria is in", answer: "AFRICA" }
+] },
+
+/* 🌍 MEDIUM */
+{ theme: "Single", category: "Global", words: [
+    { clue: "First man on the moon", answer: "ARMSTRONG", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Currency of USA", answer: "DOLLAR", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Famous scientist gravity", answer: "NEWTON", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Largest ocean", answer: "PACIFIC", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Country of pyramids", answer: "EGYPT", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "World largest desert", answer: "SAHARA", category: "Global" }
+] },
+
+/* 🌍 HARD */
+{ theme: "Single", category: "Global", words: [
+    { clue: "Theory by Einstein", answer: "RELATIVITY", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "World organization for peace", answer: "UNITEDNATIONS", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Longest river in world", answer: "NILE", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Country with most population", answer: "CHINA", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "Global economic group", answer: "G20", category: "Global" }
+] },
+{ theme: "Single", category: "Global", words: [
+    { clue: "First country in space race", answer: "USSR", category: "Global" }
+] }
+];
+
+let currentLevel = localStorage.getItem("level")
+    ? parseInt(localStorage.getItem("level"))
+    : 0;
+
+let currentPack = localStorage.getItem("pack") || "All";
+let gameMode = localStorage.getItem("gameMode") || "Normal";
+let activeLevels = [];
+
+let coins = localStorage.getItem("coins")
+    ? parseInt(localStorage.getItem("coins"))
+    : 50;
+
+let currentGuess = []; // now array of arrays
+let timerSeconds = 60;
+let timerInterval = null;
+let streak = localStorage.getItem("streak")
+    ? parseInt(localStorage.getItem("streak"))
+    : 0;
+let wordsCompletedToday = localStorage.getItem("wordsCompletedToday")
+    ? parseInt(localStorage.getItem("wordsCompletedToday"))
+    : 0;
+let extraWordsFound = {};
+let dictionary = [
+    "cat", "dog", "sun", "rain", "star", "news", "fast", "lock", "cross", "word", "planet", "apple", "story", "learn", "ring", "fish", "chair", "table", "run", "walk", "team", "wood",
+    "the", "and", "for", "are", "but", "not", "you", "all", "can", "had", "her", "was", "one", "our", "out", "day", "get", "has", "him", "his", "how", "its", "may", "new", "now", "old", "see", "two", "way", "who", "boy", "did", "has", "let", "put", "say", "she", "too", "use",
+    "able", "back", "ball", "bear", "bell", "bird", "boat", "body", "book", "call", "came", "care", "case", "city", "club", "come", "cool", "copy", "cost", "dark", "data", "date", "dear", "deep", "does", "done", "door", "down", "draw", "drop", "each", "easy", "else", "even", "ever", "face", "fact", "fall", "feel", "feet", "fell", "felt", "find", "fire", "five", "food", "foot", "form", "four", "free", "from", "full", "game", "gave", "girl", "give", "glad", "goes", "gold", "gone", "good", "got", "gray", "grew", "grow", "hair", "half", "hall", "hand", "hang", "hard", "head", "hear", "help", "here", "high", "hill", "hold", "home", "hope", "hour", "idea", "into", "jump", "just", "keep", "kind", "king", "knew", "know", "land", "last", "late", "left", "less", "life", "like", "line", "list", "live", "long", "look", "lord", "lost", "love", "made", "make", "many", "mark", "mean", "meet", "mile", "mind", "miss", "moon", "more", "most", "move", "much", "must", "name", "near", "need", "news", "next", "nice", "nine", "none", "nose", "note", "once", "only", "open", "over", "page", "park", "part", "pass", "past", "path", "pick", "plan", "play", "poor", "pull", "push", "race", "rain", "read", "real", "rest", "rich", "ride", "road", "rock", "room", "rule", "said", "same", "save", "saw", "sea", "seat", "seem", "seen", "sell", "send", "ship", "show", "side", "size", "sky", "slow", "snow", "some", "song", "soon", "sort", "soul", "star", "stay", "step", "stop", "such", "sure", "take", "talk", "tall", "team", "tell", "than", "that", "thee", "them", "then", "they", "this", "time", "told", "took", "town", "tree", "true", "turn", "unit", "upon", "used", "very", "wait", "walk", "wall", "want", "warm", "wave", "week", "well", "went", "were", "what", "when", "will", "wind", "wish", "with", "word", "work", "year", "your", "zero",
+    "about", "above", "after", "again", "agree", "allow", "along", "among", "apply", "areas", "avoid", "based", "beach", "began", "begin", "being", "below", "black", "blood", "board", "break", "bring", "build", "built", "carry", "cause", "cells", "chair", "check", "child", "civil", "class", "clean", "clear", "close", "color", "could", "cover", "death", "doing", "dream", "drive", "early", "earth", "eight", "empty", "enemy", "enter", "equal", "event", "every", "exist", "facts", "field", "fight", "final", "first", "floor", "force", "found", "frame", "front", "glass", "going", "grand", "great", "green", "group", "grown", "guess", "happy", "heart", "heavy", "horse", "house", "human", "image", "issue", "large", "later", "learn", "leave", "level", "light", "limit", "local", "major", "makes", "maybe", "means", "might", "money", "month", "music", "never", "night", "north", "often", "order", "other", "paper", "party", "peace", "peter", "phone", "photo", "place", "plant", "point", "power", "press", "price", "quick", "quite", "radio", "raise", "reach", "ready", "right", "river", "round", "route", "rules", "scale", "scene", "score", "sense", "serve", "seven", "shall", "share", "short", "shown", "sides", "since", "sixth", "small", "solid", "solve", "sorry", "sound", "south", "space", "speak", "speed", "spend", "spent", "split", "stage", "stand", "start", "state", "still", "stone", "stood", "store", "story", "study", "style", "table", "taken", "taste", "teach", "thank", "their", "there", "these", "thing", "think", "third", "those", "three", "throw", "today", "total", "trade", "train", "treat", "trust", "truth", "under", "union", "until", "value", "video", "visit", "voice", "watch", "water", "where", "which", "while", "white", "whole", "whose", "woman", "women", "world", "would", "write", "wrong", "young",
+    "log", "logs", "ago", "gas", "gal", "lag", "sag", "sol", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl", "ago", "gal", "lag", "sag", "sol", "log", "logs", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl", "ago", "gal", "lag", "sag", "sol", "log", "logs", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl"
+];
+let lastPickTime = 0;
+
+function saveGame() {
+    localStorage.setItem("level", currentLevel);
+    localStorage.setItem("coins", coins);
+    localStorage.setItem("pack", currentPack);
+    localStorage.setItem("streak", streak);
+    localStorage.setItem("wordsCompletedToday", wordsCompletedToday);
+}
+
+function getPackLevels(packName) {
+    if (packName === "All") return levels;
+    let lower = packName.toLowerCase();
+    return levels.filter(l => {
+        let themeLabel = l.theme ? l.theme.toLowerCase() : '';
+        let categoryLabel = l.category ? l.category.toLowerCase() : '';
+
+        // For wrapped single entries (theme "Single"), try its first word category
+        let singleWordCategory = '';
+        if (l.theme === 'Single' && l.words && l.words[0] && l.words[0].category) {
+            singleWordCategory = l.words[0].category.toLowerCase();
+        }
+
+        return themeLabel.includes(lower) || categoryLabel.includes(lower) || singleWordCategory.includes(lower);
+    });
+}
+
+function getDailyLevel() {
+    let today = new Date().toISOString().split('T')[0];
+    let hash = 0;
+    for (let i = 0; i < today.length; i++) {
+        hash = (hash * 31 + today.charCodeAt(i)) % 2147483647;
+    }
+    let index = Math.abs(hash) % levels.length;
+    return levels[index];
+}
+
+function renderPackSelection() {
+    const packs = ["All", "Nigerian", "English", "Global"];
+    let html = "";
+    html += `<button class="pack-btn" onclick="applyDaily()" ${currentPack === 'Daily' ? 'disabled' : ''}>Daily</button>`;
+    packs.forEach(p => {
+        html += `<button class="pack-btn" onclick="applyPack('${p}')" ${p===currentPack ? 'disabled' : ''}>${p}</button>`;
+    });
+    document.getElementById("pack-selection").innerHTML = html;
+    renderModeSelection();
+}
+
+function renderModeSelection() {
+    const modes = ["Normal", "Timed", "Bonus"];
+    let html = "<span style='font-size:13px; margin-right:8px;'>Mode:</span>";
+    modes.forEach(m => {
+        html += `<button class="pack-btn" onclick="applyGameMode('${m}')" ${m===gameMode ? 'disabled' : ''}>${m}</button>`;
+    });
+    document.getElementById("mode-selection").innerHTML = html;
+}
+
+function applyGameMode(mode) {
+    gameMode = mode;
+    localStorage.setItem("gameMode", gameMode);
+    renderModeSelection();
+    loadLevel();
+}
+
+function isTimedMode() {
+    return gameMode === 'Timed';
+}
+
+function isBonusMode() {
+    return gameMode === 'Bonus';
+}
+
+function applyDaily() {
+    currentPack = 'Daily';
+    const dailyLevel = getDailyLevel();
+    activeLevels = [dailyLevel];
+    currentLevel = 0;
+    saveGame();
+    renderPackSelection();
+    loadLevel();
+    renderDailyInfo();
+}
+
+function getToday() {
+    return new Date().toISOString().split('T')[0];
+}
+
+function isDailySolved() {
+    return localStorage.getItem('dailySolvedDate') === getToday();
+}
+
+function setDailySolved() {
+    localStorage.setItem('dailySolvedDate', getToday());
+}
+
+function renderDailyInfo() {
+    const today = getToday();
+    if (currentPack === 'Daily') {
+        if (isDailySolved()) {
+            document.getElementById('daily').innerText = `Daily challenge [${today}] solved. Come back tomorrow.`;
+            disableActionButtons();
+        } else {
+            document.getElementById('daily').innerText = `Daily challenge: ${today} (50 coins reward)`;
+            enableActionButtons();
+        }
+    } else {
+        document.getElementById('daily').innerText = '';
+        enableActionButtons();
+    }
+}
+
+function updateTimerDisplay() {
+    document.getElementById('timer').innerText = `Timer: ${timerSeconds}s`;
+}
+
+function updateStreakDisplay() {
+    document.getElementById('streak').innerText = `Streak: ${streak} 🔥`;
+    document.getElementById('bonus-info').innerText = `Today completion: ${wordsCompletedToday}`;
+}
+
+function startTimer(seconds = 60) {
+    clearInterval(timerInterval);
+    timerSeconds = seconds;
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timerSeconds -= 1;
+        if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('timer').innerText = 'Timer: 0s - Time up!';
+            coins = Math.max(0, coins - 3);
+            streak = 0;
+            saveGame();
+            updateStreakDisplay();
+            alert('Time is up! -3 coins. Try next word.');
+            nextLevel();
+            return;
+        }
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function disableActionButtons() {
+    document.querySelectorAll('.actions button').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.letters button').forEach(btn => btn.disabled = true);
+}
+
+function enableActionButtons() {
+    document.querySelectorAll('.actions button').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.letters button').forEach(btn => btn.disabled = false);
+}
+
+function applyPack(packName) {
+    currentPack = packName;
+    activeLevels = getPackLevels(packName);
+    currentLevel = 0;
+    saveGame();
+    renderPackSelection();
+    loadLevel();
+}
+
+function loadLevel() {
+    if (!activeLevels.length) {
+        activeLevels = levels;
+    }
+
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        // Multi-word level
+        currentGuess = activeLevels[currentLevel].words.map(word => []);
+    } else {
+        // Single-word level (backward compatibility)
+        currentGuess = [[]];
+    }
+
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        document.getElementById("theme").innerText = activeLevels[currentLevel].theme;
+        // Set themed background
+        if (activeLevels[currentLevel].theme.includes("Nigerian")) {
+            document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
+        } else if (activeLevels[currentLevel].theme.includes("English")) {
+            document.body.style.background = "linear-gradient(to bottom, #e0f7ff, #ffffff)";
+        } else if (activeLevels[currentLevel].theme.includes("Global")) {
+            document.body.style.background = "linear-gradient(to bottom, #f0f0f0, #ffffff)";
+        } else {
+            document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
+        }
+        // Add progress indicator
+        if (!document.getElementById("progress")) {
+            document.getElementById("theme").insertAdjacentHTML('afterend', '<div id="progress"></div>');
+        }
+        updateProgress();
+    } else {
+        document.getElementById("theme").innerText = "Puzzle";
+        document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
+        // Remove progress if exists
+        const prog = document.getElementById("progress");
+        if (prog) prog.remove();
+    }
+
+    document.getElementById("coins").innerText = "Coins: " + coins;
+    document.getElementById("level").innerText = "Level " + (currentLevel + 1);
+
+    // Use single-word renderer for explicitly wrapped Single levels (and legacy single entries)
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme && activeLevels[currentLevel].theme !== 'Single') {
+        renderWords();
+    } else {
+        renderSingleWord();
+    }
+    renderDailyInfo();
+
+    if (isTimedMode()) {
+        startTimer(gameMode === 'Timed' ? 60 : 45); // if we add mayhem later we can adjust
+    } else {
+        stopTimer();
+        document.getElementById('timer').innerText = 'Timer: Off';
+    }
+
+    updateStreakDisplay();
+}
+
+function renderSingleWord() {
+    let levelItem = activeLevels[currentLevel] || {};
+    let wordObject = (levelItem.words && levelItem.words[0]) ? levelItem.words[0] : levelItem;
+    let clue = wordObject.clue || levelItem.clue || 'No clue';
+
+    if (isBonusMode()) {
+        let html = `<div class="word-section" id="bonus-word-0"></div>`;
+        document.getElementById("words-container").innerHTML = html;
+        renderBonusMode(0);
+    } else {
+        let html = `<div class="word-section">
+            <p class="clue">Clue: ${clue}</p>
+            <div class="answer" id="answer-0"></div>
+            <div class="letters" id="letters-0"></div>
+        </div>`;
+        document.getElementById("words-container").innerHTML = html;
+        renderBoxes(0);
+        renderLetters(0);
+        setupSwipe(0);
+    }
+}
+
+function updateProgress() {
+    if (!activeLevels[currentLevel] || !activeLevels[currentLevel].theme) return;
+    let completed = 0;
+    activeLevels[currentLevel].words.forEach((word, idx) => {
+        if (currentGuess[idx].join('') === word.answer) completed++;
+    });
+    document.getElementById("progress").innerText = `Words completed: ${completed} / ${activeLevels[currentLevel].words.length}`;
+}
+
+function setupSwipe(wordIndex) {
+    let container = document.getElementById(`letters-${wordIndex}`);
+    if (!container) return;
+
+    let isSwiping = false;
+    let touched = new Set();
+
+    container.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        isSwiping = true;
+        touched.clear();
+        if (e.target.tagName === 'BUTTON') {
+            let letter = e.target.innerText;
+            if (!touched.has(e.target)) {
+                e.target.classList.add('selected');
+                touched.add(e.target);
+                pickLetter(wordIndex, letter);
+            }
+        }
+    });
+
+    container.addEventListener('pointerenter', function(e) {
+        if (isSwiping && e.target.tagName === 'BUTTON') {
+            let letter = e.target.innerText;
+            if (!touched.has(e.target)) {
+                e.target.classList.add('selected');
+                touched.add(e.target);
+                pickLetter(wordIndex, letter);
+            }
+        }
+    }, true);
+
+    container.addEventListener('pointerup', function() {
+        isSwiping = false;
+        container.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+    });
+
+    container.addEventListener('pointerleave', function() {
+        isSwiping = false;
+        container.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+    });
+}
+
+function getPossibleExtraWords(answer) {
+    let base = answer.toLowerCase();
+    let baseLetters = base.split('');
+
+    return dictionary.filter(word => {
+        if (word.toLowerCase() === base || word.length < 3) return false;
+        let tmp = baseLetters.slice();
+        for (let ch of word.toLowerCase()) {
+            let idx = tmp.indexOf(ch);
+            if (idx === -1) return false;
+            tmp.splice(idx, 1);
+        }
+        return true;
+    }).slice(0, 8);
+}
+
+function canMakeWord(word, answer) {
+    let tmp = answer.toLowerCase().split('');
+    for (let ch of word.toLowerCase()) {
+        let idx = tmp.indexOf(ch);
+        if (idx === -1) return false;
+        tmp.splice(idx, 1);
+    }
+    return true;
+}
+
+function getPossibleWordsForAnswer(answer) {
+    let base = answer.toLowerCase();
+    let results = [];
+
+    // 1️⃣ dictionary words
+    for (let word of dictionary) {
+        if (word.length >= 3 && canMakeWord(word, base)) {
+            results.push(word.toUpperCase());
+        }
+    }
+
+    // 2️⃣ FORCE generate basic combos (this is KEY fix) - but limit to avoid crashes
+    let letters = base.split('');
+    if (letters.length <= 8) {
+        function generateCombos(prefix, remaining) {
+            if (prefix.length >= 3 && prefix.length <= 6) { // limit length to prevent too many
+                results.push(prefix.toUpperCase());
+            }
+            if (prefix.length < 6) { // limit depth
+                for (let i = 0; i < remaining.length; i++) {
+                    generateCombos(
+                        prefix + remaining[i],
+                        remaining.slice(0, i).concat(remaining.slice(i + 1))
+                    );
+                }
+            }
+        }
+
+        generateCombos("", letters);
+    }
+
+    // Remove duplicates
+    results = [...new Set(results)];
+
+    // Remove the original full word
+    results = results.filter(w => w !== answer.toUpperCase());
+
+    // Sort nicely
+    results.sort((a, b) => a.length - b.length);
+
+    // Limit between 5–15 words
+    if (results.length < 5) {
+        return results; // allow small sets instead of saying none
+    }
+
+    return results.slice(0, 15);
+}
+
+function renderBonusMode(wordIndex) {
+    let levelItem = activeLevels[currentLevel] || {};
+    let wordObject = (levelItem.words && levelItem.words[wordIndex]) ? levelItem.words[wordIndex] : levelItem;
+    let answer = wordObject.answer || levelItem.answer || '';
+    let clue = wordObject.clue || levelItem.clue || 'No clue';
+
+    let debugMsg = `DEBUG: mode=${gameMode} currentLevel=${currentLevel} theme=${levelItem.theme || 'N/A'} answer=${answer || 'N/A'} clue=${clue || 'N/A'}`;
+    document.getElementById('bonus-info').innerText = debugMsg;
+    console.log(debugMsg);
+
+    if (!answer) {
+        console.warn('renderBonusMode: no answer for', currentLevel, levelItem);
+        document.getElementById(`bonus-word-${wordIndex}`).innerText = 'No word available for this level.';
+        return;
+    }
+
+    // Check if element exists
+    let targetDiv = document.getElementById(`bonus-word-${wordIndex}`);
+    if (!targetDiv) {
+        console.error(`Element bonus-word-${wordIndex} NOT FOUND. Creating it now.`);
+        let wordsContainer = document.getElementById('words-container');
+        if (wordsContainer) {
+            wordsContainer.innerHTML = `<div class="word-section" id="bonus-word-${wordIndex}"></div>`;
+            targetDiv = document.getElementById(`bonus-word-${wordIndex}`);
+        }
+    }
+
+    if (!targetDiv) {
+        console.error('FATAL: Could not find or create bonus-word div');
+        return;
+    }
+
+    let found = extraWordsFound[`${currentLevel}-${wordIndex}`] || [];
+    let pointsEarned = found.length * 5;
+    let possibleWords = getPossibleWordsForAnswer(answer);
+    let possibleCount = possibleWords.length;
+
+    let progressPercent = possibleCount > 0 ? Math.floor((found.length / possibleCount) * 100) : 0;
+
+    let html = `<div class="word-section" style="border: 3px solid red; background: #ffe0b3;">
+        <p style="font-size: 16px; color: #333; margin-bottom: 10px; font-weight: bold;">CLUE: ${clue}</p>
+        <p style="font-size: 20px; font-weight: bold; color: #000; background: #fff; padding: 10px; border: 2px solid #ff8800; border-radius: 10px; margin-bottom: 10px;">WORD: ${answer}</p>
+        <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Find words using these letters. (${possibleCount} possible)</p>
+        <div class="letters" id="bonus-letters-${wordIndex}" style="border: 1px solid blue; min-height: 50px;"></div>
+        <div style="margin-bottom: 10px;">
+            <input id="bonus-input-${wordIndex}" type="text" placeholder="Type or click letters..." style="width: 55%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" />
+            <button onclick="confirmBonusWord(${wordIndex})" style="width: 42%; padding: 8px; background: #ff9900; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Submit</button>
+        </div>
+        <p style="font-size: 14px; color: #ff8800;">Progress: ${progressPercent}%</p>
+        <div style="font-size: 13px; color: green; background: #f0f0f0; padding: 8px; border-radius: 5px;">Found: ${found.length > 0 ? found.join(', ') : 'None yet'}</div>
+        <button onclick="skipBonusWord(${wordIndex})" style="width: 100%; padding: 10px; background: #70a1ff; color: white; border: none; border-radius: 5px; margin-top: 8px;">Next</button>
+    </div>`;
+
+    console.log('Setting innerHTML on', `bonus-word-${wordIndex}`, 'with html:', html.substring(0, 100));
+    targetDiv.innerHTML = html;
+    console.log('After innerHTML. Div now contains:', targetDiv.innerHTML.substring(0, 100));
+    
+    renderBonusLetters(wordIndex);
+}
+
+function confirmBonusWord(wordIndex) {
+    let userWord = document.getElementById(`bonus-input-${wordIndex}`).value.trim().toUpperCase();
+    if (!userWord) {
+        alert('Please type a word first.');
+        return;
+    }
+
+    let answer = activeLevels[currentLevel] && activeLevels[currentLevel].theme
+        ? activeLevels[currentLevel].words[wordIndex].answer
+        : activeLevels[currentLevel] && activeLevels[currentLevel].answer;
+
+    if (!answer) return;
+
+    let key = `${currentLevel}-${wordIndex}`;
+    extraWordsFound[key] = extraWordsFound[key] || [];
+
+    // Check if already found
+    if (extraWordsFound[key].includes(userWord)) {
+        alert('Already found that word!');
+        document.getElementById(`bonus-input-${wordIndex}`).value = '';
+        return;
+    }
+
+    // Check if it's the main answer word - they can submit it to complete
+    if (userWord === answer.toUpperCase()) {
+        correctSound.play();
+        coins += 20;
+        alert('Correct! You found the main word. +20 coins!');
+        
+        // Clear the found list for this word before moving on
+        extraWordsFound[key] = [];
+        
+        currentLevel++;
+        if (currentLevel >= activeLevels.length) {
+            alert('You finished all levels! 🔥');
+            currentLevel = 0;
+        }
+        saveGame();
+        document.getElementById('coins').innerText = 'Coins: ' + coins;
+        setTimeout(() => loadLevel(), 800);
+        return;
+    }
+
+    // Check minimum length
+    if (userWord.length < 3) {
+        alert('Word must be at least 3 letters long.');
+        return;
+    }
+
+    // Get possible words for this answer
+    let possibleWords = getPossibleWordsForAnswer(answer);
+    console.log('Possible words for', answer, ':', possibleWords);
+
+    // Check if the word is in the possible words list
+    if (possibleWords.includes(userWord)) {
+        extraWordsFound[key].push(userWord);
+        coins += 5;
+        document.getElementById('coins').innerText = 'Coins: ' + coins;
+        saveGame();
+        document.getElementById(`bonus-input-${wordIndex}`).value = '';
+        clickSound.play();
+        alert(`Great! Found "${userWord}" (+5 coins)`);
+        renderBonusMode(wordIndex);
+    } else {
+        alert('That word cannot be made from these letters or is not a valid English word.');
+        document.getElementById(`bonus-input-${wordIndex}`).value = '';
+    }
+}
+
+function skipBonusWord(wordIndex) {
+    if (currentPack === 'Daily' && isDailySolved()) {
+        alert('Daily challenge already solved; come back tomorrow.');
+        return;
+    }
+    currentLevel++;
+    if (currentLevel >= activeLevels.length) {
+        alert('You finished all levels! 🔥');
+        currentLevel = 0;
+    }
+    saveGame();
+    loadLevel();
+}
+
+function renderWords() {
+    if (isBonusMode()) {
+        let html = "";
+        activeLevels[currentLevel].words.forEach((word, index) => {
+            html += `<div class="word-section" id="bonus-word-${index}"></div>`;
+        });
+        document.getElementById("words-container").innerHTML = html;
+        activeLevels[currentLevel].words.forEach((word, index) => {
+            renderBonusMode(index);
+        });
+    } else {
+        let html = "";
+        activeLevels[currentLevel].words.forEach((word, index) => {
+            html += `<div class="word-section">
+                <p class="clue">Clue: ${word.clue}</p>
+                <div class="answer" id="answer-${index}"></div>
+                <div class="letters" id="letters-${index}"></div>
+            </div>`;
+        });
+        document.getElementById("words-container").innerHTML = html;
+
+        activeLevels[currentLevel].words.forEach((word, index) => {
+            renderBoxes(index);
+            renderLetters(index);
+            setupSwipe(index);
+        });
+    }
+}
+
+function renderBoxes(wordIndex) {
+    let answerWord;
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
+    } else {
+        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
+    }
+    let html = "";
+
+    for (let i = 0; i < answerWord.length; i++) {
+        let char = currentGuess[wordIndex][i] || "";
+        if (char) {
+            html += `<div class="box" onclick="eraseLetter(${wordIndex}, ${i})">${char}</div>`;
+        } else {
+            html += `<div class="box">${char}</div>`;
+        }
+    }
+
+    document.getElementById(`answer-${wordIndex}`).innerHTML = html;
+}
+
+function renderLetters(wordIndex) {
+    let answerWord;
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
+    } else {
+        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
+    }
+    let letters = answerWord.split("").sort(() => Math.random() - 0.5);
+
+    let html = "";
+    letters.forEach(l => {
+        html += `<button data-letter="${l}" data-word="${wordIndex}">${l}</button>`;
+    });
+
+    document.getElementById(`letters-${wordIndex}`).innerHTML = html;
+    setupSwipe(wordIndex);
+}
+
+function renderBonusLetters(wordIndex) {
+    let answerWord;
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
+    } else {
+        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
+    }
+    let letters = answerWord.split("").sort(() => Math.random() - 0.5);
+
+    let html = "";
+    letters.forEach(l => {
+        html += `<button data-letter="${l}" data-word="${wordIndex}" onclick="pickBonusLetter(${wordIndex}, '${l}')">${l}</button>`;
+    });
+
+    document.getElementById(`bonus-letters-${wordIndex}`).innerHTML = html;
+}
+
+function pickLetter(wordIndex, letter) { 
+    if (Date.now() - lastPickTime < 100) return;
+    lastPickTime = Date.now();
+
+    if (currentPack === 'Daily' && isDailySolved()) {
+        return;
+    }
+
+    let answerWord;
+    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
+        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
+    } else {
+        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
+    }
+
+    if (currentGuess[wordIndex].join('') === answerWord) {
+        return;
+    }
+
+    if (currentGuess[wordIndex].length < answerWord.length) {
+        currentGuess[wordIndex].push(letter);
+        renderBoxes(wordIndex);
+        checkAnswer(wordIndex);
+        clickSound.play();
+    }
+}
+
+function pickBonusLetter(wordIndex, letter) {
+    let input = document.getElementById(`bonus-input-${wordIndex}`);
+    if (input) {
+        input.value += letter;
+    }
+}
+
+function eraseLetter(wordIndex, index) {
+    if (currentPack === 'Daily' && isDailySolved()) {
+        return;
+    }
+    if (index >= 0 && index < currentGuess[wordIndex].length) {
+        currentGuess[wordIndex].splice(index, 1);
+        renderBoxes(wordIndex);
+    }
+}
+
+function checkAnswer(wordIndex) {
+    if (currentPack === 'Daily' && isDailySolved()) {
+        alert('Daily challenge already solved; come back tomorrow.');
+        return;
+    }
+
+    let answerWord;
+    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
+    if (isMulti) {
+        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
+    } else {
+        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
+    }
+
+    if (currentGuess[wordIndex].length === answerWord.length) {
+        let guessString = currentGuess[wordIndex].join("");
+
+        if (guessString === answerWord) {
+            document.getElementById(`answer-${wordIndex}`).classList.add("win");
+            clickSound.play();
+
+            if (isMulti) {
+                updateProgress();
+                // Check if all words are complete
+                let allComplete = currentGuess.every((guess, idx) => {
+                    let ans = activeLevels[currentLevel].words[idx].answer;
+                    return guess.join("") === ans;
+                });
+
+                if (allComplete) {
+                    correctSound.play();
+                    let levelBase = 10 * activeLevels[currentLevel].words.length;
+                    let speedBonus = timerSeconds >= 40 ? 15 : (timerSeconds >= 20 ? 8 : 0);
+                    coins += levelBase + speedBonus;
+                    wordsCompletedToday += 1;
+                    streak += 1;
+                    recordScore(coins);
+
+                    // mark daily solved for daily mode
+                    if (currentPack === 'Daily') {
+                        setDailySolved();
+                        alert('Daily solved! +50 bonus coins. Come back tomorrow for a new daily challenge.');
+                        // daily bonus extra coins already may be applied in single path, but for multi pattern, add 50 here
+                        coins += 50;
+                    }
+
+                    currentLevel++;
+                    if (currentLevel >= activeLevels.length) {
+                        alert("You finished all levels! 🔥");
+                        currentLevel = 0;
+                    }
+                    saveGame();
+                    updateStreakDisplay();
+                    setTimeout(() => {
+                        loadLevel();
+                        renderDailyInfo();
+                    }, 1000);
+                }
+            } else {
+                // Single word
+                correctSound.play();
+                let bonus = 10;
+                if (currentPack === 'Daily' && !isDailySolved()) {
+                    bonus += 50;
+                    setDailySolved();
+                    alert('Daily solved! +50 bonus coins. Come back tomorrow for a new daily challenge.');
+                }
+                if (timerSeconds >= 40) bonus += 15;
+                else if (timerSeconds >= 20) bonus += 8;
+                coins += bonus;
+                wordsCompletedToday += 1;
+                streak += 1;
+                updateStreakDisplay();
+
+                currentLevel++;
+                if (currentLevel >= activeLevels.length) {
+                    alert("You finished all levels! 🔥");
+                    currentLevel = 0;
+                }
+                saveGame();
+                setTimeout(() => {
+                    loadLevel();
+                    renderDailyInfo();
+                }, 500);
+            }
+
+            document.getElementById("coins").innerText = "Coins: " + coins;
+            return;
+        }
+
+        // incorrect
+        alert("Wrong!");
+        coins -= 5;
+        currentGuess[wordIndex] = [];
+        wrongSound.play();
+        saveGame();
+        renderBoxes(wordIndex);
+    }
+
+    document.getElementById("coins").innerText = "Coins: " + coins;
+}
+
+function useHint() {
+    if (coins < 5) {
+        alert("Not enough coins!");
+        return;
+    }
+
+    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
+    let words = isMulti ? activeLevels[currentLevel].words : [{ clue: activeLevels[currentLevel].clue, answer: activeLevels[currentLevel].answer }];
+
+    // Find the first incomplete word
+    for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+        let answerWord = words[wordIndex].answer;
+        let guess = currentGuess[wordIndex];
+
+        if (guess.join("") !== answerWord) {
+            // Find first missing letter
+            for (let i = 0; i < answerWord.length; i++) {
+                if (guess[i] !== answerWord[i]) {
+                    currentGuess[wordIndex][i] = answerWord[i];
+                    coins -= 5;
+                    saveGame();
+                    document.getElementById("coins").innerText = "Coins: " + coins;
+                    renderBoxes(wordIndex);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+function shuffleLetters() {
+    if (coins < 5) {
+        alert('Not enough coins to shuffle (5).');
+        return;
+    }
+
+    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
+    let coerceIndex = 0;
+
+    function shuffleFor(wordIndex, answerWord) {
+        let letters = answerWord.split('');
+        letters.sort(() => Math.random() - 0.5);
+        let html = '';
+        letters.forEach(l => html += `<button data-letter="${l}" data-word="${wordIndex}">${l}</button>`);
+        document.getElementById(`letters-${wordIndex}`).innerHTML = html;
+    }
+
+    if (isMulti) {
+        let firstIncomplete = currentGuess.findIndex((guess, idx) => guess.join('') !== activeLevels[currentLevel].words[idx].answer);
+        if (firstIncomplete === -1) firstIncomplete = 0;
+        coerceIndex = firstIncomplete;
+        shuffleFor(coerceIndex, activeLevels[currentLevel].words[coerceIndex].answer);
+    } else {
+        shuffleFor(0, activeLevels[currentLevel].answer);
+    }
+
+    coins -= 5;
+    saveGame();
+    document.getElementById('coins').innerText = 'Coins: ' + coins;
+}
+
+function watchAd() {
+    alert("Ad watched! (+10 coins)");
+    coins += 10;
+    saveGame();
+    document.getElementById("coins").innerText = "Coins: " + coins;
+}
+
+function recordScore(score) {
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    let today = new Date().toISOString().split('T')[0];
+    leaderboard.push({ date: today, score: score, time: new Date().toLocaleTimeString() });
+    leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    renderLeaderboard();
+}
+
+function renderLeaderboard() {
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    let html = '<div id="leaderboard" style="margin-top: 10px; font-size: 14px;"><strong>Leaderboard</strong><br/>';
+    if (!leaderboard.length) {
+        html += '- No scores yet -';
+    } else {
+        leaderboard.forEach((entry, idx) => {
+            html += `${idx + 1}. ${entry.date} ${entry.time}: ${entry.score} pts<br/>`;
+        });
+    }
+    html += '</div>';
+    let existing = document.getElementById('leaderboard');
+    if (existing) existing.remove();
+    document.getElementById('daily').insertAdjacentHTML('afterend', html);
+}
+
+function nextLevel() {
+    currentLevel++;
+    if (currentLevel >= activeLevels.length) {
+        currentLevel = 0;
+    }
+    saveGame();
+    loadLevel();
+}
+
+renderPackSelection();
+activeLevels = currentPack === 'Daily' ? [getDailyLevel()] : getPackLevels(currentPack);
+renderDailyInfo();
+renderLeaderboard();
+loadLevel();
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>
