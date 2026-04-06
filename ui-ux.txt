@@ -1,0 +1,2973 @@
+<!-- Design System -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>AYO CROSS - Game Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#5aeed2",
+                        "on-primary-container": "#442100",
+                        "surface-tint": "#8c4a00",
+                        "inverse-on-surface": "#9d9d9c",
+                        "error": "#b02500",
+                        "inverse-surface": "#0d0e0e",
+                        "secondary": "#8930b0",
+                        "on-background": "#2e2f2f",
+                        "surface-container-high": "#e2e2e1",
+                        "on-primary": "#fff0e7",
+                        "on-surface-variant": "#5b5c5b",
+                        "tertiary-fixed": "#6bfde0",
+                        "secondary-fixed": "#f0c1ff",
+                        "primary-fixed-dim": "#ea8000",
+                        "tertiary-container": "#6bfde0",
+                        "outline": "#767776",
+                        "primary-container": "#fd8b00",
+                        "on-primary-fixed-variant": "#512800",
+                        "on-surface": "#2e2f2f",
+                        "on-tertiary-container": "#005f51",
+                        "on-primary-fixed": "#180800",
+                        "on-tertiary-fixed-variant": "#006a5a",
+                        "on-tertiary-fixed": "#004a3f",
+                        "secondary-container": "#f0c1ff",
+                        "primary": "#8c4a00",
+                        "surface-bright": "#f7f6f5",
+                        "background": "#f7f6f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f7f6f5",
+                        "on-error": "#ffefec",
+                        "on-secondary-container": "#72129a",
+                        "on-secondary-fixed-variant": "#7d21a4",
+                        "primary-dim": "#7b4000",
+                        "surface-container": "#e8e8e7",
+                        "surface-dim": "#d4d4d4",
+                        "surface-container-low": "#f1f1f0",
+                        "on-error-container": "#520c00",
+                        "secondary-fixed-dim": "#eaaeff",
+                        "on-secondary": "#ffedff",
+                        "surface-container-highest": "#dcdddc",
+                        "outline-variant": "#adadac",
+                        "tertiary": "#006859",
+                        "primary-fixed": "#fd8b00",
+                        "tertiary-dim": "#005a4d",
+                        "surface-variant": "#dcdddc",
+                        "on-tertiary": "#c2ffef",
+                        "inverse-primary": "#fd8b00",
+                        "on-secondary-fixed": "#580079",
+                        "error-dim": "#b92902",
+                        "secondary-dim": "#7c20a3",
+                        "error-container": "#f95630"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .letter-tile {
+            box-shadow: 0 4px 0 0 #fd8b00;
+        }
+        .letter-tile:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #fd8b00;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface antialiased overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#f7f6f5] dark:bg-neutral-900 docked full-width top-0 pt-safe z-50 flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3">
+<button class="text-[#8c4a00] dark:text-[#fd8b00] hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-2xl font-black text-[#8c4a00] dark:text-[#fd8b00] uppercase">AYO CROSS</h1>
+</div>
+<div class="flex items-center gap-4">
+<!-- Streak Counter -->
+<div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-error-container text-lg" data-icon="local_fire_department" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-headline font-bold text-sm text-on-surface">12</span>
+</div>
+<!-- Coin Counter -->
+<div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-primary-fixed text-lg" data-icon="monetization_on" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-sm text-on-surface">1200</span>
+</div>
+</div>
+</header>
+<main class="flex flex-col min-h-[calc(100vh-80px)] pb-32">
+<!-- Mode Selectors (Scrollable Navigation) -->
+<div class="w-full mt-2 px-6 overflow-hidden">
+<div class="flex gap-4 overflow-x-auto no-scrollbar py-2">
+<div class="flex bg-surface-container p-1 rounded-full shrink-0">
+<button class="bg-primary-container text-on-primary-container px-6 py-1.5 rounded-full font-label font-bold text-sm transition-all">Daily</button>
+<button class="text-on-surface-variant px-6 py-1.5 rounded-full font-label font-semibold text-sm">All</button>
+</div>
+<div class="flex bg-surface-container p-1 rounded-full shrink-0">
+<button class="bg-tertiary text-on-tertiary px-5 py-1.5 rounded-full font-label font-bold text-sm">Nigerian</button>
+<button class="text-on-surface-variant px-5 py-1.5 rounded-full font-label font-semibold text-sm">English</button>
+<button class="text-on-surface-variant px-5 py-1.5 rounded-full font-label font-semibold text-sm">Global</button>
+</div>
+</div>
+</div>
+<!-- Play Area (Clue Card) -->
+<section class="px-6 mt-6">
+<div class="relative bg-surface-container-low rounded-lg p-8 flex flex-col items-center justify-center text-center overflow-hidden min-h-[180px]">
+<!-- Tonal accent background pattern -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full -mr-12 -mt-12"></div>
+<div class="absolute bottom-0 left-0 w-24 h-24 bg-tertiary/5 rounded-full -ml-8 -mb-8"></div>
+<span class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-2 opacity-60">Today's Clue</span>
+<h2 class="font-body text-xl font-semibold text-on-surface px-4 leading-snug">
+                    Classic spicy Nigerian rice dish often served at celebrations.
+                </h2>
+</div>
+</section>
+<!-- Word Slots -->
+<section class="px-6 mt-10">
+<div class="flex justify-center gap-2">
+<!-- Slot 1 (Filled) -->
+<div class="w-12 h-14 bg-surface-container-lowest border-2 border-primary rounded-sm flex items-center justify-center">
+<span class="font-headline text-3xl font-bold text-primary">J</span>
+</div>
+<!-- Slot 2 (Empty) -->
+<div class="w-12 h-14 bg-surface-container-high rounded-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-on-surface-variant/30 rounded-full"></div>
+</div>
+<!-- Slot 3 (Empty) -->
+<div class="w-12 h-14 bg-surface-container-high rounded-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-on-surface-variant/30 rounded-full"></div>
+</div>
+<!-- Slot 4 (Empty) -->
+<div class="w-12 h-14 bg-surface-container-high rounded-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-on-surface-variant/30 rounded-full"></div>
+</div>
+<!-- Slot 5 (Empty) -->
+<div class="w-12 h-14 bg-surface-container-high rounded-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-on-surface-variant/30 rounded-full"></div>
+</div>
+<!-- Slot 6 (Empty) -->
+<div class="w-12 h-14 bg-surface-container-high rounded-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-on-surface-variant/30 rounded-full"></div>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="max-w-[280px] mx-auto mt-8 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full w-1/6 bg-gradient-to-r from-primary to-primary-container rounded-full"></div>
+</div>
+</section>
+<!-- Letter Bank (Bento Grid Style) -->
+<section class="px-8 mt-12 flex-grow">
+<div class="grid grid-cols-4 gap-4 max-w-sm mx-auto">
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">O</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">L</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">F</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">R</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">I</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">V</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-surface-container-lowest rounded-sm flex items-center justify-center transition-all">
+<span class="font-headline text-2xl font-extrabold text-on-surface">A</span>
+</button>
+<button class="letter-tile w-full aspect-square bg-tertiary text-on-tertiary rounded-sm flex items-center justify-center transition-all scale-105 shadow-none ring-4 ring-tertiary/20">
+<span class="font-headline text-2xl font-extrabold">E</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Action Bar) -->
+<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-around items-center px-4 py-2 bg-[#ffffff]/60 dark:bg-neutral-950/60 backdrop-blur-xl w-[90%] max-w-md rounded-full shadow-[0_20px_40px_rgba(46,47,47,0.06)]">
+<!-- Hint Button (Active State Logic applied) -->
+<button class="bg-[#fd8b00] text-white rounded-full p-4 scale-110 -translate-y-2 relative group Active: scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined text-2xl" data-icon="lightbulb" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<!-- Attention grabbing ping indicator -->
+<span class="absolute top-0 right-0 flex h-4 w-4">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+<span class="relative inline-flex rounded-full h-4 w-4 bg-tertiary-fixed"></span>
+</span>
+</button>
+<button class="text-neutral-600 dark:text-neutral-400 p-4 hover:bg-[#e2e2e1] dark:hover:bg-neutral-800 rounded-full Active: scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined text-2xl" data-icon="video_ad">youtube_ad</span>
+</button>
+<button class="text-neutral-600 dark:text-neutral-400 p-4 hover:bg-[#e2e2e1] dark:hover:bg-neutral-800 rounded-full Active: scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined text-2xl" data-icon="shuffle">shuffle</span>
+</button>
+<button class="text-neutral-600 dark:text-neutral-400 p-4 hover:bg-[#e2e2e1] dark:hover:bg-neutral-800 rounded-full Active: scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined text-2xl" data-icon="skip_next">skip_next</span>
+</button>
+</nav>
+<!-- Content Background Image Decoration (Optional for texture) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[-1]">
+<img class="w-full h-full object-cover" data-alt="subtle vector line pattern of geometric shapes and dots on a clean light background for minimal texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC39ghMZAhZepwz3xXtOxc0a5Ze2HOP_TYrR30_BAAVw0dMF7VzBXkaYGcJ4CB5D1paV3Ub-WzchgkDX_AJDLLuQcN_Az4mZwXU2zf-tormk4wjHev15dlG-byMOLosJNI8eLSLygFnCYTKSukLLHnh5p6E_nOD4e2GHKmTrO6b8lQzYxMmZV8Svriuj6ctPzslq7NBvEVoEmiuWVkAbbw4kgUk4bITvBC4pd9uff1ftwlsYieJuw9kZz8En71YAUpJO1mOsuJPl3M"/>
+</div>
+</body></html>
+
+<!-- AYO CROSS - Game Screen -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AYO CROSS - Test Your Wits Globally</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed-dim": "#5aeed2",
+                "on-primary-container": "#442100",
+                "surface-tint": "#8c4a00",
+                "inverse-on-surface": "#9d9d9c",
+                "error": "#b02500",
+                "inverse-surface": "#0d0e0e",
+                "secondary": "#8930b0",
+                "on-background": "#2e2f2f",
+                "surface-container-high": "#e2e2e1",
+                "on-primary": "#fff0e7",
+                "on-surface-variant": "#5b5c5b",
+                "tertiary-fixed": "#6bfde0",
+                "secondary-fixed": "#f0c1ff",
+                "primary-fixed-dim": "#ea8000",
+                "tertiary-container": "#6bfde0",
+                "outline": "#767776",
+                "primary-container": "#fd8b00",
+                "on-primary-fixed-variant": "#512800",
+                "on-surface": "#2e2f2f",
+                "on-tertiary-container": "#005f51",
+                "on-primary-fixed": "#180800",
+                "on-tertiary-fixed-variant": "#006a5a",
+                "on-tertiary-fixed": "#004a3f",
+                "secondary-container": "#f0c1ff",
+                "primary": "#8c4a00",
+                "surface-bright": "#f7f6f5",
+                "background": "#f7f6f5",
+                "surface-container-lowest": "#ffffff",
+                "surface": "#f7f6f5",
+                "on-error": "#ffefec",
+                "on-secondary-container": "#72129a",
+                "on-secondary-fixed-variant": "#7d21a4",
+                "primary-dim": "#7b4000",
+                "surface-container": "#e8e8e7",
+                "surface-dim": "#d4d4d4",
+                "surface-container-low": "#f1f1f0",
+                "on-error-container": "#520c00",
+                "secondary-fixed-dim": "#eaaeff",
+                "on-secondary": "#ffedff",
+                "surface-container-highest": "#dcdddc",
+                "outline-variant": "#adadac",
+                "tertiary": "#006859",
+                "primary-fixed": "#fd8b00",
+                "tertiary-dim": "#005a4d",
+                "surface-variant": "#dcdddc",
+                "on-tertiary": "#c2ffef",
+                "inverse-primary": "#fd8b00",
+                "on-secondary-fixed": "#580079",
+                "error-dim": "#b92902",
+                "secondary-dim": "#7c20a3",
+                "error-container": "#f95630"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Plus Jakarta Sans"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopAppBar -->
+<nav class="bg-[#f7f6f5] dark:bg-neutral-900 sticky top-0 z-50 w-full px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#8c4a00] dark:text-[#fd8b00] text-2xl">grid_view</span>
+<span class="font-headline font-black text-2xl text-[#8c4a00] dark:text-[#fd8b00] uppercase tracking-tight">AYO CROSS</span>
+</div>
+<div class="hidden md:flex gap-8 items-center font-headline font-bold text-neutral-500">
+<a class="text-[#8c4a00] dark:text-[#fd8b00] hover:opacity-80 transition-opacity" href="#">Home</a>
+<a class="hover:opacity-80 transition-opacity" href="#">Global Board</a>
+<a class="hover:opacity-80 transition-opacity" href="#">Categories</a>
+<a class="hover:opacity-80 transition-opacity" href="#">Support</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low px-4 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-[#8c4a00]">1200</span>
+</div>
+<button class="bg-primary text-white px-6 py-2 rounded-full font-headline font-bold hover:opacity-90 active:scale-95 transition-all">Play Now</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative pt-16 pb-24 overflow-hidden">
+<div class="absolute top-0 right-0 -z-10 w-1/2 h-full opacity-10 pointer-events-none">
+<div class="w-full h-full bg-gradient-to-bl from-primary to-transparent blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
+</div>
+<div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-sm font-bold tracking-wide">
+<span class="material-symbols-outlined text-sm">public</span>
+                    THE WORLD'S FIRST MULTICULTURAL WORD GAME
+                </div>
+<h1 class="font-headline text-6xl lg:text-7xl font-extrabold text-on-surface leading-[1.1] tracking-tighter">
+                    Test Your Wits <br/>
+<span class="text-primary italic">Globally</span> and <span class="text-tertiary">Locally</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed font-medium">
+                    Master word puzzles that span from the streets of Lagos to the lights of London. Experience the tactile joy of Ayo Cross.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-gradient-to-r from-primary to-primary-container text-white px-10 py-5 rounded-full font-headline text-lg font-bold shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3">
+                        Play Now for Free
+                        <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+<button class="border-2 border-outline-variant text-on-surface px-10 py-5 rounded-full font-headline text-lg font-bold hover:bg-surface-container transition-colors">
+                        View Tutorial
+                    </button>
+</div>
+<div class="flex items-center gap-6 pt-4">
+<div class="flex -space-x-3">
+<img class="w-10 h-10 rounded-full border-4 border-background" data-alt="portrait of a young smiling man in casual wear with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ20bkbKGzosYAZMIjh_-koVRFCohXOIFk8gpLf6QL7Gwy2fkT_j14ciWmTFWA42EwzIfTefjHeAcPofOnLYcS5_w6p1yWibjqab5sMtfdEhYS3cHq4q-g0m5z7vDAf16Gy3aBgu6VMo1OPCqnJ8b8zUAtmUrw0MAAPKB2VLRebAPhvhuZOHP8jVh0SXc3h1CXgl41yLFBx0zO3qC7hGApRrbwpyuIYwXJRqhgfIX-vR398oyTPk6ZU7Go2gOUrXgHdNmtr95rQiA"/>
+<img class="w-10 h-10 rounded-full border-4 border-background" data-alt="close-up of a diverse woman laughing with sun flare and natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZehsDjdUHDHI5-HWuO15hCko7lntNFxQYs14QhlXpjHB0nc0gTBAUmuIInapuFgVfI43ghr-edFKiW9kOCoja9omZUgsSz-vdxPmpfojKeV9gcRb8zVGUOw6NyCJ2TJelzZ5h-0dqlUFkQUK-KnOUeHMfDGiKFf6f6yeu7Q9I1LWIrkDczDjfowC2nbOyXqCjOqNzS1FRFlaEpdZXArp51qPvYuQR1G5RGE2tkYl6wvQO-sgi8hkyyEUSxfTJjA4tCPNymTGOTBo"/>
+<img class="w-10 h-10 rounded-full border-4 border-background" data-alt="man wearing glasses looking at phone with a warm smiling expression and urban background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTumXt0Cwjf94N1xSNZV9EFixxItukLmboNatAnIfZ_QSLNTzWC3Tx6IHoUt7pvkGA1ymBJcAZzSMbM215CRSTOmJBtLnA5Fl0xgRMp68J3Hb8iRhPnNIxKJrC7z7skMAop1AKW7Llm5Gu-eAfssgGCBoafyDNL3BHSBR7j_e6CUo2A02Rtab8C1CFbX-WLHyjFjcBJhi6QShoDDPtz5CDJZr4616cKwIuWBVog2VG-ATNNRCeQIT7tBQsIB82MSS0RTit5LagtlM"/>
+</div>
+<p class="text-sm font-bold text-on-surface-variant"><span class="text-primary">4.9/5</span> from 50k+ daily players</p>
+</div>
+</div>
+<div class="relative flex justify-center">
+<!-- Phone Mockup Container -->
+<div class="relative z-10 w-[300px] h-[600px] bg-inverse-surface rounded-[3rem] p-3 shadow-2xl border-[8px] border-neutral-800">
+<div class="w-full h-full bg-surface overflow-hidden rounded-[2.2rem] relative flex flex-col">
+<!-- Game Header -->
+<div class="p-4 flex justify-between items-center bg-surface-container-low">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+<span class="font-headline font-black text-sm text-primary">LEVEL 42</span>
+<span class="material-symbols-outlined text-tertiary">settings</span>
+</div>
+<!-- Game Board Grid -->
+<div class="flex-grow p-4 grid grid-cols-4 gap-2 content-center bg-surface">
+<!-- Correct Word -->
+<div class="bg-tertiary text-white w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl shadow-inner">A</div>
+<div class="bg-tertiary text-white w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl shadow-inner">Y</div>
+<div class="bg-tertiary text-white w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl shadow-inner">O</div>
+<div class="bg-surface-container-highest w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl"></div>
+<div class="bg-surface-container-highest w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl"></div>
+<div class="bg-surface-container-highest w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl"></div>
+<div class="bg-primary-container text-on-primary-container w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl shadow-inner">C</div>
+<div class="bg-surface-container-highest w-full aspect-square rounded-sm flex items-center justify-center font-headline font-bold text-xl"></div>
+</div>
+<!-- Letter Tiles Selection -->
+<div class="p-6 bg-surface-container rounded-t-xl flex justify-center gap-2">
+<div class="bg-surface-container-lowest w-12 h-12 rounded-sm shadow-[0_2px_0_#fd8b00] flex items-center justify-center font-headline font-bold text-lg">A</div>
+<div class="bg-surface-container-lowest w-12 h-12 rounded-sm shadow-[0_2px_0_#fd8b00] flex items-center justify-center font-headline font-bold text-lg">Y</div>
+<div class="bg-surface-container-lowest w-12 h-12 rounded-sm shadow-[0_2px_0_#fd8b00] flex items-center justify-center font-headline font-bold text-lg">O</div>
+<div class="bg-tertiary text-white w-12 h-12 rounded-sm flex items-center justify-center font-headline font-bold text-lg scale-110 shadow-lg">X</div>
+</div>
+</div>
+</div>
+<!-- Decorative Shapes -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-secondary-container rounded-full blur-3xl opacity-30"></div>
+<div class="absolute -bottom-10 -left-10 w-60 h-60 bg-tertiary-container rounded-full blur-3xl opacity-20"></div>
+</div>
+</div>
+</header>
+<!-- Features Section -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<h2 class="font-headline text-4xl font-extrabold text-on-surface mb-4 tracking-tight">Crafted for Word Lovers</h2>
+<div class="h-1.5 w-24 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Cultural Categories -->
+<div class="bg-surface-container-lowest p-10 rounded-lg shadow-sm border border-outline-variant/10 group hover:-translate-y-2 transition-transform">
+<div class="w-16 h-16 bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-3xl">language</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4">Cultural Categories</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Explore diverse word packs including Nigerian dialects, British English, and Global slang.</p>
+<ul class="space-y-3 font-bold text-sm text-secondary">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">check_circle</span> Nigerian Pidgin</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">check_circle</span> Oxford Standard</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">check_circle</span> Global Trends</li>
+</ul>
+</div>
+<!-- Daily Challenges -->
+<div class="bg-surface-container-lowest p-10 rounded-lg shadow-sm border border-outline-variant/10 group hover:-translate-y-2 transition-transform">
+<div class="w-16 h-16 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-3xl">local_fire_department</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4">Daily Challenges</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Keep the streak alive! Earn massive coin rewards and exclusive badges every single day.</p>
+<div class="bg-surface-container-low p-4 rounded-full flex items-center justify-between">
+<span class="font-bold text-xs uppercase tracking-widest px-3">Streak Reward</span>
+<div class="flex items-center gap-1 text-primary font-black">
+<span class="material-symbols-outlined text-sm">monetization_on</span> 500
+                        </div>
+</div>
+</div>
+<!-- Multiple Modes -->
+<div class="bg-surface-container-lowest p-10 rounded-lg shadow-sm border border-outline-variant/10 group hover:-translate-y-2 transition-transform">
+<div class="w-16 h-16 bg-tertiary-container text-on-tertiary-container rounded-lg flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-3xl">dashboard_customize</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4">Multiple Modes</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Play your way. Relax in Normal mode, beat the clock in Timed, or unlock the Bonus rounds.</p>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-black uppercase">Timed</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-black uppercase">Zen</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-black uppercase">Blitz</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof / Leaderboard Section -->
+<section class="py-24 bg-background relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1">
+<div class="bg-surface-container-lowest rounded-lg shadow-2xl p-8 border-4 border-surface-container-high">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline text-2xl font-extrabold flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">emoji_events</span>
+                            GLOBAL TOP 5
+                        </h3>
+<span class="text-xs font-bold text-on-surface-variant tracking-widest uppercase">Live Updates</span>
+</div>
+<div class="space-y-4">
+<!-- Player 1 -->
+<div class="flex items-center justify-between p-4 bg-primary-container rounded-lg text-on-primary-container shadow-lg scale-105">
+<div class="flex items-center gap-4">
+<span class="font-black text-xl">1</span>
+<img class="w-10 h-10 rounded-full" data-alt="professional headshot of a confident man with a slight smile in an office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApNT4N2xhaTgPXQ8ZLe6vYQWfubVMJW9Jcg_mj9kwZ6cg1NjJzCncQ9jYhwsLiKc7kBbHEN6IyIjLx51vjgAIViNiNPnccogybzX4sOY1xwQiee689gfdFmpX48LA-J2cU6IceaBmSlQuusr2-8HdxwxYXLaVRI1xYOJfHCrSvs6c46m2xEdBkC5pAFCsZtVUe4MZlNawM9wsC3aS592cHSwc95EWKGD1zo9YQrc427zJWjecZPdbMoNOdz67OzqwZ0-N2lw1Sj2w"/>
+<span class="font-bold">Olamide G.</span>
+</div>
+<span class="font-black tracking-tight">145,200 pts</span>
+</div>
+<!-- Player 2 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<span class="font-black text-xl text-outline">2</span>
+<img class="w-10 h-10 rounded-full" data-alt="vibrant portrait of a woman wearing a colorful headwrap against a plain light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE1541V3p13OiXjhDEmrgPStYiEaGxwweM0aHDxy2dqx5MTG35nrVbrgPfty-75vya8CRfGwdFoSTZcWZS9AZBNoRJ9PRlDg8rnRAb89glPOsd4Kj4X7yxwsErC1U8P0-vGg7LA7drbAWc0MTNv07g1qiI6VPZQq40DyPCHBmPq6BY2uRB8PuoQbHrgASJQ4R0rO17pJmGL9D1GCd0YrNP1V_0SCH9AckNfM4WrYiaVF_tgFqfRkdKPtDNx-yc7prKsRooxlxg6VY"/>
+<span class="font-bold">Sarah W.</span>
+</div>
+<span class="font-black text-outline tracking-tight">132,450 pts</span>
+</div>
+<!-- Player 3 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-4">
+<span class="font-black text-xl text-outline">3</span>
+<img class="w-10 h-10 rounded-full" data-alt="man in a casual blue shirt smiling warmly in an outdoor setting with greenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp43TvFZ9_KqSiR1LfRfkRetAi72E6nuzhsJVAS-qHIIKA9_RzpKCCK08ZUS7IyavOBzywSb23rqvAKXcGbAvbWGHrYcNuDUI4DoIsx8frM5Yl43ZHvNxVHZHbgM5gXKGgzNQgXAjwUfHjaWf-ut5limT2ky6QZAwHbldRJdPtY1KFhiCzTDfWh93Nsp8obuPvyC3NmxCTwoIvX4kRR1oVH8wnambsGM1_HbLbrYYhiVD1KEV_sQqE0rEQVsZ47YF1At6f7mRAC1A"/>
+<span class="font-bold">Chidi K.</span>
+</div>
+<span class="font-black text-outline tracking-tight">128,900 pts</span>
+</div>
+</div>
+<button class="w-full mt-8 py-4 border-2 border-dashed border-outline-variant text-outline font-bold rounded-lg hover:border-primary hover:text-primary transition-all">
+                        View Full Global Rankings
+                    </button>
+</div>
+</div>
+<div class="order-1 lg:order-2 space-y-8">
+<h2 class="font-headline text-5xl font-extrabold text-on-surface leading-tight tracking-tight">
+                    Join a Community of <br/><span class="text-secondary">Word Masters</span>
+</h2>
+<p class="text-xl text-on-surface-variant leading-relaxed">
+                    Competing isn't just about the points—it's about the glory. Show off your vocabulary skills and climb the ranks in our local and global leaderboards.
+                </p>
+<div class="grid grid-cols-2 gap-6">
+<div class="p-6 bg-tertiary-container/20 rounded-lg">
+<span class="block text-3xl font-black text-tertiary">2M+</span>
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Puzzles Solved</span>
+</div>
+<div class="p-6 bg-secondary-container/20 rounded-lg">
+<span class="block text-3xl font-black text-secondary">150+</span>
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Countries</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-24">
+<div class="max-w-5xl mx-auto px-6 text-center bg-inverse-surface text-white rounded-lg p-16 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-container via-transparent to-transparent"></div>
+</div>
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold mb-6 relative z-10">Ready to Cross the World?</h2>
+<p class="text-xl opacity-80 mb-10 max-w-2xl mx-auto relative z-10">Start your journey today. Available on all modern browsers and coming soon to mobile stores.</p>
+<button class="relative z-10 bg-primary-container text-on-primary-container px-12 py-5 rounded-full font-headline text-xl font-black shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                Play Now for Free
+            </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-12 bg-surface-container-highest border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8c4a00] text-xl">grid_view</span>
+<span class="font-headline font-black text-xl text-[#8c4a00] uppercase tracking-tight">AYO CROSS</span>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-bold text-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Cookie Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Careers</a>
+</div>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">public</span>
+</a>
+</div>
+</div>
+<div class="mt-12 text-center text-xs font-medium text-outline uppercase tracking-widest">
+                © 2024 Ayo Cross Gaming Studio. All Rights Reserved.
+            </div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile only placeholder as per rules, hidden on desktop) -->
+<div class="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-around items-center px-4 py-2 bg-[#ffffff]/60 backdrop-blur-xl w-[90%] max-w-md rounded-full shadow-[0_20px_40px_rgba(46,47,47,0.06)]">
+<div class="text-[#8c4a00] dark:text-[#fd8b00] bg-[#fd8b00] text-white rounded-full p-4 scale-110 -translate-y-2">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 p-4">
+<span class="material-symbols-outlined">youtube_ad</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 p-4">
+<span class="material-symbols-outlined">shuffle</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 p-4">
+<span class="material-symbols-outlined">skip_next</span>
+</div>
+</div>
+</body></html>
+
+<!-- AYO CROSS - Landing Page -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Victory - AYO CROSS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#72129a",
+                    "on-secondary-fixed-variant": "#7d21a4",
+                    "on-surface-variant": "#5b5c5b",
+                    "on-tertiary-fixed": "#004a3f",
+                    "tertiary-dim": "#005a4d",
+                    "primary-dim": "#7b4000",
+                    "on-primary-container": "#442100",
+                    "error": "#b02500",
+                    "tertiary-fixed": "#6bfde0",
+                    "surface-dim": "#d4d4d4",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#8930b0",
+                    "on-background": "#2e2f2f",
+                    "on-error": "#ffefec",
+                    "primary-fixed": "#fd8b00",
+                    "on-surface": "#2e2f2f",
+                    "on-tertiary-container": "#005f51",
+                    "inverse-on-surface": "#9d9d9c",
+                    "on-secondary-fixed": "#580079",
+                    "surface-container": "#e8e8e7",
+                    "error-dim": "#b92902",
+                    "secondary-dim": "#7c20a3",
+                    "tertiary-container": "#6bfde0",
+                    "surface-container-highest": "#dcdddc",
+                    "tertiary": "#006859",
+                    "on-error-container": "#520c00",
+                    "inverse-surface": "#0d0e0e",
+                    "surface-container-low": "#f1f1f0",
+                    "surface-container-high": "#e2e2e1",
+                    "surface-bright": "#f7f6f5",
+                    "background": "#f7f6f5",
+                    "surface": "#f7f6f5",
+                    "tertiary-fixed-dim": "#5aeed2",
+                    "surface-tint": "#8c4a00",
+                    "secondary-fixed": "#f0c1ff",
+                    "inverse-primary": "#fd8b00",
+                    "on-tertiary-fixed-variant": "#006a5a",
+                    "surface-variant": "#dcdddc",
+                    "secondary-container": "#f0c1ff",
+                    "outline": "#767776",
+                    "on-primary-fixed-variant": "#512800",
+                    "on-tertiary": "#c2ffef",
+                    "on-primary-fixed": "#180800",
+                    "primary": "#8c4a00",
+                    "outline-variant": "#adadac",
+                    "primary-fixed-dim": "#ea8000",
+                    "on-secondary": "#ffedff",
+                    "secondary-fixed-dim": "#eaaeff",
+                    "on-primary": "#fff0e7",
+                    "primary-container": "#fd8b00",
+                    "error-container": "#f95630"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-mesh {
+            background-color: #f7f6f5;
+            background-image: radial-gradient(at 0% 0%, #fd8b0015 0, transparent 50%), radial-gradient(at 100% 100%, #8930b015 0, transparent 50%);
+        }
+        .text-shadow-tactile {
+            text-shadow: 0 2px 0 rgba(140, 74, 0, 0.2);
+        }
+        .inner-pressed {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background antialiased overflow-hidden">
+<!-- Game Board (Dimmed Background) -->
+<main class="fixed inset-0 z-0 bg-mesh flex flex-col items-center justify-center filter blur-sm grayscale-[0.3]">
+<!-- Pseudo Top Bar -->
+<header class="w-full top-0 absolute flex justify-between items-center px-6 py-4">
+<div class="text-xl font-black text-primary font-headline tracking-tight">AYO CROSS</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-lowest px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-bold font-label">1,240</span>
+</div>
+</div>
+</header>
+<!-- Dummy Puzzle Grid -->
+<div class="grid grid-cols-4 gap-3">
+<div class="w-16 h-16 bg-surface-container-lowest rounded-md flex items-center justify-center text-3xl font-bold font-headline border-b-4 border-primary-container/20">W</div>
+<div class="w-16 h-16 bg-tertiary text-on-tertiary rounded-md flex items-center justify-center text-3xl font-bold font-headline border-b-4 border-tertiary-dim">O</div>
+<div class="w-16 h-16 bg-tertiary text-on-tertiary rounded-md flex items-center justify-center text-3xl font-bold font-headline border-b-4 border-tertiary-dim">R</div>
+<div class="w-16 h-16 bg-tertiary text-on-tertiary rounded-md flex items-center justify-center text-3xl font-bold font-headline border-b-4 border-tertiary-dim">D</div>
+</div>
+</main>
+<!-- Overlay Dimmer -->
+<div class="fixed inset-0 z-10 bg-on-background/40 backdrop-blur-[2px]"></div>
+<!-- Victory Modal -->
+<div class="fixed inset-0 z-20 flex items-center justify-center p-6">
+<div class="w-full max-w-md bg-surface-container-low rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.15)] overflow-hidden flex flex-col items-center text-center">
+<!-- Modal Header / Decorative Area -->
+<div class="w-full bg-gradient-to-b from-primary-container to-surface-container-low pt-12 pb-8 relative overflow-hidden">
+<!-- Abstract Background Shapes -->
+<div class="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+<div class="absolute -top-5 -right-5 w-24 h-24 bg-tertiary-container/20 rounded-full blur-xl"></div>
+<!-- Main Icon -->
+<div class="relative z-10 mb-4 inline-flex items-center justify-center w-28 h-28 bg-surface-container-lowest rounded-full shadow-lg ring-8 ring-white/20">
+<span class="material-symbols-outlined text-7xl text-primary-fixed leading-none" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h1 class="font-headline font-black text-4xl text-on-primary-container tracking-tight text-shadow-tactile">LEVEL UP</h1>
+<p class="font-label text-primary font-bold uppercase tracking-widest mt-1">Magnificent!</p>
+</div>
+<!-- Content -->
+<div class="w-full px-8 pb-10 space-y-8">
+<!-- Rewards Section -->
+<div class="bg-surface-container-lowest rounded-lg p-6 flex flex-col items-center shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<span class="font-label text-sm text-outline font-bold tracking-wider uppercase mb-3">Rewards Earned</span>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+</div>
+<span class="text-3xl font-headline font-extrabold text-on-surface">+50 COINS</span>
+</div>
+</div>
+<!-- Progress Section -->
+<div class="space-y-4">
+<div class="flex justify-between items-end px-1">
+<div class="flex flex-col items-start">
+<span class="text-xs font-label font-bold text-outline uppercase tracking-tighter">Current Level</span>
+<span class="text-2xl font-headline font-black text-on-surface">Level 43</span>
+</div>
+<span class="text-sm font-headline font-bold text-tertiary">0% Complete</span>
+</div>
+<!-- Progress Bar Track -->
+<div class="w-full h-4 bg-surface-container-highest rounded-full inner-pressed overflow-hidden p-0.5">
+<div class="h-full w-2 bg-gradient-to-r from-tertiary to-tertiary-fixed rounded-full shadow-sm"></div>
+</div>
+<p class="text-xs text-outline font-medium">Keep it up! You're becoming a master linguist.</p>
+</div>
+<!-- Action Button -->
+<button class="w-full group relative bg-gradient-to-b from-primary-container to-primary py-5 rounded-full shadow-[0_8px_0_#7b4000] active:shadow-none active:translate-y-[6px] transition-all duration-75">
+<span class="relative z-10 flex items-center justify-center gap-3 font-headline font-extrabold text-xl text-white tracking-wide">
+                        NEXT LEVEL
+                        <span class="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</span>
+</button>
+<!-- Secondary Link -->
+<a class="inline-block text-on-surface-variant font-label text-sm font-bold hover:text-primary transition-colors" href="#">
+                    Back to menu
+                </a>
+</div>
+</div>
+</div>
+<!-- Background Decorative Elements (Not visible due to modal, but for structure) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-9xl">star</span>
+<span class="material-symbols-outlined text-9xl">star</span>
+<span class="material-symbols-outlined text-9xl">star</span>
+</div>
+</body></html>
+
+<!-- Level Up Victory Popup -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f7f6f5",
+                    "tertiary-fixed-dim": "#5aeed2",
+                    "surface-bright": "#f7f6f5",
+                    "background": "#f7f6f5",
+                    "inverse-primary": "#fd8b00",
+                    "surface-tint": "#8c4a00",
+                    "secondary-fixed": "#f0c1ff",
+                    "surface-container-highest": "#dcdddc",
+                    "on-error-container": "#520c00",
+                    "inverse-surface": "#0d0e0e",
+                    "surface-container-low": "#f1f1f0",
+                    "surface-container-high": "#e2e2e1",
+                    "tertiary": "#006859",
+                    "primary-fixed-dim": "#ea8000",
+                    "on-secondary": "#ffedff",
+                    "outline-variant": "#adadac",
+                    "on-primary": "#fff0e7",
+                    "primary-container": "#fd8b00",
+                    "error-container": "#f95630",
+                    "secondary-fixed-dim": "#eaaeff",
+                    "secondary-container": "#f0c1ff",
+                    "on-tertiary-fixed-variant": "#006a5a",
+                    "surface-variant": "#dcdddc",
+                    "primary": "#8c4a00",
+                    "outline": "#767776",
+                    "on-primary-fixed-variant": "#512800",
+                    "on-tertiary": "#c2ffef",
+                    "on-primary-fixed": "#180800",
+                    "tertiary-fixed": "#6bfde0",
+                    "surface-dim": "#d4d4d4",
+                    "error": "#b02500",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#8930b0",
+                    "on-background": "#2e2f2f",
+                    "on-tertiary-fixed": "#004a3f",
+                    "tertiary-dim": "#005a4d",
+                    "on-secondary-container": "#72129a",
+                    "on-secondary-fixed-variant": "#7d21a4",
+                    "on-surface-variant": "#5b5c5b",
+                    "primary-dim": "#7b4000",
+                    "on-primary-container": "#442100",
+                    "secondary-dim": "#7c20a3",
+                    "tertiary-container": "#6bfde0",
+                    "surface-container": "#e8e8e7",
+                    "error-dim": "#b92902",
+                    "primary-fixed": "#fd8b00",
+                    "on-surface": "#2e2f2f",
+                    "on-error": "#ffefec",
+                    "on-secondary-fixed": "#580079",
+                    "on-tertiary-container": "#005f51",
+                    "inverse-on-surface": "#9d9d9c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7f6f5;
+            color: #2e2f2f;
+        }
+        .premium-shadow {
+            box-shadow: 0 20px 40px rgba(46, 47, 47, 0.06);
+        }
+        .tile-pressed {
+            box-shadow: inset 0 -4px 0 rgba(140, 74, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-[#f7f6f5] dark:bg-[#1a1a1a]">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="text-2xl font-black tracking-tight text-[#8c4a00] dark:text-[#fd8b00] font-headline">Lexis</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-4 py-2 rounded-full premium-shadow border border-outline-variant/10">
+<span class="material-symbols-outlined text-[#8c4a00] filled-icon" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-[#8c4a00]">1,250</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#f1f1f0] transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[#4a4a4a]">settings</span>
+</button>
+</div>
+</div>
+<div class="bg-[#e2e2e1] dark:bg-[#2d2d2d] h-[2px] w-full"></div>
+</header>
+<main class="max-w-xl mx-auto px-6 pt-8 pb-12">
+<!-- Title & Tabs -->
+<div class="mb-10">
+<h1 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-6">Leaderboard</h1>
+<div class="bg-surface-container-high p-1.5 rounded-full flex gap-1">
+<button class="flex-1 py-3 px-4 rounded-full font-headline font-bold text-sm bg-surface-container-lowest text-primary shadow-sm transition-all">Daily</button>
+<button class="flex-1 py-3 px-4 rounded-full font-headline font-bold text-sm text-on-surface-variant hover:bg-surface-container-low transition-all">Weekly</button>
+<button class="flex-1 py-3 px-4 rounded-full font-headline font-bold text-sm text-on-surface-variant hover:bg-surface-container-low transition-all">All-Time</button>
+</div>
+</div>
+<!-- Podium Section (Top 3) -->
+<div class="flex items-end justify-center gap-4 mb-12 mt-16 px-2">
+<!-- Rank 2 -->
+<div class="flex flex-col items-center flex-1">
+<div class="relative mb-3">
+<div class="w-20 h-20 rounded-full border-4 border-surface-container-highest overflow-hidden premium-shadow">
+<img class="w-full h-full object-cover" data-alt="portrait of a smiling man with short hair and casual clothes against a soft studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADpnGWgIWB7fN-0CiOwhz6tyLfQvlUs8p7a-a7buRXs_BY8HxKkJuJZkjoPd8QaqveBy2Uh9NHqZEWtqxPPVYk3kgt8x8HSKANDiwA994Nx16qwV3ZjYoada_JAU-5TvXrp-mYzZ2nwmWPV_g6TrRopooqHFV2kqcjTKIVh0FjYbBxhv_N0-MuckfT_HPu1yzQtHCttJ7KCgtH1GXptjB1yUjEyUgzOgrckIiObBF7oPbDQMDeZxy7p7MhKaYaWhtqyU3hkjYtTIA"/>
+</div>
+<div class="absolute -bottom-2 -right-1 w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center border-4 border-surface shadow-sm">
+<span class="text-xs font-headline font-black text-slate-700">2</span>
+</div>
+</div>
+<span class="font-headline font-bold text-sm text-center truncate w-full">Jonas W.</span>
+<span class="text-tertiary font-bold text-xs">14,820</span>
+</div>
+<!-- Rank 1 -->
+<div class="flex flex-col items-center flex-1 -translate-y-6">
+<div class="relative mb-4">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2">
+<span class="material-symbols-outlined text-primary-container text-4xl filled-icon" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div class="w-28 h-28 rounded-full border-4 border-primary-container overflow-hidden premium-shadow scale-110">
+<img class="w-full h-full object-cover" data-alt="headshot of a young professional woman with a friendly expression and natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP8eeY8GECK2BZJqtMW2jeLazPYW4kTp-E9cfPmBdewzcfRCcygKppxWx2UFyva7dM5F2XKOV_ffr3ivxit9OCpcdeDvEsw2YdQzAhuKNxKmIo4RRn084cYo2qJhW_oDoLcTapXWiiop_K07TQiqsm9h3el4JqOHxdtVY2KQd0Fiwou5J6Th2S1VhGX0hm7d2UKSOWcknYJFIEngpD-h6_yXA6WzHpUx8AFuhbjSl-1M3HnIy4kIyL0YTvdaU5-7TTiF-UYzpQDZ0"/>
+</div>
+<div class="absolute -bottom-3 -right-1 w-10 h-10 rounded-full bg-primary-container flex items-center justify-center border-4 border-surface shadow-md">
+<span class="text-sm font-headline font-black text-white">1</span>
+</div>
+</div>
+<span class="font-headline font-bold text-lg text-center truncate w-full">Sarah K.</span>
+<span class="text-primary font-black text-sm">18,450</span>
+</div>
+<!-- Rank 3 -->
+<div class="flex flex-col items-center flex-1">
+<div class="relative mb-3">
+<div class="w-20 h-20 rounded-full border-4 border-orange-200 overflow-hidden premium-shadow">
+<img class="w-full h-full object-cover" data-alt="close up portrait of a young man with beard looking confident in natural outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiyX_pDOIUjz6Jh9rMsUfDQ3zizwsDedoIQ6J_-P9BmzxpFJMqs4Q5FHR8By9Ov_zNqK7KtGwUCeIYz6JO71H-YZSf2a7qTgyYXZBzr50IHX88avDGC_illAxZ4D17O__8pkdgXrsS0B4_ziPuB_Sm8fZXnNivKuU3CYKlQbHwY4OibALeSrlgxfeM1vUbvdjy-0XVDjeMMTC2TkDUPK1MKl2XUvQKPrJj_6Zk7p3jxx1fXeo3ZkalRYP4kYO9N517yeCvZYEmjR0"/>
+</div>
+<div class="absolute -bottom-2 -right-1 w-8 h-8 rounded-full bg-[#cd7f32] flex items-center justify-center border-4 border-surface shadow-sm">
+<span class="text-xs font-headline font-black text-white">3</span>
+</div>
+</div>
+<span class="font-headline font-bold text-sm text-center truncate w-full">Marcus L.</span>
+<span class="text-tertiary font-bold text-xs">12,100</span>
+</div>
+</div>
+<!-- Rankings List -->
+<div class="space-y-3">
+<!-- List Item: User -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-primary-container/10 border-2 border-primary-container/20 premium-shadow">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-extrabold text-primary">12</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high border-2 border-white">
+<img class="w-full h-full object-cover" data-alt="circular avatar portrait of a person with glasses smiling in a bright setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOAlA3l0wwKMzI28hKRAqVk2Rm96a3a6F8jCfl4GWi0pR0x4ZOAydtgnbHgiCgCrMkMt32Ftgp6F9z-4g0BLDvfKdaX_k-tYavihAQjM5ynuB29GbgmUwwTZV99S-1JiDEEn2l-WuE8QhTt-ajbxpPAdeT9azS2PEGlMJi3BBA7G4G9sx6NRRTQ-AS3M1s0Iux6sk-pwuzchYRPWUQSNzXf0uRzEtEg_Kvl3Juh6Jjm_sPUOUAXyTQF1ISzggqlLfoJYOfH3CR5qI"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-bold text-on-surface">You (Alex)</span>
+<span class="text-xs text-on-surface-variant font-medium">Ranked top 15%</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline font-black text-primary">8,940</span>
+</div>
+</div>
+<!-- List Item 4 -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors premium-shadow group">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-bold text-outline">4</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="professional male avatar with neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH33DVvTHeNhkGP7ODwSt68lYNUZk4eVvgzuIGxB6ujOt6F88Ix2x72pYEJ3UAwJxgQ2HVTk73gFiAtnYTyT1XUNg45oIuo6yJTKJgmTiy57kEUoqEBnH7YGzXHe344UEE7xfUz8utjwbihRlS5yORiumQ_qAvW9xQswxwtYUmMeFJs_LXVkZelUsIBQNf8uMbXkfOyZcCVd5iUDL6Mj_MJ0c4OJAevI_AXULoN1UX_Sr2V9ErohaV46QKKQY71vzHLCbZhDHOclM"/>
+</div>
+<span class="font-headline font-bold text-on-surface">David Chen</span>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-surface-variant">10,250</span>
+</div>
+</div>
+<!-- List Item 5 -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors premium-shadow">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-bold text-outline">5</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="portrait of a woman with braided hair and a warm smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJSlcC9Rux5ys-ETJuVn1rMRLrFmvR54aZIg6N3nc25wdbSKwerkP5wE-dfXUuWa7vWya0fLnEKRmSQiAc15QxaNIl4rL6m95lc-1o_2cWt6Nnba4ejgKb3xXh62TkxahP1lDwiaXKROnej7slhc926g8NeJbXD4BO6jF6ViyWpdC7vnkDVHk8hXnpI--W3Ed77UeX6lIoTnfxsl6JNGge4jhoOZc8piYnhXZ7S-wdZs3N9cYRcWHs_e9LF8W58M5HU4gH3dJV9K0"/>
+</div>
+<span class="font-headline font-bold text-on-surface">Elena Rodriguez</span>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-surface-variant">9,810</span>
+</div>
+</div>
+<!-- List Item 6 -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors premium-shadow">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-bold text-outline">6</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="smiling man with clean glasses looking directly at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1pUa2_B81oDe5avlCVQO_Qe6-p2vzH9kx_Ob2eMEmiZM8xLjPdj9igMqWRl6yChTJZ0-F-II_dAum_VSadCyKCFXHIBriCJa1I0HleCdHFJpiBVbD1zG3uRxzO8yRuuzbmKHFWKqgK9262jCmeUQHwW8gK7tKVXb71qhprHZt81zvFJlledNZgbv4pFXJpH8PrPQZiVCCzgMwtyaoKdhcVDbTf4Q71vUGMm3lEMq1MjvV--WOgLrhV_YaVQxl_UuIl40NK0guN5Q"/>
+</div>
+<span class="font-headline font-bold text-on-surface">Thomas Müller</span>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-surface-variant">9,420</span>
+</div>
+</div>
+<!-- List Item 7 -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors premium-shadow">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-bold text-outline">7</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="minimalist portrait of a woman with sleek hair in artistic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATCMoMH7b9soWEmHKFDPbOcCPBLhcoQ8-8UO-Ca8Cfels30Y-c6o-FeL_nYnUGJMGMYcbDIYLae5ABDgH1o-R6S6Z_FYsKQCqp6WyiZ6-J_lHNpHMBJpbTc7X86l-d6RgRcHWBs16Cq27Q7L7Ji5l-tpVOY0kroS8yQ4rfrQ16LDTHA63dKcRvvo4A04DDozPY9Sy_w26-5XR57cfohY50StYYCHAduKneau5MuS9yG8PhEQazbaNv18wt_4OpU-jh8cxOQSjES-k"/>
+</div>
+<span class="font-headline font-bold text-on-surface">Aki Tanaka</span>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-surface-variant">9,100</span>
+</div>
+</div>
+<!-- Decorative separator / jump in list -->
+<div class="py-4 flex justify-center gap-1.5 opacity-30">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<!-- List Item 100 -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors premium-shadow">
+<div class="flex items-center gap-4">
+<span class="w-6 text-center font-headline font-bold text-outline text-xs">100</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="rugged portrait of a man with serious expression in high contrast" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAz95-hoM-7WkY_Dl-NAdTIgVuZ0Gs7I0WrZCFzasVyRYClfFbhHpR9bEteptSe2isrivNGNjxDw_QvSQ7ohQEjcbYlQQeCo90fPyX9zUjDdK_4yy-hc3i7voWV1roOJXBoaniglIVROwNBuOiXPmM5bWlYNaPlRk2pCaehwTClBERkTI2m_fljfg3oGCyXFprnvq0DP7emfcNsbEOL3hZT3yig_0IzLhUq62UGTAjnsWrYvNs1Q314lEQ5FUMtrKOcOsxCwrRyp8"/>
+</div>
+<span class="font-headline font-bold text-on-surface">Ivan Petrov</span>
+</div>
+<div class="text-right">
+<span class="font-headline font-bold text-on-surface-variant">4,200</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#ffffff]/80 dark:bg-[#1a1a1a]/80 backdrop-blur-xl rounded-t-[2rem] shadow-[0_-10px_40px_rgba(46,47,47,0.06)]">
+<a class="flex flex-col items-center justify-center text-[#898989] px-5 py-2 hover:text-[#8c4a00] transition-all Active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">videogame_asset</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[11px]">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#fd8b00] text-white rounded-full px-5 py-2 Active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1 filled-icon" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[11px]">Leagues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#898989] px-5 py-2 hover:text-[#8c4a00] transition-all Active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">shopping_bag</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[11px]">Store</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#898989] px-5 py-2 hover:text-[#8c4a00] transition-all Active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[11px]">Profile</span>
+</a>
+</nav>
+</body></html>
+
+<!-- Global Leaderboard -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#eaaeff",
+            "inverse-primary": "#fd8b00",
+            "inverse-on-surface": "#9d9d9c",
+            "primary-container": "#fd8b00",
+            "error-container": "#f95630",
+            "primary": "#8c4a00",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#dcdddc",
+            "on-primary": "#fff0e7",
+            "surface-variant": "#dcdddc",
+            "background": "#f7f6f5",
+            "tertiary-fixed": "#6bfde0",
+            "on-error-container": "#520c00",
+            "on-primary-container": "#442100",
+            "surface": "#f7f6f5",
+            "tertiary-dim": "#005a4d",
+            "primary-dim": "#7b4000",
+            "surface-container": "#e8e8e7",
+            "on-tertiary-container": "#005f51",
+            "on-surface": "#2e2f2f",
+            "on-error": "#ffefec",
+            "surface-tint": "#8c4a00",
+            "on-primary-fixed-variant": "#512800",
+            "outline-variant": "#adadac",
+            "inverse-surface": "#0d0e0e",
+            "on-secondary-container": "#72129a",
+            "secondary-fixed": "#f0c1ff",
+            "tertiary-container": "#6bfde0",
+            "secondary-dim": "#7c20a3",
+            "primary-fixed-dim": "#ea8000",
+            "on-secondary": "#ffedff",
+            "surface-bright": "#f7f6f5",
+            "error-dim": "#b92902",
+            "surface-dim": "#d4d4d4",
+            "on-tertiary": "#c2ffef",
+            "secondary": "#8930b0",
+            "surface-container-high": "#e2e2e1",
+            "on-primary-fixed": "#180800",
+            "error": "#b02500",
+            "on-surface-variant": "#5b5c5b",
+            "on-tertiary-fixed": "#004a3f",
+            "on-background": "#2e2f2f",
+            "on-tertiary-fixed-variant": "#006a5a",
+            "tertiary": "#006859",
+            "on-secondary-fixed": "#580079",
+            "secondary-container": "#f0c1ff",
+            "tertiary-fixed-dim": "#5aeed2",
+            "outline": "#767776",
+            "primary-fixed": "#fd8b00",
+            "surface-container-low": "#f1f1f0",
+            "on-secondary-fixed-variant": "#7d21a4"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Be Vietnam Pro"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .tactile-tile {
+      box-shadow: 0 4px 0 0 rgba(140, 74, 0, 0.1);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tactile-tile:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 0 rgba(140, 74, 0, 0.1);
+    }
+    .glass-effect {
+      backdrop-filter: blur(12px);
+      background-color: rgba(247, 246, 245, 0.6);
+    }
+    .premium-gradient {
+      background: linear-gradient(135deg, #8c4a00 0%, #fd8b00 100%);
+    }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- TopAppBar Section -->
+<header class="sticky top-0 z-40 bg-[#f7f6f5] dark:bg-[#1a1a1a] flex justify-between items-center w-full px-6 py-4 max-w-full">
+<div class="text-2xl font-black text-[#8c4a00] dark:text-[#fd8b00] tracking-widest font-headline">AYO CROSS</div>
+<div class="flex items-center gap-3">
+<!-- User Coin Balance Display -->
+<div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-primary">1,250</span>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#e2e2e1] dark:hover:bg-[#333333] transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[#4e4e4e] dark:text-[#a0a0a0]">settings</span>
+</button>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-6 pt-4 pb-32">
+<!-- Hero Banner -->
+<section class="mb-10">
+<div class="relative w-full h-48 rounded-lg overflow-hidden premium-gradient shadow-lg flex items-center justify-center">
+<div class="absolute inset-0 opacity-20" data-alt="Subtle geometric grid pattern background for a premium game interface" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC4aYZpWMnaXAiedIULED0_bOmuTvLijLJL1IJlcxl8hXIBMuVoIpAoWnRyg0ealo9uPhfsZWtpVXj-QbqGLN0JT12FVVt9Y6zy-8FWI3d8dafYK9dFl4v70LPzw-pKha1IxjKyEDlWtnYsnZRT5yWDzpo4gvd56QZIC_IIWBdof43z0ekYDskWyoeSPiuBKfDGZwaKdBbbxuTkBnmMPznLBhbDVClZDeu6MkwPKpowb0pAOPdf8HKJ0WQnFPEsHtgJyXlQMmKneBo');"></div>
+<div class="relative z-10 text-center text-white px-6">
+<h2 class="font-headline text-3xl font-extrabold tracking-tight mb-2">MEGA COIN EVENT</h2>
+<p class="font-body text-on-primary text-sm opacity-90">+50% Extra Coins on all Vault Packs</p>
+<div class="mt-4 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full inline-block text-xs font-bold uppercase tracking-wider">Limited Time Only</div>
+</div>
+</div>
+</section>
+<!-- Coin Packs Section -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6 px-2">
+<h3 class="font-headline text-xl font-bold tracking-tight text-on-surface">Coin Packs</h3>
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Store Specials</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Coin Pack 1 -->
+<button class="tactile-tile bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center text-center group">
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary-container" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+</div>
+<span class="font-headline font-extrabold text-2xl text-on-surface mb-1">500</span>
+<span class="text-xs font-bold text-outline uppercase mb-4">Starter Stack</span>
+<div class="w-full py-2 bg-primary text-white rounded-full font-headline font-bold text-sm">$1.99</div>
+</button>
+<!-- Coin Pack 2 -->
+<button class="tactile-tile bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center text-center group border-2 border-primary-container/20 relative">
+<div class="absolute top-0 right-4 -translate-y-1/2 bg-tertiary text-on-tertiary text-[10px] font-black px-3 py-1 rounded-full uppercase">Most Popular</div>
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary-container" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<span class="font-headline font-extrabold text-2xl text-on-surface mb-1">2,500</span>
+<span class="text-xs font-bold text-outline uppercase mb-4">Adventurer Bag</span>
+<div class="w-full py-2 bg-primary text-white rounded-full font-headline font-bold text-sm">$4.99</div>
+</button>
+<!-- Coin Pack 3 -->
+<button class="tactile-tile bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center text-center group">
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary-container" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<span class="font-headline font-extrabold text-2xl text-on-surface mb-1">7,500</span>
+<span class="text-xs font-bold text-outline uppercase mb-4">Scholar's Vault</span>
+<div class="w-full py-2 bg-primary text-white rounded-full font-headline font-bold text-sm">$9.99</div>
+</button>
+<!-- Coin Pack 4 -->
+<button class="tactile-tile bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center text-center group">
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary-container" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<span class="font-headline font-extrabold text-2xl text-on-surface mb-1">20,000</span>
+<span class="text-xs font-bold text-outline uppercase mb-4">Royal Treasure</span>
+<div class="w-full py-2 bg-primary text-white rounded-full font-headline font-bold text-sm">$19.99</div>
+</button>
+</div>
+</section>
+<!-- Power-up Packs Section -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6 px-2">
+<h3 class="font-headline text-xl font-bold tracking-tight text-on-surface">Power-ups</h3>
+<span class="text-xs font-bold text-tertiary uppercase tracking-widest">Tactical Edge</span>
+</div>
+<div class="space-y-4">
+<!-- Power-up Item 1 -->
+<div class="tactile-tile bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-tertiary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-2xl">lightbulb</span>
+</div>
+<div class="flex-1">
+<h4 class="font-headline font-bold text-on-surface">Precision Hint x5</h4>
+<p class="text-xs text-outline">Reveals the exact letter you need</p>
+</div>
+<button class="px-6 py-2 bg-tertiary text-white rounded-full font-headline font-bold text-sm hover:scale-105 active:scale-95 transition-all">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span>150</span>
+</div>
+</button>
+</div>
+<!-- Power-up Item 2 -->
+<div class="tactile-tile bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-container/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-2xl">shuffle</span>
+</div>
+<div class="flex-1">
+<h4 class="font-headline font-bold text-on-surface">Board Shuffle x3</h4>
+<p class="text-xs text-outline">Refreshes the board layout</p>
+</div>
+<button class="px-6 py-2 bg-tertiary text-white rounded-full font-headline font-bold text-sm hover:scale-105 active:scale-95 transition-all">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span>80</span>
+</div>
+</button>
+</div>
+<!-- Power-up Item 3 -->
+<div class="tactile-tile bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-2xl">skip_next</span>
+</div>
+<div class="flex-1">
+<h4 class="font-headline font-bold text-on-surface">Level Skip x1</h4>
+<p class="text-xs text-outline">Jump straight to the next challenge</p>
+</div>
+<button class="px-6 py-2 bg-tertiary text-white rounded-full font-headline font-bold text-sm hover:scale-105 active:scale-95 transition-all">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span>300</span>
+</div>
+</button>
+</div>
+</div>
+</section>
+<!-- Exclusive Themes Section -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6 px-2">
+<h3 class="font-headline text-xl font-bold tracking-tight text-on-surface">Exclusive Themes</h3>
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Premium Aesthetics</span>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<button class="tactile-tile relative group overflow-hidden rounded-lg h-40">
+<img alt="Midnight Nebula" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Dreamy night sky theme with deep purple nebulae and glowing stars for a luxury game board background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBJyO8-0_6N1hDplOhZAjGPyyMfX16emLAZX3cCzcb3qgTv6ts-H7RzOsRM7TGh42bcwBhnKbU7FSYPTlKFOPoMK4IOaACtDGNs7uYnYgvim_js4Q9atsqOQtUFMcboB_CScDIPLCF8daFlQiCZWGQR-K3rHx1uQrZkxR2EOXFt0IklBZDvLvdhF7H07SL_6W9vQaJ9-VAgBtTfNVnnXhZ1QmPk_jACu5P2On00LS_zv2RJ2DQNdiAFJOfBLLmojCClzhfOwRMQvg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 text-left">
+<div class="flex justify-between items-end">
+<div>
+<h4 class="font-headline font-extrabold text-white text-lg">Midnight Nebula</h4>
+<p class="text-white/80 text-xs">Deep Cosmic Accents</p>
+</div>
+<div class="px-5 py-2 bg-primary-container text-on-primary-container rounded-full font-headline font-bold text-sm">
+                800 Coins
+              </div>
+</div>
+</div>
+</button>
+<button class="tactile-tile relative group overflow-hidden rounded-lg h-40">
+<img alt="Rainforest Bliss" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Lush tropical forest theme with vibrant green leaves and soft dappled sunlight for a fresh game aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZaLl8vmkBW5F8oXY7B93tSUazv6ZQNBIIhm1nGyaVPbDk8g2lyU6HggGOVkP-gozWyCFZTJqIN-ZiDjiGoTI5owGTwyggcjAf7OP18N5eE_97mIjREa3KXAytfKDgCSQIoShQZ_nKroOc8JEyaawlAYj7ks5c5zJI_9eLU_jz1c3c9oygWKy22Chzo-T6kBHaPESoSnKWlzlhP7k3eaMngJt3I88q_4SoN6SYayDLYcRr-iRMnWOVDio0zVHlfNpAXfs_8mE0GI8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 text-left">
+<div class="flex justify-between items-end">
+<div>
+<h4 class="font-headline font-extrabold text-white text-lg">Rainforest Bliss</h4>
+<p class="text-white/80 text-xs">Emerald Jungle Vibrations</p>
+</div>
+<div class="px-5 py-2 bg-primary-container text-on-primary-container rounded-full font-headline font-bold text-sm">
+                800 Coins
+              </div>
+</div>
+</div>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Section -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#f7f6f5]/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-[0_-10px_30px_rgba(46,47,47,0.06)] rounded-t-[2rem]">
+<!-- Play Tab -->
+<a class="flex flex-col items-center justify-center text-[#8930b0] opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined text-2xl">videogame_asset</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-bold uppercase mt-1">Play</span>
+</a>
+<!-- Store Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-[#fd8b00] text-white rounded-full px-5 py-2 scale-110 shadow-lg active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-bold uppercase mt-1">Store</span>
+</a>
+<!-- Events Tab -->
+<a class="flex flex-col items-center justify-center text-[#8930b0] opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined text-2xl">military_tech</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-bold uppercase mt-1">Events</span>
+</a>
+<!-- Profile Tab -->
+<a class="flex flex-col items-center justify-center text-[#8930b0] opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-bold uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>
+
+<!-- AYO CROSS - Store Screen -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AYO CROSS | Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#d4d4d4",
+                    "tertiary-fixed": "#6bfde0",
+                    "error": "#b02500",
+                    "secondary": "#8930b0",
+                    "on-background": "#2e2f2f",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-dim": "#005a4d",
+                    "on-tertiary-fixed": "#004a3f",
+                    "on-surface-variant": "#5b5c5b",
+                    "on-secondary-fixed-variant": "#7d21a4",
+                    "on-secondary-container": "#72129a",
+                    "primary-dim": "#7b4000",
+                    "on-primary-container": "#442100",
+                    "tertiary-container": "#6bfde0",
+                    "secondary-dim": "#7c20a3",
+                    "error-dim": "#b92902",
+                    "surface-container": "#e8e8e7",
+                    "on-surface": "#2e2f2f",
+                    "primary-fixed": "#fd8b00",
+                    "on-error": "#ffefec",
+                    "on-secondary-fixed": "#580079",
+                    "inverse-on-surface": "#9d9d9c",
+                    "on-tertiary-container": "#005f51",
+                    "tertiary-fixed-dim": "#5aeed2",
+                    "surface": "#f7f6f5",
+                    "surface-bright": "#f7f6f5",
+                    "background": "#f7f6f5",
+                    "inverse-primary": "#fd8b00",
+                    "surface-tint": "#8c4a00",
+                    "secondary-fixed": "#f0c1ff",
+                    "surface-container-highest": "#dcdddc",
+                    "surface-container-low": "#f1f1f0",
+                    "surface-container-high": "#e2e2e1",
+                    "on-error-container": "#520c00",
+                    "inverse-surface": "#0d0e0e",
+                    "tertiary": "#006859",
+                    "on-secondary": "#ffedff",
+                    "primary-fixed-dim": "#ea8000",
+                    "outline-variant": "#adadac",
+                    "primary-container": "#fd8b00",
+                    "error-container": "#f95630",
+                    "on-primary": "#fff0e7",
+                    "secondary-fixed-dim": "#eaaeff",
+                    "secondary-container": "#f0c1ff",
+                    "surface-variant": "#dcdddc",
+                    "on-tertiary-fixed-variant": "#006a5a",
+                    "primary": "#8c4a00",
+                    "on-tertiary": "#c2ffef",
+                    "on-primary-fixed": "#180800",
+                    "outline": "#767776",
+                    "on-primary-fixed-variant": "#512800"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-24 md:pb-0">
+<!-- Top Navigation Bar (Shared Component Logic) -->
+<header class="bg-[#f7f6f5] dark:bg-[#1a1a1a] flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#fd8b00] tracking-tighter headline">AYO CROSS</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-[#8930b0] dark:text-[#b060d0] font-bold hover:opacity-80 transition-opacity" href="#">Play</a>
+<a class="text-[#8930b0] dark:text-[#b060d0] font-bold hover:opacity-80 transition-opacity" href="#">Daily</a>
+<a class="text-[#8930b0] dark:text-[#b060d0] font-bold hover:opacity-80 transition-opacity" href="#">Social</a>
+<a class="text-[#8c4a00] dark:text-[#fd8b00] font-bold" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#8930b0] hover:opacity-80 transition-opacity" data-icon="settings">settings</button>
+<button class="material-symbols-outlined text-[#8930b0] hover:opacity-80 transition-opacity" data-icon="help">help</button>
+</div>
+</header>
+<!-- Separation Logic -->
+<div class="bg-[#f1f1f0] dark:bg-[#2a2a2a] h-[2px] w-full"></div>
+<main class="max-w-6xl mx-auto px-6 py-12 space-y-12">
+<!-- Hero Profile Section -->
+<section class="flex flex-col items-center text-center space-y-6">
+<div class="relative group">
+<div class="w-40 h-40 rounded-full border-4 border-primary-container p-1 bg-surface-container-lowest">
+<img alt="Alex's Profile" class="w-full h-full object-cover rounded-full shadow-lg" data-alt="Modern high-end portrait of a stylish young man with a friendly expression in soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFAZP6Z5JDfaur8GkvegfuX6d0LZEMkp9h9jZLt1QzqNjj4i3EJe3nv7_VPKe_7JGdJyyonJmtd-oYKp3b6bqSvBDhhB9GdXJ_SfIMD20SeL662lOx3WrHzRvF8MQEWPhRAuZp0KLlJu3ljXopiSO3X9jo3UVFQexMxKyfoN6zAAeRgE6SWkfzSuESVxQHW6Z_FcAND0SKtAft39pdGsj7CN7pKsAiCCwDPG4kgDSovL5tzhfrdt3So7OKBb5iHE1aWD1zgRYU-VU"/>
+</div>
+<button class="absolute bottom-1 right-1 bg-primary text-white p-3 rounded-full shadow-lg active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="space-y-1">
+<h1 class="text-4xl font-extrabold text-on-surface tracking-tight">Alex</h1>
+<p class="text-primary font-bold text-lg">Word Ninja</p>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-white px-8 py-3 rounded-full font-bold shadow-lg hover:opacity-90 active:scale-95 transition-all">
+                Edit Profile
+            </button>
+</section>
+<!-- Stats Section: Asymmetric Grid / Horizontal Layout -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.06)] flex flex-col items-center justify-center space-y-2 border-b-4 border-primary-container">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="monetization_on">monetization_on</span>
+<span class="text-2xl font-black headline">14,250</span>
+<span class="text-on-surface-variant text-sm font-medium">Total Points</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.06)] flex flex-col items-center justify-center space-y-2 border-b-4 border-error-container">
+<span class="material-symbols-outlined text-error-container text-3xl" data-icon="local_fire_department">local_fire_department</span>
+<span class="text-2xl font-black headline">18 Days</span>
+<span class="text-on-surface-variant text-sm font-medium">Best Streak</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.06)] flex flex-col items-center justify-center space-y-2 border-b-4 border-tertiary">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="extension">extension</span>
+<span class="text-2xl font-black headline">432</span>
+<span class="text-on-surface-variant text-sm font-medium">Puzzles Solved</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.06)] flex flex-col items-center justify-center space-y-2 border-b-4 border-secondary">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="leaderboard">leaderboard</span>
+<span class="text-2xl font-black headline">#12</span>
+<span class="text-on-surface-variant text-sm font-medium">Global Rank</span>
+</div>
+</section>
+<!-- Achievements Grid -->
+<section class="space-y-8">
+<div class="flex items-end justify-between px-2">
+<h2 class="text-2xl font-extrabold headline tracking-tight">Achievements</h2>
+<span class="text-secondary font-bold cursor-pointer hover:underline">View All</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+<!-- Unlocked -->
+<div class="group relative flex flex-col items-center gap-3">
+<div class="w-24 h-24 bg-primary-fixed rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-200 cursor-pointer border-4 border-white">
+<span class="material-symbols-outlined text-on-primary-fixed text-4xl" data-icon="emoji_events">emoji_events</span>
+</div>
+<span class="headline font-bold text-sm">First Win</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">Won your first match!</div>
+</div>
+<div class="group relative flex flex-col items-center gap-3">
+<div class="w-24 h-24 bg-error-container rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-200 cursor-pointer border-4 border-white">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="flare">flare</span>
+</div>
+<span class="headline font-bold text-sm">10 Day Streak</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">True dedication.</div>
+</div>
+<div class="group relative flex flex-col items-center gap-3">
+<div class="w-24 h-24 bg-secondary rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-200 cursor-pointer border-4 border-white">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<span class="headline font-bold text-sm">Word Master</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">Vocab expert status.</div>
+</div>
+<!-- Locked -->
+<div class="group relative flex flex-col items-center gap-3 opacity-40 grayscale">
+<div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl" data-icon="travel_explore">travel_explore</span>
+</div>
+<span class="headline font-bold text-sm">Cultural Explorer</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">Locked: Play in 5 languages</div>
+</div>
+<div class="group relative flex flex-col items-center gap-3 opacity-40 grayscale">
+<div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl" data-icon="diamond">diamond</span>
+</div>
+<span class="headline font-bold text-sm">Elite Rank</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">Locked: Reach Top 10</div>
+</div>
+<div class="group relative flex flex-col items-center gap-3 opacity-40 grayscale">
+<div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl" data-icon="stars">stars</span>
+</div>
+<span class="headline font-bold text-sm">Legend</span>
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-xs font-bold whitespace-nowrap">Locked: 1000 Puzzles Solved</div>
+</div>
+</div>
+</section>
+<!-- Account Section: List with Glassmorphism/Tonal Layering -->
+<section class="bg-surface-container-low rounded-lg p-8 shadow-sm">
+<h2 class="text-2xl font-extrabold headline tracking-tight mb-8">Account Settings</h2>
+<div class="space-y-1">
+<!-- Notifications Toggle -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-t-lg hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="notifications">notifications</span>
+<span class="font-bold text-on-surface">Notifications</span>
+</div>
+<div class="w-12 h-6 bg-primary-container rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<!-- Language -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="language">language</span>
+<span class="font-bold text-on-surface">Language</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="text-sm font-medium">English</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Sound & Music -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="volume_up">volume_up</span>
+<span class="font-bold text-on-surface">Sound &amp; Music</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Link Account -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="share">share</span>
+<span class="font-bold text-on-surface">Link Account</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Help & Support -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="help_center">help_center</span>
+<span class="font-bold text-on-surface">Help &amp; Support</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Log Out -->
+<div class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-b-lg hover:bg-error-container/10 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-error" data-icon="logout">logout</span>
+<span class="font-bold text-error">Log Out</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile only, Shared Component Logic) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-8px_30px_rgba(46,47,47,0.06)] rounded-t-[2.5rem]">
+<div class="flex flex-col items-center justify-center text-[#8930b0] dark:text-[#8930b0] p-2 hover:bg-[#f1f1f0] transition-all rounded-full active:scale-90">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-[11px]">Play</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#8930b0] dark:text-[#8930b0] p-2 hover:bg-[#f1f1f0] transition-all rounded-full active:scale-90">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-[11px]">Daily</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#8930b0] dark:text-[#8930b0] p-2 hover:bg-[#f1f1f0] transition-all rounded-full active:scale-90">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-[11px]">Social</span>
+</div>
+<!-- Active Tab: Profile -->
+<div class="flex flex-col items-center justify-center bg-[#fd8b00] text-white rounded-full p-3 scale-110 -translate-y-2 transition-all duration-200 shadow-lg">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-[11px]">Profile</span>
+</div>
+</nav>
+</body></html>
+
+<!-- Profile Screen -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#2e2f2f",
+                    "inverse-on-surface": "#9d9d9c",
+                    "primary-container": "#fd8b00",
+                    "primary-fixed-dim": "#ea8000",
+                    "surface-container-high": "#e2e2e1",
+                    "surface-container-highest": "#dcdddc",
+                    "on-secondary": "#ffedff",
+                    "tertiary-fixed": "#6bfde0",
+                    "on-tertiary-fixed-variant": "#006a5a",
+                    "tertiary-dim": "#005a4d",
+                    "primary-fixed": "#fd8b00",
+                    "inverse-surface": "#0d0e0e",
+                    "error-container": "#f95630",
+                    "on-error-container": "#520c00",
+                    "on-error": "#ffefec",
+                    "on-surface-variant": "#5b5c5b",
+                    "on-secondary-container": "#72129a",
+                    "on-tertiary-container": "#005f51",
+                    "surface-container": "#e8e8e7",
+                    "primary": "#8c4a00",
+                    "on-secondary-fixed-variant": "#7d21a4",
+                    "outline": "#767776",
+                    "secondary-fixed": "#f0c1ff",
+                    "surface-container-low": "#f1f1f0",
+                    "on-secondary-fixed": "#580079",
+                    "tertiary": "#006859",
+                    "on-surface": "#2e2f2f",
+                    "on-primary-fixed": "#180800",
+                    "tertiary-fixed-dim": "#5aeed2",
+                    "error": "#b02500",
+                    "inverse-primary": "#fd8b00",
+                    "primary-dim": "#7b4000",
+                    "surface-tint": "#8c4a00",
+                    "on-primary-container": "#442100",
+                    "error-dim": "#b92902",
+                    "on-tertiary": "#c2ffef",
+                    "secondary-container": "#f0c1ff",
+                    "secondary-fixed-dim": "#eaaeff",
+                    "surface": "#f7f6f5",
+                    "tertiary-container": "#6bfde0",
+                    "on-tertiary-fixed": "#004a3f",
+                    "surface-dim": "#d4d4d4",
+                    "background": "#f7f6f5",
+                    "surface-variant": "#dcdddc",
+                    "outline-variant": "#adadac",
+                    "secondary": "#8930b0",
+                    "on-primary-fixed-variant": "#512800",
+                    "on-primary": "#fff0e7",
+                    "secondary-dim": "#7c20a3",
+                    "surface-bright": "#f7f6f5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .category-card-shadow {
+            box-shadow: 0 20px 40px rgba(46, 47, 47, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50 bg-[#f7f6f5] dark:bg-[#1a1a19]">
+<div class="flex items-center gap-3">
+<h1 class="text-2xl font-black tracking-tighter text-[#8c4a00] dark:text-[#fd8b00] uppercase font-['Plus_Jakarta_Sans']">AYO CROSS</h1>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-4 py-2 rounded-full active:scale-95 transition-transform duration-150 ease-out cursor-pointer">
+<span class="material-symbols-outlined text-[#8c4a00]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-on-surface">1,240</span>
+</div>
+</header>
+<main class="px-6 pt-4 pb-32 max-w-4xl mx-auto">
+<!-- Hero Section / Context -->
+<div class="mb-8 mt-2">
+<h2 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface mb-2">Puzzles for You</h2>
+<p class="font-body text-on-surface-variant text-lg">Choose a category and start your word journey.</p>
+</div>
+<!-- Category Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Nigerian Culture Card -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-lg p-6 category-card-shadow flex flex-col justify-between aspect-[1.1/1] transition-all hover:-translate-y-1 active:scale-95">
+<div class="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full -mr-12 -mt-12 blur-3xl"></div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-4 text-green-700">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">theater_comedy</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-background mb-1">Nigerian Culture</h3>
+<p class="text-sm font-medium text-on-surface-variant">45% Complete</p>
+<div class="w-full h-2 bg-surface-container mt-3 rounded-full overflow-hidden">
+<div class="h-full bg-green-500 rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between mt-6">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Portrait of a smiling West African man with vibrant traditional patterns in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSvD-m82BqWbElJYCWLhZmIcUFI-RVR_d4uST4gNeGM_Gdb2hfnGSNz0nqCg2uxbXQkOx8rftGUnZvTH5JxRfMv2SYGKe8TzMD8REnewPKruiSP4D6KgYS-fhoEVa7DYFyQ3riLDGTgYn5tbfORBPuzSStK5a35r5bt9mn_4iyfR7gfJgzYydeCNyrwktIYPmpKTTTpLBGSQBBznK5wVXgde1g7Iz3n_m8izGnNHmXHlGwgvPOpRxgw3-n0gHpVlWpn-j0YPVuA68"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+12</div>
+</div>
+<button class="bg-[#fd8b00] hover:bg-[#ea8000] text-white font-headline font-bold py-3 px-8 rounded-full shadow-lg shadow-[#fd8b00]/20 active:scale-95 transition-all">Play</button>
+</div>
+</div>
+<!-- English Classics Card -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-lg p-6 category-card-shadow flex flex-col justify-between aspect-[1.1/1] transition-all hover:-translate-y-1 active:scale-95">
+<div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -mr-12 -mt-12 blur-3xl"></div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-red-50/100 rounded-lg flex items-center justify-center mb-4 text-red-700">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-background mb-1">English Classics</h3>
+<p class="text-sm font-medium text-on-surface-variant">70% Complete</p>
+<div class="w-full h-2 bg-surface-container mt-3 rounded-full overflow-hidden">
+<div class="h-full bg-red-600 rounded-full" style="width: 70%;"></div>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between mt-6">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close up of vintage leather-bound books stacked on a wooden table with soft library lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM5y34jAdTW62CbGnO5PtTG-eGjT9W2mtR6BByAbBRuqFS9fo2EicqmoYQN9quUZBS20fwRrsEv0f5GBQvl3-rzR2kNJ2CxZc2ENTWAqQYe0oHyBN7LeBKXvHhQAGJ7mmaegL0bta8HmsMxgwnY3IJpT0qpcFQHUxdAaR-iGNPs0Pd8AtEKUvWNR6RqL1anFUe5iWwpxMb0xT3LjGMzTCcZiO_vRWK9tGTMnC9ZEvKZAHYiNU0MQsqQZ9W7l_OBkEd0cp8A3kK2Kk"/>
+</div>
+<button class="bg-[#fd8b00] hover:bg-[#ea8000] text-white font-headline font-bold py-3 px-8 rounded-full shadow-lg shadow-[#fd8b00]/20 active:scale-95 transition-all">Play</button>
+</div>
+</div>
+<!-- Global Wonders Card -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-lg p-6 category-card-shadow flex flex-col justify-between aspect-[1.1/1] transition-all hover:-translate-y-1 active:scale-95">
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/10 rounded-full -mr-12 -mt-12 blur-3xl"></div>
+<div class="relative z-10">
+<div class="w-14 h-14 bg-tertiary-container/30 rounded-lg flex items-center justify-center mb-4 text-tertiary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">public</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-background mb-1">Global Wonders</h3>
+<p class="text-sm font-medium text-on-surface-variant">20% Complete</p>
+<div class="w-full h-2 bg-surface-container mt-3 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 20%;"></div>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between mt-6">
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Stylized miniature globe with pins on various continents in soft morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoA54U6zlkXLCOLkNOuFwDlyj6bQR_4NhAoBIb6LKAvjipvx8S9tLTt3wMt2IRCXyh6R1Ld3hUMT4U3i9w4r3T-1Bc7YA__8fn37dzC-91ORCfQIthnncSXJ_G1TN6pJLYJn7SbDFjwFOI6jcyU4DmFbWC7580KvH-YppfLhP3kYMh8yIwuTE1za1GxYPDddKzRkIZx1hdleOMTIy6OQ5B41KpsuSTo13As9efK7cPLNq4IV-QlMRI39iTbeSRDp9je9PNLtctlfs"/>
+</div>
+<button class="bg-[#fd8b00] hover:bg-[#ea8000] text-white font-headline font-bold py-3 px-8 rounded-full shadow-lg shadow-[#fd8b00]/20 active:scale-95 transition-all">Play</button>
+</div>
+</div>
+<!-- Daily Challenge Card (Locked State) -->
+<div class="group relative overflow-hidden bg-secondary text-white rounded-lg p-6 category-card-shadow flex flex-col justify-between aspect-[1.1/1] transition-all">
+<div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-20 -mt-20 blur-2xl"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<div class="w-14 h-14 bg-white/20 rounded-lg backdrop-blur-md flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+</div>
+<div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Locked</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-1">Daily Challenge</h3>
+<p class="text-sm font-medium text-white/70">Unlocks in 04:22:15</p>
+</div>
+<div class="relative z-10 flex items-center justify-center mt-6">
+<div class="w-full h-14 rounded-full border-2 border-white/30 flex items-center justify-center gap-2 text-white/50 cursor-not-allowed">
+<span class="material-symbols-outlined text-lg">lock</span>
+<span class="font-headline font-bold">Come back later</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#ffffff]/80 dark:bg-[#1a1a19]/80 backdrop-blur-xl border-t border-[#f1f1f0]/20 shadow-[0_-10px_40px_rgba(46,47,47,0.06)] rounded-t-lg">
+<!-- Home -->
+<div class="flex flex-col items-center justify-center text-[#5a5a59] dark:text-[#a1a1a0] px-4 py-2 opacity-70 hover:opacity-100 transition-all cursor-pointer active:scale-90 duration-200 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</div>
+<!-- Categories (Active) -->
+<div class="flex flex-col items-center justify-center bg-[#fd8b00] text-white rounded-full px-5 py-2 scale-110 -translate-y-1 shadow-lg shadow-[#fd8b00]/20 cursor-pointer active:scale-90 duration-200 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Categories</span>
+</div>
+<!-- Daily -->
+<div class="flex flex-col items-center justify-center text-[#5a5a59] dark:text-[#a1a1a0] px-4 py-2 opacity-70 hover:opacity-100 transition-all cursor-pointer active:scale-90 duration-200 transition-transform">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Daily</span>
+</div>
+<!-- Profile -->
+<div class="flex flex-col items-center justify-center text-[#5a5a59] dark:text-[#a1a1a0] px-4 py-2 opacity-70 hover:opacity-100 transition-all cursor-pointer active:scale-90 duration-200 transition-transform">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</nav>
+</body></html>
+
+<!-- Category Selection Screen -->
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#e2e2e1",
+            "secondary-fixed-dim": "#eaaeff",
+            "error-dim": "#b92902",
+            "on-primary-fixed-variant": "#512800",
+            "on-tertiary": "#c2ffef",
+            "on-primary-container": "#442100",
+            "inverse-surface": "#0d0e0e",
+            "outline-variant": "#adadac",
+            "secondary-container": "#f0c1ff",
+            "primary": "#8c4a00",
+            "on-primary": "#fff0e7",
+            "on-primary-container": "#442100",
+            "inverse-surface": "#0d0e0e",
+            "outline-variant": "#adadac",
+            "secondary-container": "#f0c1ff",
+            "primary": "#8c4a00",
+            "on-primary": "#fff0e7",
+            "on-error": "#ffefec",
+            "primary-container": "#fd8b00",
+            "on-surface": "#2e2f2f",
+            "surface-variant": "#dcdddc",
+            "secondary-fixed": "#f0c1ff",
+            "error": "#b02500",
+            "on-surface-variant": "#5b5c5b",
+            "on-tertiary-container": "#005f51",
+            "secondary-dim": "#7c20a3",
+            "surface-tint": "#8c4a00",
+            "on-tertiary-fixed-variant": "#006a5a",
+            "outline": "#767776",
+            "surface-container": "#e8e8e7",
+            "on-error-container": "#520c00",
+            "on-secondary-fixed": "#580079",
+            "on-tertiary-fixed": "#004a3f",
+            "background": "#f7f6f5",
+            "surface": "#f7f6f5",
+            "tertiary-container": "#6bfde0",
+            "on-secondary-container": "#72129a",
+            "tertiary-dim": "#005a4d",
+            "surface-bright": "#f7f6f5",
+            "primary-fixed": "#fd8b00",
+            "inverse-on-surface": "#9d9d9c",
+            "inverse-primary": "#fd8b00",
+            "secondary": "#8930b0",
+            "primary-dim": "#7b4000",
+            "error-container": "#f95630",
+            "tertiary": "#006859",
+            "primary-fixed-dim": "#ea8000",
+            "on-background": "#2e2f2f",
+            "surface-dim": "#d4d4d4",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f1f0",
+            "surface-container-highest": "#dcdddc",
+            "on-secondary-fixed-variant": "#7d21a4",
+            "on-secondary": "#ffedff",
+            "tertiary-fixed": "#6bfde0",
+            "on-primary-fixed": "#180800",
+            "tertiary-fixed-dim": "#5aeed2"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Be Vietnam Pro"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .tactile-tile {
+      box-shadow: 0 4px 0 0 #fd8b00;
+    }
+    .tactile-tile:active {
+      box-shadow: 0 0px 0 0 #fd8b00;
+      transform: translateY(4px);
+    }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen pb-32">
+<header class="bg-[#f7f6f5] dark:bg-[#1c1b1a] flex justify-between items-center w-full px-6 py-4 sticky top-0 z-40">
+<div class="font-headline text-2xl font-black text-primary dark:text-primary-container">AYO CROSS</div>
+<div class="flex gap-3">
+<button class="p-2 hover:bg-[#e8e8e7] dark:hover:bg-[#3b3a39] rounded-full transition-colors active:scale-90 duration-200 ease-out">
+<span class="material-symbols-outlined text-primary dark:text-primary-container">local_fire_department</span>
+</button>
+<button class="p-2 hover:bg-[#e8e8e7] dark:hover:bg-[#3b3a39] rounded-full transition-colors active:scale-90 duration-200 ease-out">
+<span class="material-symbols-outlined text-primary dark:text-primary-container">settings</span>
+</button>
+</div>
+</header>
+<main class="px-6 pt-4 max-w-2xl mx-auto space-y-8">
+<section class="relative bg-surface-container rounded-lg p-6 flex items-center justify-between overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant font-headline">Current Daily Streak</p>
+<div class="flex items-center gap-2">
+<span class="text-4xl font-black font-headline text-primary">12</span>
+<span class="material-symbols-outlined text-error-container text-3xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<p class="text-sm font-medium text-on-surface-variant">Best: 24 Days</p>
+</div>
+<div class="h-16 w-px bg-outline-variant opacity-20"></div>
+<div class="text-right">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant font-headline">Coins</p>
+<div class="flex items-center gap-2 justify-end">
+<span class="text-2xl font-bold font-headline">1,450</span>
+<span class="material-symbols-outlined text-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<div class="flex justify-between items-end px-2">
+<div>
+<h2 class="text-3xl font-black font-headline text-on-surface">October</h2>
+<p class="text-sm font-medium text-on-surface-variant">2023 Challenge Collection</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-low rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 bg-surface-container-low rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 bg-surface-container-low p-4 rounded-lg">
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Sun</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Mon</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Tue</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Wed</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Thu</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Fri</div>
+<div class="text-center text-[10px] font-black uppercase text-outline tracking-widest pb-2">Sat</div>
+<div class="aspect-square bg-transparent"></div>
+<div class="aspect-square bg-transparent"></div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20 group cursor-default">
+<span class="text-xs font-bold text-on-surface-variant">1</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20">
+<span class="text-xs font-bold text-on-surface-variant">2</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20">
+<span class="text-xs font-bold text-on-surface-variant">3</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-error-container/10 rounded-sm flex flex-col items-center justify-center relative border-b-2 border-error-container/40 group cursor-pointer hover:bg-error-container/20 transition-colors">
+<span class="text-xs font-bold text-error">4</span>
+<div class="flex items-center gap-0.5 mt-1">
+<span class="text-[10px] font-black text-error">50</span>
+<span class="material-symbols-outlined text-[12px] text-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+</div>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20">
+<span class="text-xs font-bold text-on-surface-variant">5</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20">
+<span class="text-xs font-bold text-on-surface-variant">6</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-sm flex flex-col items-center justify-center relative border-b-2 border-primary-container/20">
+<span class="text-xs font-bold text-on-surface-variant">7</span>
+<span class="material-symbols-outlined text-primary-container text-lg mt-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="aspect-square bg-primary-container ring-4 ring-primary-container/30 rounded-sm flex flex-col items-center justify-center relative transform scale-110 shadow-xl z-10">
+<span class="text-xs font-black text-white">8</span>
+<span class="text-[8px] font-black text-white uppercase tracking-tighter mt-1">Today</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">9</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">10</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">11</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">12</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">13</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">14</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-sm flex flex-col items-center justify-center opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">15</span>
+<span class="material-symbols-outlined text-sm mt-1">lock</span>
+</div>
+</div>
+</section>
+<section class="bg-secondary-container/30 p-6 rounded-lg relative overflow-hidden border-2 border-secondary-container">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline font-black text-secondary text-lg">Monthly Rewards</h3>
+<p class="text-sm font-medium text-on-secondary-container">Solve 15 Puzzles for a Mega Pack</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-3xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">card_giftcard</span>
+</div>
+<div class="w-full bg-surface-container-high h-4 rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary rounded-full" style="width: 60%"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] font-black uppercase text-secondary">9 / 15 Solved</span>
+<span class="text-[10px] font-black uppercase text-on-surface-variant">6 more to go!</span>
+</div>
+</section>
+<div class="fixed bottom-24 left-0 w-full px-6 flex justify-center pointer-events-none">
+<button class="pointer-events-auto bg-gradient-to-r from-primary to-primary-container text-white font-headline font-black text-xl px-10 py-5 rounded-full shadow-2xl shadow-primary-container/40 transform active:scale-95 transition-all flex items-center gap-3">
+<span>Play Today's Challenge</span>
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#f7f6f5]/90 dark:bg-[#1c1b1a]/90 backdrop-blur-xl shadow-[0_-8px_30px_rgba(46,47,47,0.04)] rounded-t-[2.5rem]">
+<a class="flex flex-col items-center justify-center text-[#2e2f2f] dark:text-[#e2e2e1] opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-headline text-[10px] uppercase font-bold tracking-widest mt-1">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#fd8b00] dark:bg-[#8c4a00] text-white rounded-full px-6 py-2 shadow-lg shadow-orange-500/20" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-headline text-[10px] uppercase font-bold tracking-widest mt-1">Daily</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#2e2f2f] dark:text-[#e2e2e1] opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-headline text-[10px] uppercase font-bold tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#2e2f2f] dark:text-[#e2e2e1] opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-headline text-[10px] uppercase font-bold tracking-widest mt-1">Stats</span>
+</a>
+</nav>
+</body></html>
+
+<!-- Daily Challenge Calendar -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AYO CROSS - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .tactile-press:active {
+            transform: scale(0.98);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f7f6f5",
+                      "surface-container": "#e8e8e7",
+                      "tertiary-dim": "#005a4d",
+                      "primary-fixed": "#fd8b00",
+                      "surface-variant": "#dcdddc",
+                      "on-primary-fixed-variant": "#512800",
+                      "inverse-primary": "#fd8b00",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f1f1f0",
+                      "primary-container": "#fd8b00",
+                      "error-dim": "#b92902",
+                      "on-primary-container": "#442100",
+                      "outline": "#767776",
+                      "on-surface": "#2e2f2f",
+                      "surface": "#f7f6f5",
+                      "on-tertiary-fixed-variant": "#006a5a",
+                      "tertiary-fixed": "#6bfde0",
+                      "secondary": "#8930b0",
+                      "on-tertiary-container": "#005f51",
+                      "secondary-fixed": "#f0c1ff",
+                      "secondary-container": "#f0c1ff",
+                      "on-primary": "#fff0e7",
+                      "on-background": "#2e2f2f",
+                      "on-secondary-fixed-variant": "#7d21a4",
+                      "inverse-on-surface": "#9d9d9c",
+                      "primary": "#8c4a00",
+                      "on-surface-variant": "#5b5c5b",
+                      "outline-variant": "#adadac",
+                      "surface-container-highest": "#dcdddc",
+                      "error": "#b02500",
+                      "tertiary-container": "#6bfde0",
+                      "surface-container-high": "#e2e2e1",
+                      "on-tertiary-fixed": "#004a3f",
+                      "on-secondary-container": "#72129a",
+                      "on-secondary-fixed": "#580079",
+                      "background": "#f7f6f5",
+                      "secondary-dim": "#7c20a3",
+                      "on-error": "#ffefec",
+                      "on-error-container": "#520c00",
+                      "surface-dim": "#d4d4d4",
+                      "tertiary": "#006859",
+                      "primary-fixed-dim": "#ea8000",
+                      "primary-dim": "#7b4000",
+                      "surface-tint": "#8c4a00",
+                      "on-secondary": "#ffedff",
+                      "secondary-fixed-dim": "#eaaeff",
+                      "tertiary-fixed-dim": "#5aeed2",
+                      "on-tertiary": "#c2ffef",
+                      "on-primary-fixed": "#180800",
+                      "inverse-surface": "#0d0e0e",
+                      "error-container": "#f95630"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "body": ["Be Vietnam Pro"],
+                      "label": ["Plus Jakarta Sans"]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<nav class="flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50 bg-[#f7f6f5] dark:bg-[#1c1b1b] shadow-[0_4px_20px_rgba(46,47,47,0.04)]">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary tactile-press p-2 hover:bg-surface-container rounded-full transition-all">arrow_back</button>
+<h1 class="font-headline font-bold text-lg tracking-tight text-primary">Settings</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+<span class="hidden md:block font-headline font-black text-[#8c4a00] uppercase tracking-widest">AYO CROSS</span>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="max-w-2xl mx-auto px-6 pt-6 pb-32 space-y-8">
+<!-- Audio & Visuals -->
+<section class="space-y-4">
+<h2 class="px-2 font-headline font-extrabold text-on-surface-variant text-sm uppercase tracking-widest">Audio &amp; Visuals</h2>
+<div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+<!-- Music Toggle -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">music_note</span>
+</div>
+<span class="font-headline font-semibold">Music</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Sound Effects Toggle -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">volume_up</span>
+</div>
+<span class="font-headline font-semibold">Sound Effects</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Haptic Feedback Toggle -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">vibration</span>
+</div>
+<span class="font-headline font-semibold">Haptic Feedback</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Notifications -->
+<section class="space-y-4">
+<h2 class="px-2 font-headline font-extrabold text-on-surface-variant text-sm uppercase tracking-widest">Notifications</h2>
+<div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</div>
+<span class="font-headline font-semibold">Daily Challenge Reminders</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">event</span>
+</div>
+<span class="font-headline font-semibold">Special Events</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Account & Social -->
+<section class="space-y-4">
+<h2 class="px-2 font-headline font-extrabold text-on-surface-variant text-sm uppercase tracking-widest">Account &amp; Social</h2>
+<div class="space-y-3">
+<!-- Linked Account Status -->
+<div class="p-6 bg-surface-container-lowest rounded-lg border-2 border-surface-container shadow-[0_10px_20px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Profile" class="w-16 h-16 rounded-full object-cover" data-alt="close-up portrait of a friendly man with a warm smile, soft natural lighting, professional photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdsbekNufOFo24ck5ShwO4Ifx3X8vK9KveXP2Htd6pvFCQfDwEP5onU46JQJqGKZC_OFgbhe71cwryjj_jevHanXqVM2iLXMx-tinYziG4wXs2M2NdiTCroffmjp5gOwgR-1Qk-HxQqi0xet2q_5csuumMdWPkYH8xaCmCu-uwDy_qhnh_P5tIRUCdB3ynyLVA20AXmPeNezsh3yZTnzXDYf5Se5gwjkMCK-CnSjyScdnm2nD7l7FblgX0ZagO32iYZ2AdxRb87zs"/>
+<div class="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-md">
+<span class="material-symbols-outlined text-blue-600 text-sm">verified</span>
+</div>
+</div>
+<div>
+<p class="font-headline font-bold text-lg">Alex Wordmaster</p>
+<p class="text-on-surface-variant text-sm font-medium">Linked with Google</p>
+</div>
+</div>
+<button class="bg-surface-container text-on-surface-variant px-6 py-2.5 rounded-full font-headline font-bold text-sm tactile-press hover:bg-surface-container-high transition-colors">
+                        Change Username
+                    </button>
+</div>
+<!-- Action Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<button class="group flex items-center justify-center gap-3 p-4 bg-surface-container-lowest rounded-full border-2 border-surface-container hover:bg-primary-container/5 hover:border-primary-container/30 transition-all tactile-press">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">share</span>
+<span class="font-headline font-bold">Invite Friends</span>
+</button>
+<button class="group flex items-center justify-center gap-3 p-4 bg-surface-container-lowest rounded-full border-2 border-error/10 hover:bg-error/5 hover:border-error/30 transition-all tactile-press">
+<span class="material-symbols-outlined text-error group-hover:scale-110 transition-transform">logout</span>
+<span class="font-headline font-bold text-error">Logout</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Support & Info -->
+<section class="space-y-4">
+<h2 class="px-2 font-headline font-extrabold text-on-surface-variant text-sm uppercase tracking-widest">Support &amp; Info</h2>
+<div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">help_center</span>
+</div>
+<span class="font-headline font-semibold">Help &amp; Support</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">policy</span>
+</div>
+<span class="font-headline font-semibold">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT shadow-sm hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">gavel</span>
+</div>
+<span class="font-headline font-semibold">Terms of Service</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</a>
+</div>
+</section>
+<!-- Footer Info -->
+<div class="pt-8 pb-12 text-center space-y-2">
+<p class="font-headline font-bold text-primary uppercase tracking-[0.2em] text-xs">AYO CROSS</p>
+<p class="text-on-surface-variant text-xs font-medium">Version v1.4.2</p>
+<p class="text-outline-variant text-[10px] font-medium uppercase tracking-widest mt-4">Handcrafted with joy © 2024</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#ffffff]/80 dark:bg-[#1c1b1b]/80 backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.05)] rounded-t-[2.5rem]">
+<!-- Play -->
+<button class="flex flex-col items-center justify-center text-[#5a5958] dark:text-[#a1a09f] p-2 hover:text-[#8c4a00] transition-colors active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="extension">extension</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-wider">Play</span>
+</button>
+<!-- Streak -->
+<button class="flex flex-col items-center justify-center text-[#5a5958] dark:text-[#a1a09f] p-2 hover:text-[#8c4a00] transition-colors active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-wider">Streak</span>
+</button>
+<!-- Settings (Active) -->
+<button class="flex flex-col items-center justify-center bg-gradient-to-br from-[#8c4a00] to-[#fd8b00] text-white rounded-full p-3 shadow-lg scale-110 -translate-y-2 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-wider">Settings</span>
+</button>
+<!-- Store -->
+<button class="flex flex-col items-center justify-center text-[#5a5958] dark:text-[#a1a09f] p-2 hover:text-[#8c4a00] transition-colors active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-wider">Store</span>
+</button>
+</nav>
+</body></html>
+
+<!-- Settings Screen -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#7d21a4",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#adadac",
+                    "on-tertiary": "#c2ffef",
+                    "surface-container": "#e8e8e7",
+                    "surface-container-highest": "#dcdddc",
+                    "secondary-fixed-dim": "#eaaeff",
+                    "on-primary-container": "#442100",
+                    "on-surface": "#2e2f2f",
+                    "primary-container": "#fd8b00",
+                    "error": "#b02500",
+                    "surface-bright": "#f7f6f5",
+                    "tertiary": "#006859",
+                    "on-tertiary-fixed": "#004a3f",
+                    "tertiary-fixed-dim": "#5aeed2",
+                    "surface-container-high": "#e2e2e1",
+                    "on-tertiary-fixed-variant": "#006a5a",
+                    "on-primary": "#fff0e7",
+                    "primary-fixed-dim": "#ea8000",
+                    "on-primary-fixed-variant": "#512800",
+                    "on-error-container": "#520c00",
+                    "outline": "#767776",
+                    "surface-container-low": "#f1f1f0",
+                    "on-background": "#2e2f2f",
+                    "background": "#f7f6f5",
+                    "inverse-primary": "#fd8b00",
+                    "on-secondary-fixed": "#580079",
+                    "surface-variant": "#dcdddc",
+                    "primary-dim": "#7b4000",
+                    "secondary-container": "#f0c1ff",
+                    "on-secondary": "#ffedff",
+                    "inverse-surface": "#0d0e0e",
+                    "secondary-dim": "#7c20a3",
+                    "on-primary-fixed": "#180800",
+                    "inverse-on-surface": "#9d9d9c",
+                    "tertiary-fixed": "#6bfde0",
+                    "error-dim": "#b92902",
+                    "primary-fixed": "#fd8b00",
+                    "primary": "#8c4a00",
+                    "surface-tint": "#8c4a00",
+                    "on-error": "#ffefec",
+                    "error-container": "#f95630",
+                    "secondary-fixed": "#f0c1ff",
+                    "on-secondary-container": "#72129a",
+                    "secondary": "#8930b0",
+                    "surface-dim": "#d4d4d4",
+                    "tertiary-dim": "#005a4d",
+                    "surface": "#f7f6f5",
+                    "on-tertiary-container": "#005f51",
+                    "on-surface-variant": "#5b5c5b",
+                    "tertiary-container": "#6bfde0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .victory-glow {
+            text-shadow: 0 0 20px rgba(253, 139, 0, 0.4);
+        }
+        .confetti-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(140, 74, 0, 0.05) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#f7f6f5] dark:bg-stone-950 w-full top-0 sticky z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="text-2xl font-black text-[#8c4a00] dark:text-[#fd8b00] tracking-tighter font-['Plus_Jakarta_Sans']">
+                AYO CROSS
+            </div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container rounded-full px-4 py-1.5 hover:opacity-80 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-[#fd8b00]" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-headline font-bold text-on-surface">1,250</span>
+</div>
+<button class="text-[#8c4a00] dark:text-[#fd8b00] hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">workspace_premium</span>
+</button>
+</div>
+</div>
+<div class="bg-[#e2e2e1] dark:bg-stone-800 h-[1px] w-full"></div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-6 py-8 relative confetti-bg">
+<!-- Abstract Background Light Trails -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-container/10 rounded-full blur-[100px]"></div>
+<div class="absolute top-1/2 -right-24 w-80 h-80 bg-tertiary-container/10 rounded-full blur-[100px]"></div>
+<div class="absolute -bottom-24 left-1/2 w-64 h-64 bg-secondary-container/10 rounded-full blur-[100px]"></div>
+</div>
+<!-- Main Victory Card -->
+<div class="w-full max-w-md bg-surface-container-lowest rounded-lg shadow-[0_20px_40px_rgba(46,47,47,0.06)] p-8 relative z-10 border-b-4 border-primary-container/20">
+<div class="text-center mb-8">
+<h1 class="font-headline font-black text-5xl text-primary tracking-tighter victory-glow mb-6">Victory!</h1>
+<!-- 3 Stars Rating -->
+<div class="flex justify-center gap-4 mb-4">
+<span class="material-symbols-outlined text-6xl text-primary-container drop-shadow-[0_4px_10px_rgba(253,139,0,0.4)]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-7xl text-primary-container -mt-4 drop-shadow-[0_4px_15px_rgba(253,139,0,0.5)]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-6xl text-primary-container drop-shadow-[0_4px_10px_rgba(253,139,0,0.4)]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-headline font-bold text-secondary uppercase tracking-[0.2em] text-sm">Puzzle Completed</p>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 gap-3 mb-8">
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-DEFAULT">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">timer</span>
+<span class="font-medium text-on-surface-variant">Time</span>
+</div>
+<span class="font-headline font-extrabold text-on-surface">01:45</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-DEFAULT">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">target</span>
+<span class="font-medium text-on-surface-variant">Accuracy</span>
+</div>
+<span class="font-headline font-extrabold text-on-surface">95%</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-primary-container/10 rounded-DEFAULT">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-dim" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-medium text-primary-dim">Coins Earned</span>
+</div>
+<span class="font-headline font-extrabold text-primary">+25</span>
+</div>
+</div>
+<!-- Achievements -->
+<div class="mb-10">
+<h3 class="font-headline font-bold text-on-surface-variant text-xs uppercase tracking-widest mb-4 text-center">Achievement Unlocked</h3>
+<div class="flex justify-center">
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-20 h-20 rounded-full bg-gradient-to-br from-tertiary to-tertiary-container flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-white text-4xl">bolt</span>
+</div>
+<span class="font-headline font-bold text-tertiary text-sm">Speed Demon</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-4">
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white font-headline font-extrabold py-5 rounded-full shadow-[0_8px_20px_rgba(140,74,0,0.25)] active:scale-95 transition-all duration-150 flex items-center justify-center gap-2">
+                    Next Level
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="w-full bg-transparent border-2 border-surface-container-high text-on-surface-variant font-headline font-bold py-4 rounded-full hover:bg-surface-container-low active:scale-95 transition-all duration-150">
+                    Main Menu
+                </button>
+</div>
+</div>
+<!-- Decorative Floating Elements -->
+<div class="mt-8 flex gap-3 opacity-40 grayscale pointer-events-none">
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest flex items-center justify-center font-headline font-black text-xl">A</div>
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest flex items-center justify-center font-headline font-black text-xl">Y</div>
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest flex items-center justify-center font-headline font-black text-xl">O</div>
+</div>
+</main>
+<div class="h-32"></div> <!-- Spacer for fixed bottom nav -->
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-8 pb-6 pt-3 bg-[#ffffff]/60 dark:bg-stone-900/60 backdrop-blur-xl shadow-[0_-10px_30px_rgba(46,47,47,0.04)] rounded-t-[2rem]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 py-2 hover:text-[#8c4a00] dark:hover:text-[#fd8b00] active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<!-- Puzzles (Active) -->
+<a class="flex flex-col items-center justify-center bg-[#fd8b00] dark:bg-[#8c4a00] text-white rounded-full px-5 py-2 scale-110 active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="extension" style="font-variation-settings: 'FILL' 1;">extension</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-widest mt-0.5">Puzzles</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 py-2 hover:text-[#8c4a00] dark:hover:text-[#fd8b00] active:scale-90 transition-transform duration-200 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>
+
+<!-- Puzzle Completion Results -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AYO CROSS - Level Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#fd8b00",
+                        "surface-container-highest": "#dcdddc",
+                        "primary": "#8c4a00",
+                        "surface-container-low": "#f1f1f0",
+                        "on-secondary-fixed-variant": "#7d21a4",
+                        "primary-fixed-dim": "#ea8000",
+                        "secondary-container": "#f0c1ff",
+                        "inverse-primary": "#fd8b00",
+                        "outline": "#767776",
+                        "on-tertiary-container": "#005f51",
+                        "error-container": "#f95630",
+                        "surface-dim": "#d4d4d4",
+                        "surface-variant": "#dcdddc",
+                        "tertiary": "#006859",
+                        "secondary-fixed": "#f0c1ff",
+                        "tertiary-dim": "#005a4d",
+                        "on-secondary-container": "#72129a",
+                        "inverse-on-surface": "#9d9d9c",
+                        "on-surface-variant": "#5b5c5b",
+                        "surface-container": "#e8e8e7",
+                        "primary-dim": "#7b4000",
+                        "primary-fixed": "#fd8b00",
+                        "secondary-fixed-dim": "#eaaeff",
+                        "tertiary-container": "#6bfde0",
+                        "error": "#b02500",
+                        "surface-tint": "#8c4a00",
+                        "on-tertiary-fixed": "#004a3f",
+                        "on-background": "#2e2f2f",
+                        "inverse-surface": "#0d0e0e",
+                        "surface-container-high": "#e2e2e1",
+                        "secondary-dim": "#7c20a3",
+                        "on-primary-fixed": "#180800",
+                        "secondary": "#8930b0",
+                        "on-error-container": "#520c00",
+                        "tertiary-fixed": "#6bfde0",
+                        "on-secondary-fixed": "#580079",
+                        "on-secondary": "#ffedff",
+                        "on-primary-fixed-variant": "#512800",
+                        "on-error": "#ffefec",
+                        "outline-variant": "#adadac",
+                        "tertiary-fixed-dim": "#5aeed2",
+                        "on-surface": "#2e2f2f",
+                        "on-primary": "#fff0e7",
+                        "error-dim": "#b92902",
+                        "surface-bright": "#f7f6f5",
+                        "on-tertiary": "#c2ffef",
+                        "on-primary-container": "#442100",
+                        "background": "#f7f6f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f7f6f5",
+                        "on-tertiary-fixed-variant": "#006a5a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            backdrop-filter: blur(12px);
+            background-color: rgba(247, 246, 245, 0.6);
+        }
+        .tile-shadow {
+            box-shadow: 0 4px 0 0 rgba(140, 74, 0, 0.2);
+        }
+        .tile-shadow:active {
+            box-shadow: 0 0px 0 0 transparent;
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-[#f7f6f5] dark:bg-neutral-900 flex justify-between items-center px-6 py-4 max-w-full">
+<div class="flex items-center gap-6">
+<h1 class="text-2xl font-black italic tracking-tighter text-[#8c4a00] dark:text-[#fd8b00]">AYO CROSS</h1>
+<div class="hidden md:flex items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="monetization_on">monetization_on</span>
+<span class="font-headline font-bold text-sm">1,240</span>
+</div>
+<div class="flex items-center gap-2 bg-error-container/10 px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-error-container" data-icon="local_fire_department" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-headline font-bold text-sm text-error-dim">12</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-full hover:bg-[#f1f1f0] dark:hover:bg-neutral-800 transition-colors">
+<span class="material-symbols-outlined text-[#8c4a00] dark:text-[#fd8b00]" data-icon="account_circle">account_circle</span>
+</button>
+<button class="p-2 rounded-full hover:bg-[#f1f1f0] dark:hover:bg-neutral-800 transition-colors">
+<span class="material-symbols-outlined text-[#8c4a00] dark:text-[#fd8b00]" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<div class="bg-[#e2e2e1] dark:bg-neutral-800 h-[2px] w-full"></div>
+<div class="flex min-h-[calc(100vh-74px)]">
+<!-- SideNavBar -->
+<aside class="hidden md:flex fixed left-0 top-18 h-full w-64 bg-[#f7f6f5] dark:bg-neutral-900 border-r border-transparent flex-col z-40 shadow-xl dark:shadow-none py-6">
+<div class="px-6 mb-8">
+<h2 class="text-[#8c4a00] font-black font-headline">Level Select</h2>
+<p class="font-['Be_Vietnam_Pro'] font-medium text-xs text-neutral-500">Earn stars to unlock tiers</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="bg-[#fd8b00] text-white rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-transform duration-200 active:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-sm">Daily Challenge</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-[#e8e8e7] dark:hover:bg-neutral-800 rounded-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-sm">Classic</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-[#e8e8e7] dark:hover:bg-neutral-800 rounded-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-sm">Arcade</span>
+</div>
+<div class="text-neutral-600 dark:text-neutral-400 mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-[#e8e8e7] dark:hover:bg-neutral-800 rounded-full cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span class="font-['Be_Vietnam_Pro'] font-medium text-sm">Themed</span>
+</div>
+</nav>
+<div class="px-4 mt-auto mb-20">
+<button class="w-full bg-secondary-container text-on-secondary-container font-headline font-bold py-3 rounded-full flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+                    Store
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-6 md:p-10 mb-24">
+<!-- Hero Selection Grid -->
+<div class="max-w-5xl mx-auto space-y-12">
+<!-- Daily Challenge Bento Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 relative overflow-hidden rounded-xl bg-primary text-white p-8 flex flex-col justify-between aspect-[2/1] md:aspect-auto">
+<div class="relative z-10">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-bold font-headline uppercase tracking-widest mb-4 inline-block">Daily Quest</span>
+<h2 class="font-headline font-extrabold text-3xl md:text-4xl leading-tight">Nigerian Heritage<br/>Puzzles</h2>
+<p class="mt-2 text-primary-container font-medium opacity-90">Solve today's word riddle to earn 2x coins!</p>
+</div>
+<button class="relative z-10 w-fit mt-6 bg-white text-primary font-headline font-bold px-8 py-3 rounded-full shadow-lg active:scale-95 transition-transform">
+                            Play Now
+                        </button>
+<!-- Decorative Abstract Background -->
+<div class="absolute right-[-20%] top-[-20%] w-64 h-64 bg-primary-container/30 rounded-full blur-3xl"></div>
+<div class="absolute right-[-5%] bottom-[-5%] w-48 h-48 bg-secondary/30 rounded-full blur-3xl"></div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+<div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-inner relative">
+<span class="material-symbols-outlined text-4xl text-primary-container" data-icon="reward" style="font-variation-settings: 'FILL' 1;">rewarded_ads</span>
+<div class="absolute -top-1 -right-1 bg-error-container text-white text-[10px] px-2 py-1 rounded-full font-bold">NEW</div>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">Next Reward</h3>
+<p class="text-sm text-on-surface-variant">4 stars to "Classic Master" badge</p>
+</div>
+<div class="w-full bg-surface-container-highest h-3 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[65%]" style="box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);"></div>
+</div>
+</div>
+</section>
+<!-- Level Selection Grid -->
+<section>
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline font-black text-2xl text-primary">Classic Journey</h2>
+<p class="text-on-surface-variant font-medium">Progress: 14/40 Levels Completed</p>
+</div>
+<button class="text-primary font-headline font-bold flex items-center gap-1 hover:underline">
+                            View All <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+<!-- Level 1 (Completed 3 stars) -->
+<div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-between aspect-square tile-shadow cursor-pointer transition-all hover:scale-[1.02] border border-outline-variant/10">
+<span class="font-headline font-black text-4xl text-primary-container">01</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Completed</span>
+</div>
+<!-- Level 2 (Completed 2 stars) -->
+<div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-between aspect-square tile-shadow cursor-pointer transition-all hover:scale-[1.02] border border-outline-variant/10">
+<span class="font-headline font-black text-4xl text-primary-container">02</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-outline-variant text-xl" data-icon="star">star</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Completed</span>
+</div>
+<!-- Level 3 (Current/Active) -->
+<div class="bg-tertiary-container p-6 rounded-lg flex flex-col items-center justify-between aspect-square ring-4 ring-tertiary/20 tile-shadow cursor-pointer transition-all scale-105 shadow-2xl">
+<span class="font-headline font-black text-4xl text-on-tertiary-container">03</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-on-tertiary-container/30 text-xl" data-icon="star">star</span>
+<span class="material-symbols-outlined text-on-tertiary-container/30 text-xl" data-icon="star">star</span>
+<span class="material-symbols-outlined text-on-tertiary-container/30 text-xl" data-icon="star">star</span>
+</div>
+<span class="bg-on-tertiary-container text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider">Play</span>
+</div>
+<!-- Level 4 (Locked) -->
+<div class="bg-surface-container p-6 rounded-lg flex flex-col items-center justify-center aspect-square opacity-60 grayscale border border-outline-variant/10">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="mt-4 font-headline font-bold text-lg text-on-surface-variant">04</span>
+</div>
+<!-- Level 5 (Locked) -->
+<div class="bg-surface-container p-6 rounded-lg flex flex-col items-center justify-center aspect-square opacity-60 grayscale border border-outline-variant/10">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="mt-4 font-headline font-bold text-lg text-on-surface-variant">05</span>
+</div>
+<!-- Level 6 (Locked) -->
+<div class="bg-surface-container p-6 rounded-lg flex flex-col items-center justify-center aspect-square opacity-60 grayscale border border-outline-variant/10">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="mt-4 font-headline font-bold text-lg text-on-surface-variant">06</span>
+</div>
+</div>
+</section>
+<!-- Category Section -->
+<section class="space-y-6">
+<h2 class="font-headline font-black text-2xl text-secondary">Themed Explorations</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="group relative overflow-hidden rounded-xl h-48 cursor-pointer shadow-lg transition-all hover:translate-y-[-4px]">
+<img alt="Lagos landscape" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="vibrant sunset over a bustling nigerian market with silhouettes of people and colorful textile patterns in foreground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOTK8tY0ZTZ1aWhPN8Zdb5c2TWb8amNuooogyieLHsQ7ug7Z4DGPDppxStsulkCkFM4dYIxMNIh391-JdHdgpzWCMaqC33MtaXbJs-pQTswwjCzh2HdAkkC9wyJU3KnvlXGJr4JT8bJrzjE2t8gRrOStDzse6ghAQbJLVLEkrWFhL9BuBpr7pGor54naH8XF2E3_hJpk-odmkguwhTkCXAGHQ-boMTaHl-ldSjOFwhMc98LgaZGJ9Y2fd-ZBQ5UQDhwLCHYbfHgHs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-headline font-black text-xl uppercase italic">Nigerian Culture</h3>
+<p class="text-secondary-container text-sm font-medium">12 Puzzles • 3 Unlockable Badges</p>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl h-48 cursor-pointer shadow-lg transition-all hover:translate-y-[-4px]">
+<img alt="Global landmarks" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="stylized composition of global landmarks like the eiffel tower and taj mahal in a vibrant pop-art color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPkUgS7lm0iC2Gz-K6NcyjQvxX-J2UazS9r4anlWgUhzfEV-WUNDcnr1NVSTBtnhAa8MbsnXdwAI3k_QEFF8peQCcBEGPfkiWLxf8WB2cdjzin56-4X2cvj1jy7VxCjM00inITeBPTo_5N2A5LiCzxh0wrOP7d2wC4ZlJqakNYvq06A2flGctTY7MBFDfXVtN1tQpcmpOEMxXVr6YnvpFu9Dgp7hP4kL7_9Y9X47OWlteLd0UN3BJR_piqWivIBfsnh1Dy_Lb5L3Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-headline font-black text-xl uppercase italic">Global Wonders</h3>
+<p class="text-primary-container text-sm font-medium">18 Puzzles • Travel the world</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-6 px-4 bg-[#f7f6f5]/90 dark:bg-neutral-900/90 backdrop-blur-md shadow-[0_-8px_30px_rgb(46,47,47,0.06)] rounded-t-[2rem] md:hidden">
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 p-2 hover:opacity-80 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#fd8b00] text-white rounded-full w-14 h-14 -mt-6 shadow-lg shadow-[#fd8b00]/30 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-3xl" data-icon="extension">extension</span>
+<!-- Label hidden for active FAB state usually, but following JSON structure -->
+<span class="sr-only">Puzzles</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 p-2 hover:opacity-80 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="star">star</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest mt-1">Events</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 p-2 hover:opacity-80 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="leaderboard">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest mt-1">Rankings</span>
+</a>
+</nav>
+<!-- Hidden label for Puzzles for accessibility and alignment with bottom nav rules -->
+<div class="md:hidden fixed bottom-1 left-1/2 -translate-x-1/2 pointer-events-none">
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest text-[#fd8b00]">Puzzles</span>
+</div>
+</body></html>
