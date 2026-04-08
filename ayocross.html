@@ -1,1324 +1,1635 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-<link rel="manifest" href="manifest.json">    
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ayo Cross</title>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>AYO CROSS</title>
+<link rel="manifest" href="manifest.json"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{'primary':'#8c4a00','primary-container':'#fd8b00','primary-fixed':'#fd8b00','primary-fixed-dim':'#ea8000','primary-dim':'#7b4000','on-primary':'#fff0e7','on-primary-container':'#442100','on-primary-fixed':'#180800','on-primary-fixed-variant':'#512800','secondary':'#8930b0','secondary-container':'#f0c1ff','secondary-fixed':'#f0c1ff','secondary-fixed-dim':'#eaaeff','secondary-dim':'#7c20a3','on-secondary':'#ffedff','on-secondary-container':'#72129a','on-secondary-fixed':'#580079','on-secondary-fixed-variant':'#7d21a4','tertiary':'#006859','tertiary-container':'#6bfde0','tertiary-fixed':'#6bfde0','tertiary-fixed-dim':'#5aeed2','tertiary-dim':'#005a4d','on-tertiary':'#c2ffef','on-tertiary-container':'#005f51','on-tertiary-fixed':'#004a3f','on-tertiary-fixed-variant':'#006a5a','background':'#f7f6f5','surface':'#f7f6f5','surface-bright':'#f7f6f5','surface-dim':'#d4d4d4','surface-variant':'#dcdddc','surface-tint':'#8c4a00','surface-container-lowest':'#ffffff','surface-container-low':'#f1f1f0','surface-container':'#e8e8e7','surface-container-high':'#e2e2e1','surface-container-highest':'#dcdddc','on-surface':'#2e2f2f','on-surface-variant':'#5b5c5b','on-background':'#2e2f2f','outline':'#767776','outline-variant':'#adadac','error':'#b02500','error-container':'#f95630','error-dim':'#b92902','on-error':'#ffefec','on-error-container':'#520c00','inverse-surface':'#0d0e0e','inverse-on-surface':'#9d9d9c','inverse-primary':'#fd8b00'},borderRadius:{'DEFAULT':'1rem','lg':'2rem','xl':'3rem','full':'9999px'},fontFamily:{'headline':['Plus Jakarta Sans','sans-serif'],'body':['Be Vietnam Pro','sans-serif'],'label':['Plus Jakarta Sans','sans-serif']}}}}
+</script>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #ffe0b3, #ffffff);
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    transition: background 0.5s ease;
-}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+body{min-height:max(844px,100dvh);overscroll-behavior:none;font-family:'Be Vietnam Pro',sans-serif;transition:background 0.4s ease}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;user-select:none}
+.screen{display:none;min-height:100dvh}
+.screen.active{display:block}
+.letter-tile{box-shadow:0 4px 0 0 var(--tile-shadow,#ea8000);transition:transform 0.08s,box-shadow 0.08s;cursor:pointer;user-select:none}
+.letter-tile:active{transform:translateY(3px);box-shadow:0 1px 0 0 var(--tile-shadow,#ea8000)}
+.letter-tile.selected{background-color:var(--accent,#fd8b00)!important;color:white!important}
+.ans-slot{transition:all 0.15s ease;display:inline-flex;align-items:center;justify-content:center}
+.ans-slot.filled{background:white;border-color:var(--accent,#fd8b00)}
+.ans-slot.correct{background:#e8f5e9;border-color:#43a047;animation:pop 0.2s ease}
+.tog{width:52px;height:30px;border-radius:9999px;background:#e8e8e7;position:relative;cursor:pointer;transition:background 0.2s;border:none;padding:0;flex-shrink:0}
+.tog.on{background:var(--accent,#fd8b00)}
+.tog::after{content:'';position:absolute;width:22px;height:22px;border-radius:50%;background:white;top:4px;left:4px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.tog.on::after{left:26px}
+.timer-fill{transition:width 1s linear}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:9999;background:#2e2f2f;color:white;padding:10px 20px;border-radius:9999px;font-family:'Plus Jakarta Sans';font-size:14px;font-weight:600;opacity:0;transition:opacity 0.25s;pointer-events:none;white-space:nowrap;max-width:85vw;text-align:center}
+#toast.show{opacity:1}
+.confetti-p{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9998}
+.nav-active{color:var(--accent,#fd8b00)!important}
+.nav-active .nav-icon{font-variation-settings:'FILL' 1!important}
+.nav-active .nav-lbl{color:var(--accent,#fd8b00)!important}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+@keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes confetti-fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(105vh) rotate(720deg)}}
+@keyframes snowfall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+@keyframes leaf-fall{0%{transform:translateY(-20px) rotate(0deg) translateX(0);opacity:0.9}50%{transform:translateY(50vh) rotate(180deg) translateX(30px);opacity:0.7}100%{transform:translateY(110vh) rotate(360deg) translateX(-20px);opacity:0}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes desert-shimmer{0%,100%{opacity:0.3}50%{opacity:0.7}}
+.fade-up{animation:fadeUp 0.35s ease forwards}
+.ob-slide{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;min-height:60vh}
+.ob-slide.active{display:flex}
 
-.container {
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-}
+/* ── THEME: DARK NIGHT ── */
+html[data-theme="dark"]{--accent:#a78bfa;--tile-shadow:#7c3aed;--bg-primary:#0f0f1a;--bg-card:#1a1a2e;--text-primary:#e2e8f0;--text-muted:#94a3b8}
+html[data-theme="dark"] body{background:#0f0f1a!important;color:#e2e8f0!important}
+html[data-theme="dark"] header,html[data-theme="dark"] nav{background:#0f0f1a!important;border-color:#1e1e3a!important}
+html[data-theme="dark"] .bg-background,html[data-theme="dark"] .bg-surface{background-color:#0f0f1a!important}
+html[data-theme="dark"] .bg-surface-container-lowest{background-color:#1a1a2e!important}
+html[data-theme="dark"] .bg-surface-container-low{background-color:#16162a!important}
+html[data-theme="dark"] .bg-surface-container{background-color:#1e1e3a!important}
+html[data-theme="dark"] .bg-surface-container-high{background-color:#252545!important}
+html[data-theme="dark"] .text-on-surface,.html[data-theme="dark"] .text-primary{color:#e2e8f0!important}
+html[data-theme="dark"] .text-on-surface-variant{color:#94a3b8!important}
+html[data-theme="dark"] .text-primary-container{color:#a78bfa!important}
+html[data-theme="dark"] .bg-primary-container{background:#7c3aed!important}
+html[data-theme="dark"] .letter-tile{background:#1a1a2e!important;border-color:#7c3aed!important;color:#e2e8f0!important}
 
-h1 {
-    color: #ff8800;
-    margin-bottom: 5px;
-}
+/* ── THEME: OCEAN BLUE ── */
+html[data-theme="ocean"]{--accent:#0ea5e9;--tile-shadow:#0369a1;--bg-primary:#f0f9ff;--bg-card:#e0f2fe}
+html[data-theme="ocean"] body{background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%)!important}
+html[data-theme="ocean"] .text-primary{color:#0369a1!important}
+html[data-theme="ocean"] .text-primary-container{color:#0ea5e9!important}
+html[data-theme="ocean"] .bg-primary-container{background:#0ea5e9!important}
+html[data-theme="ocean"] .bg-surface-container-lowest{background:rgba(255,255,255,0.85)!important;backdrop-filter:blur(8px)}
+html[data-theme="ocean"] .bg-surface-container-low{background:rgba(224,242,254,0.8)!important}
+html[data-theme="ocean"] .letter-tile{background:rgba(255,255,255,0.9)!important;border-color:#0ea5e9!important;color:#0369a1!important}
+html[data-theme="ocean"] header{background:rgba(240,249,255,0.9)!important;backdrop-filter:blur(12px)}
 
-#level {
-    font-size: 14px;
-    color: #555;
-}
+/* ── THEME: SUNSET PINK ── */
+html[data-theme="sunset"]{--accent:#f43f5e;--tile-shadow:#be123c;--bg-primary:#fff1f2}
+html[data-theme="sunset"] body{background:linear-gradient(135deg,#fff1f2 0%,#ffe4e6 50%,#fecdd3 100%)!important}
+html[data-theme="sunset"] .text-primary{color:#be123c!important}
+html[data-theme="sunset"] .text-primary-container{color:#f43f5e!important}
+html[data-theme="sunset"] .bg-primary-container{background:#f43f5e!important}
+html[data-theme="sunset"] .bg-surface-container-lowest{background:rgba(255,255,255,0.88)!important}
+html[data-theme="sunset"] .bg-surface-container-low{background:rgba(255,228,230,0.85)!important}
+html[data-theme="sunset"] .letter-tile{background:rgba(255,255,255,0.9)!important;border-color:#f43f5e!important;color:#be123c!important}
+html[data-theme="sunset"] header{background:rgba(255,241,242,0.9)!important;backdrop-filter:blur(12px)}
 
-#coins {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+/* ── THEME: FOREST ── */
+html[data-theme="forest"]{--accent:#16a34a;--tile-shadow:#15803d;--bg-primary:#f0fdf4}
+html[data-theme="forest"] body{background:linear-gradient(160deg,#052e16 0%,#14532d 30%,#166534 60%,#4d7c0f 100%)!important;color:#f0fdf4!important}
+html[data-theme="forest"] header,html[data-theme="forest"] nav{background:rgba(5,46,22,0.92)!important;backdrop-filter:blur(12px)}
+html[data-theme="forest"] .bg-background,html[data-theme="forest"] .bg-surface{background:transparent!important}
+html[data-theme="forest"] .bg-surface-container-lowest{background:rgba(20,83,45,0.75)!important;backdrop-filter:blur(8px);border-color:rgba(22,163,74,0.3)!important}
+html[data-theme="forest"] .bg-surface-container-low{background:rgba(5,46,22,0.7)!important;backdrop-filter:blur(6px)}
+html[data-theme="forest"] .bg-surface-container{background:rgba(20,83,45,0.6)!important}
+html[data-theme="forest"] .text-on-surface{color:#f0fdf4!important}
+html[data-theme="forest"] .text-on-surface-variant{color:#bbf7d0!important}
+html[data-theme="forest"] .text-primary{color:#4ade80!important}
+html[data-theme="forest"] .text-primary-container{color:#86efac!important}
+html[data-theme="forest"] .bg-primary-container{background:#16a34a!important}
+html[data-theme="forest"] .letter-tile{background:rgba(20,83,45,0.8)!important;border-color:#16a34a!important;color:#f0fdf4!important}
 
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    animation: fadeIn 0.5s ease;
-}
+/* ── THEME: MIDNIGHT LAGOS ── */
+html[data-theme="midnight"]{--accent:#f59e0b;--tile-shadow:#b45309;--bg-primary:#020617}
+html[data-theme="midnight"] body{background:linear-gradient(180deg,#020617 0%,#0f172a 40%,#1e1b4b 100%)!important;color:#f1f5f9!important}
+html[data-theme="midnight"] header,html[data-theme="midnight"] nav{background:rgba(2,6,23,0.92)!important;backdrop-filter:blur(12px)}
+html[data-theme="midnight"] .bg-background,html[data-theme="midnight"] .bg-surface{background:transparent!important}
+html[data-theme="midnight"] .bg-surface-container-lowest{background:rgba(15,23,42,0.85)!important;backdrop-filter:blur(8px)}
+html[data-theme="midnight"] .bg-surface-container-low{background:rgba(2,6,23,0.8)!important}
+html[data-theme="midnight"] .text-on-surface{color:#f1f5f9!important}
+html[data-theme="midnight"] .text-on-surface-variant{color:#94a3b8!important}
+html[data-theme="midnight"] .text-primary{color:#f59e0b!important}
+html[data-theme="midnight"] .text-primary-container{color:#fbbf24!important}
+html[data-theme="midnight"] .bg-primary-container{background:#d97706!important}
+html[data-theme="midnight"] .letter-tile{background:rgba(15,23,42,0.9)!important;border-color:#f59e0b!important;color:#f1f5f9!important}
 
-.box {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 45px;
-    height: 45px;
-    margin: 4px;
-    border-radius: 8px;
-    background: #f2f2f2;
-    font-size: 22px;
-    font-weight: bold;
-}
+/* ── THEME: DESERT GOLD ── */
+html[data-theme="desert"]{--accent:#d97706;--tile-shadow:#b45309;--bg-primary:#fffbeb}
+html[data-theme="desert"] body{background:linear-gradient(160deg,#fffbeb 0%,#fef3c7 40%,#fde68a 70%,#fcd34d 100%)!important}
+html[data-theme="desert"] .text-primary{color:#92400e!important}
+html[data-theme="desert"] .text-primary-container{color:#d97706!important}
+html[data-theme="desert"] .bg-primary-container{background:#d97706!important}
+html[data-theme="desert"] .bg-surface-container-lowest{background:rgba(255,255,255,0.8)!important}
+html[data-theme="desert"] .bg-surface-container-low{background:rgba(254,243,199,0.8)!important}
+html[data-theme="desert"] .letter-tile{background:rgba(255,251,235,0.95)!important;border-color:#d97706!important;color:#92400e!important}
+html[data-theme="desert"] header{background:rgba(255,251,235,0.9)!important;backdrop-filter:blur(12px)}
 
-.letters button {
-    width: 60px;
-    height: 50px;
-    margin: 5px;
-    border-radius: 10px;
-    border: none;
-    background: #ff9900;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-}
+/* ── THEME: SNOWY CASTLE (1000 coins premium) ── */
+html[data-theme="snowy"]{--accent:#60a5fa;--tile-shadow:#2563eb;--bg-primary:#eff6ff}
+html[data-theme="snowy"] body{background:linear-gradient(180deg,#dbeafe 0%,#eff6ff 30%,#f0f9ff 60%,#e0f2fe 100%)!important;color:#1e3a5f!important}
+html[data-theme="snowy"] header{background:rgba(219,234,254,0.85)!important;backdrop-filter:blur(16px);border-bottom:1px solid rgba(147,197,253,0.4)!important}
+html[data-theme="snowy"] nav{background:rgba(219,234,254,0.88)!important;backdrop-filter:blur(16px)}
+html[data-theme="snowy"] .bg-background,html[data-theme="snowy"] .bg-surface{background:transparent!important}
+html[data-theme="snowy"] .bg-surface-container-lowest{background:rgba(255,255,255,0.65)!important;backdrop-filter:blur(12px);border:1px solid rgba(147,197,253,0.3)!important;box-shadow:0 4px 24px rgba(96,165,250,0.1)!important}
+html[data-theme="snowy"] .bg-surface-container-low{background:rgba(219,234,254,0.6)!important;backdrop-filter:blur(8px)}
+html[data-theme="snowy"] .bg-surface-container{background:rgba(191,219,254,0.5)!important}
+html[data-theme="snowy"] .text-on-surface{color:#1e3a5f!important}
+html[data-theme="snowy"] .text-on-surface-variant{color:#3b82a0!important}
+html[data-theme="snowy"] .text-primary{color:#1d4ed8!important}
+html[data-theme="snowy"] .text-primary-container{color:#60a5fa!important}
+html[data-theme="snowy"] .bg-primary-container{background:#3b82f6!important}
+html[data-theme="snowy"] .letter-tile{background:rgba(255,255,255,0.75)!important;backdrop-filter:blur(4px);border:1.5px solid rgba(96,165,250,0.5)!important;color:#1d4ed8!important;box-shadow:0 4px 0 0 #2563eb,0 0 12px rgba(96,165,250,0.2)!important}
+html[data-theme="snowy"] .text-outline{color:#60a5fa!important}
+html[data-theme="snowy"] .border-outline-variant{border-color:rgba(147,197,253,0.4)!important}
 
-.letters button:hover {
-    background: #ff7700;
-}
-
-.letters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.shuffle { background: #70a1ff; }
-
-@media (max-width: 600px) {
-    .container { max-width: 100%; padding: 10px; }
-    .box, .letters button { width: 48px; height: 48px; margin: 4px; font-size: 18px; }
-    .card { padding: 15px; }
-    .actions button { font-size: 14px; padding: 10px; }
-    input[type="text"] { font-size: 16px; /* Prevents zoom on iOS */ }
-}
-
-.actions button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.hint { background: #ffd966; }
-.ad { background: #66ccff; }
-.skip { background: #ff6666; }
-
-.actions button:hover {
-    opacity: 0.9;
-}
-
-#theme {
-    font-weight: bold;
-    color: #ff8800;
-    margin-bottom: 10px;
-}
-
-#progress {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
-}
-
-#timer, #streak, #bonus-info {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-#timer span, #streak span, #bonus-info span {
-    font-weight: bold;
-}
-
-.letters button.selected {
-    background: #c76d00;
-}
-
-.word-section {
-    margin-bottom: 20px;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 10px;
-}
-
-.word-section .clue {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.word-section .answer {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.word-section .letters {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.win {
-    animation: pop 0.4s ease;
-}
-
-@keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); background: #c8ffcc; }
-    100% { transform: scale(1); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
+/* Theme animation canvas */
+#theme-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.screen.active{position:relative;z-index:1}
+#bottom-nav{position:relative;z-index:10}
 </style>
 </head>
+<body class="bg-background font-body text-on-surface antialiased overflow-x-hidden">
 
-<body>
+<!-- Theme animation canvas -->
+<canvas id="theme-canvas"></canvas>
+<div id="toast"></div>
 
-<div class="container">
-
-<h1>AYO CROSS</h1>
-<div id="pack-selection"></div>
-<div id="mode-selection"></div>
-<div id="daily"></div>
-<div id="level"></div>
-<div id="coins"></div>
-<div id="timer"></div>
-<div id="streak"></div>
-<div id="bonus-info"></div>
-
-<div class="card">
-    <p id="theme"></p>
-
-    <div id="words-container"></div>
-
-    <div class="actions">
-        <button class="hint" onclick="useHint()">💡 Hint (-5)</button>
-        <button class="ad" onclick="watchAd()">📺 Watch Ad (+10)</button>
-        <button class="shuffle" onclick="shuffleLetters()">🔀 Shuffle</button>
-        <button class="skip" onclick="nextLevel()">⏭ Skip</button>
+<!-- ══════════════ ONBOARDING ══════════════ -->
+<div id="screen-onboarding" class="screen bg-background flex flex-col">
+  <div class="flex-1 relative overflow-hidden">
+    <div class="ob-slide active" id="ob-slide-0">
+      <div class="w-28 h-28 bg-primary-container rounded-full flex items-center justify-center mb-8 shadow-xl"><span class="font-headline font-black text-4xl text-white">AC</span></div>
+      <h1 class="font-headline font-black text-4xl text-primary mb-4 tracking-tight">AYO CROSS</h1>
+      <p class="text-on-surface-variant font-medium text-lg leading-relaxed max-w-xs">The Nigerian word puzzle game. Test your wits from Lagos to the world stage.</p>
     </div>
+    <div class="ob-slide" id="ob-slide-1">
+      <h2 class="font-headline font-black text-3xl text-on-surface mb-2">Who are you?</h2>
+      <p class="text-on-surface-variant mb-6 font-medium">Pick an avatar and enter your name</p>
+      <div class="flex gap-3 flex-wrap justify-center mb-6">
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦁">🦁</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦊">🦊</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐯">🐯</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦅">🦅</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐉">🐉</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦋">🦋</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐺">🐺</button>
+        <button class="ob-av w-16 h-16 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦜">🦜</button>
+      </div>
+      <input id="ob-name-input" type="text" maxlength="16" placeholder="Your name..."
+        class="w-full max-w-xs px-5 py-4 rounded-full bg-surface-container-lowest border-2 border-outline-variant font-headline font-semibold text-center text-on-surface focus:border-primary-container focus:outline-none text-lg"/>
+    </div>
+    <div class="ob-slide" id="ob-slide-2">
+      <h2 class="font-headline font-black text-3xl text-on-surface mb-2">What's your vibe?</h2>
+      <p class="text-on-surface-variant mb-6 font-medium">Choose your starting category</p>
+      <div class="flex flex-col gap-3 w-full max-w-xs">
+        <button class="ob-pack flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border-2 border-outline-variant transition-all text-left" data-pack="Nigerian"><span class="text-3xl">🇳🇬</span><div><div class="font-headline font-bold text-on-surface">Nigerian</div><div class="text-sm text-on-surface-variant">Culture, food & history</div></div></button>
+        <button class="ob-pack flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border-2 border-outline-variant transition-all text-left" data-pack="English"><span class="text-3xl">📘</span><div><div class="font-headline font-bold text-on-surface">English</div><div class="text-sm text-on-surface-variant">Words & vocabulary</div></div></button>
+        <button class="ob-pack flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border-2 border-outline-variant transition-all text-left" data-pack="Global"><span class="text-3xl">🌍</span><div><div class="font-headline font-bold text-on-surface">Global</div><div class="text-sm text-on-surface-variant">World knowledge & trivia</div></div></button>
+        <button class="ob-pack flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest border-2 border-outline-variant transition-all text-left" data-pack="All"><span class="text-3xl">🎲</span><div><div class="font-headline font-bold text-on-surface">Mix it up</div><div class="text-sm text-on-surface-variant">A little of everything</div></div></button>
+      </div>
+    </div>
+    <div class="ob-slide" id="ob-slide-3">
+      <div id="ob-ready-av" class="w-24 h-24 text-6xl flex items-center justify-center rounded-full bg-surface-container mb-5">🦁</div>
+      <h2 class="font-headline font-black text-3xl text-on-surface mb-2">You're set, <span id="ob-ready-name">Player</span>!</h2>
+      <p class="text-on-surface-variant font-medium mb-6">You start with <span class="text-primary-container font-bold">50 coins</span> and <span class="text-primary-container font-bold">3 hints</span>.</p>
+      <div class="flex gap-3">
+        <div class="flex flex-col items-center p-4 rounded-lg bg-surface-container-lowest w-24"><span class="material-symbols-outlined text-primary-container text-2xl mb-1" style="font-variation-settings:'FILL' 1">monetization_on</span><span class="font-headline font-black text-xl">50</span><span class="text-xs text-on-surface-variant">Coins</span></div>
+        <div class="flex flex-col items-center p-4 rounded-lg bg-surface-container-lowest w-24"><span class="material-symbols-outlined text-tertiary text-2xl mb-1" style="font-variation-settings:'FILL' 1">lightbulb</span><span class="font-headline font-black text-xl">3</span><span class="text-xs text-on-surface-variant">Hints</span></div>
+        <div class="flex flex-col items-center p-4 rounded-lg bg-surface-container-lowest w-24"><span class="material-symbols-outlined text-error-container text-2xl mb-1" style="font-variation-settings:'FILL' 1">local_fire_department</span><span class="font-headline font-black text-xl">0</span><span class="text-xs text-on-surface-variant">Streak</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="px-8 pb-10 space-y-3">
+    <div class="flex justify-center gap-2 mb-2" id="ob-dots">
+      <div class="w-8 h-2 rounded-full bg-primary-container transition-all" data-dot="0"></div>
+      <div class="w-2 h-2 rounded-full bg-surface-container-high transition-all" data-dot="1"></div>
+      <div class="w-2 h-2 rounded-full bg-surface-container-high transition-all" data-dot="2"></div>
+      <div class="w-2 h-2 rounded-full bg-surface-container-high transition-all" data-dot="3"></div>
+    </div>
+    <button id="ob-btn" onclick="obNext()" class="w-full py-5 rounded-full bg-primary-container text-white font-headline font-extrabold text-lg shadow-[0_6px_0_#ea8000] active:shadow-none active:translate-y-1 transition-all duration-75">Get Started</button>
+    <button id="ob-skip" onclick="obSkip()" class="w-full py-2 text-on-surface-variant font-label font-bold text-sm">Skip</button>
+  </div>
 </div>
 
+<!-- ══════════════ HOME ══════════════ -->
+<div id="screen-home" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
+    <h1 class="font-headline font-black text-2xl text-primary uppercase tracking-tight">AYO CROSS</h1>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+        <span class="material-symbols-outlined text-error-container text-base" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+        <span class="font-headline font-bold text-sm" id="h-streak">0</span>
+      </div>
+      <div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+        <span class="material-symbols-outlined text-primary-container text-base" style="font-variation-settings:'FILL' 1">monetization_on</span>
+        <span class="font-headline font-bold text-sm" id="h-coins">50</span>
+      </div>
+      <button onclick="showScreen('screen-profile')" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-xl active:scale-90 transition-transform" id="h-avatar">🦁</button>
+    </div>
+  </header>
+  <main class="px-6 pt-2 space-y-5">
+    <!-- Daily card — always Normal mode, no mode selector -->
+    <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary to-primary-dim p-6 text-white cursor-pointer active:scale-[0.98] transition-transform" onclick="startDaily()">
+      <div class="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-8 -mt-8"></div>
+      <div class="relative z-10">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">calendar_today</span><span class="font-label font-bold text-xs uppercase tracking-widest opacity-80">Daily Challenge</span></div>
+          <span class="text-xs font-bold bg-white/20 px-2 py-1 rounded-full" id="h-daily-badge">NORMAL</span>
+        </div>
+        <h2 class="font-headline font-black text-xl mb-1" id="h-daily-title">Today's Puzzle</h2>
+        <p class="text-white/80 text-sm" id="h-daily-sub">+20 bonus coins · Tap to play</p>
+      </div>
+    </div>
+
+    <!-- Category cards — each opens its own screen -->
+    <div>
+      <h2 class="font-headline font-black text-lg text-on-surface mb-3">Play a Category</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="openCategory('Nigerian')" class="relative overflow-hidden rounded-lg h-28 cursor-pointer active:scale-[0.97] transition-transform text-left">
+          <div class="absolute inset-0 bg-gradient-to-br from-green-700 to-emerald-500"></div>
+          <div class="absolute inset-0 flex flex-col justify-end p-4"><span class="text-2xl mb-1">🇳🇬</span><h3 class="text-white font-headline font-black text-base uppercase leading-tight">Nigerian</h3></div>
+        </button>
+        <button onclick="openCategory('English')" class="relative overflow-hidden rounded-lg h-28 cursor-pointer active:scale-[0.97] transition-transform text-left">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-700 to-violet-500"></div>
+          <div class="absolute inset-0 flex flex-col justify-end p-4"><span class="text-2xl mb-1">📘</span><h3 class="text-white font-headline font-black text-base uppercase leading-tight">English</h3></div>
+        </button>
+        <button onclick="openCategory('Global')" class="relative overflow-hidden rounded-lg h-28 cursor-pointer active:scale-[0.97] transition-transform text-left">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-700 to-sky-500"></div>
+          <div class="absolute inset-0 flex flex-col justify-end p-4"><span class="text-2xl mb-1">🌍</span><h3 class="text-white font-headline font-black text-base uppercase leading-tight">Global</h3></div>
+        </button>
+        <button onclick="openCategory('All')" class="relative overflow-hidden rounded-lg h-28 cursor-pointer active:scale-[0.97] transition-transform text-left">
+          <div class="absolute inset-0 bg-gradient-to-br from-orange-600 to-amber-500"></div>
+          <div class="absolute inset-0 flex flex-col justify-end p-4"><span class="text-2xl mb-1">🎲</span><h3 class="text-white font-headline font-black text-base uppercase leading-tight">All</h3></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-surface-container-lowest rounded-lg p-3 text-center border border-outline-variant/10">
+        <div class="font-headline font-black text-xl text-on-surface" id="h-total-levels">0</div>
+        <div class="text-xs text-on-surface-variant font-medium">Levels Done</div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-lg p-3 text-center border border-outline-variant/10">
+        <div class="font-headline font-black text-xl text-on-surface" id="h-streak-stat">0</div>
+        <div class="text-xs text-on-surface-variant font-medium">Day Streak</div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-lg p-3 text-center border border-outline-variant/10">
+        <div class="font-headline font-black text-xl text-on-surface" id="h-total-coins">0</div>
+        <div class="text-xs text-on-surface-variant font-medium">Total Coins</div>
+      </div>
+    </div>
+  </main>
 </div>
+
+<!-- ══════════════ CATEGORY SCREEN ══════════════ -->
+<div id="screen-category" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4 flex items-center gap-3">
+    <button onclick="showScreen('screen-home')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all">
+      <span class="material-symbols-outlined text-on-surface">arrow_back</span>
+    </button>
+    <div class="flex-1">
+      <h1 class="font-headline font-bold text-lg text-on-surface" id="cat-title">Nigerian</h1>
+      <p class="text-xs text-on-surface-variant font-medium" id="cat-subtitle">Choose a mode then tap a level</p>
+    </div>
+    <div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+      <span class="material-symbols-outlined text-primary-container text-base" style="font-variation-settings:'FILL' 1">monetization_on</span>
+      <span class="font-headline font-bold text-sm" id="cat-coins">50</span>
+    </div>
+  </header>
+  <main class="px-6 pt-2 space-y-5">
+    <!-- Mode selector — horizontal pill scroll -->
+    <div>
+      <p class="font-label font-bold text-xs uppercase tracking-widest text-on-surface-variant mb-2">Select Mode</p>
+      <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="cat-mode-row"></div>
+    </div>
+    <!-- Level grid for this category -->
+    <div>
+      <div class="flex justify-between items-center mb-3">
+        <p class="font-headline font-bold text-on-surface">Levels</p>
+        <p class="text-xs text-on-surface-variant font-medium" id="cat-progress">0/0 completed</p>
+      </div>
+      <div class="grid grid-cols-3 gap-3" id="cat-level-grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ MODE RULES SCREEN ══════════════ -->
+<div id="screen-rules" class="screen bg-background flex flex-col">
+  <header class="bg-background px-6 py-4 flex items-center gap-3">
+    <button id="rules-back-btn" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all">
+      <span class="material-symbols-outlined text-on-surface">arrow_back</span>
+    </button>
+    <h1 class="font-headline font-bold text-lg text-on-surface" id="rules-title">Mode Rules</h1>
+  </header>
+  <div class="flex-1 px-6 py-4 flex flex-col items-center justify-center space-y-6">
+    <!-- Mode icon + name -->
+    <div class="w-24 h-24 rounded-full flex items-center justify-center text-5xl" id="rules-icon-wrap">⏱</div>
+    <div class="text-center">
+      <h2 class="font-headline font-black text-3xl text-on-surface mb-2" id="rules-mode-name">Timed</h2>
+      <p class="text-on-surface-variant font-medium leading-relaxed max-w-xs" id="rules-desc">Rules go here.</p>
+    </div>
+    <!-- Bullet rules -->
+    <div class="w-full max-w-xs space-y-3" id="rules-bullets"></div>
+    <!-- Duel name inputs (hidden unless duel) -->
+    <div id="duel-names" class="w-full max-w-xs space-y-3" style="display:none">
+      <input id="duel-p1" type="text" maxlength="12" placeholder="Player 1 name..." class="w-full px-4 py-3 rounded-full bg-surface-container border border-outline-variant font-headline font-semibold text-on-surface focus:border-primary-container focus:outline-none"/>
+      <input id="duel-p2" type="text" maxlength="12" placeholder="Player 2 name..." class="w-full px-4 py-3 rounded-full bg-surface-container border border-outline-variant font-headline font-semibold text-on-surface focus:border-primary-container focus:outline-none"/>
+    </div>
+  </div>
+  <div class="px-6 pb-10 space-y-3">
+    <button onclick="startFromRules()" class="w-full py-5 rounded-full bg-primary-container text-white font-headline font-extrabold text-xl shadow-[0_6px_0_#ea8000] active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined text-2xl">play_arrow</span> Start Playing
+    </button>
+    <button onclick="showScreen('screen-category')" class="w-full py-2 text-on-surface-variant font-label font-bold text-sm">Choose different mode</button>
+  </div>
+</div>
+
+<!-- ══════════════ GAME ══════════════ -->
+<div id="screen-game" class="screen bg-background pb-36">
+  <header class="bg-background sticky top-0 z-40 px-4 py-3 flex justify-between items-center">
+    <button onclick="showScreen('screen-category')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all">
+      <span class="material-symbols-outlined text-on-surface">arrow_back</span>
+    </button>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full">
+        <span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings:'FILL' 1">monetization_on</span>
+        <span class="font-headline font-bold text-sm" id="g-coins">50</span>
+      </div>
+      <div class="flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-full">
+        <span class="material-symbols-outlined text-error-container text-sm" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+        <span class="font-headline font-bold text-sm" id="g-streak">0</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-headline font-bold px-2 py-1 rounded-full bg-surface-container text-on-surface-variant" id="g-mode-badge">NORMAL</span>
+      <span class="font-label font-bold text-sm text-on-surface-variant" id="g-level-lbl">Level 1</span>
+    </div>
+  </header>
+  <div id="g-timer-wrap" class="px-6 mb-1" style="display:none">
+    <div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+      <div id="g-timer-fill" class="timer-fill h-full bg-tertiary rounded-full" style="width:100%"></div>
+    </div>
+    <div class="flex justify-between mt-1">
+      <span class="text-xs text-on-surface-variant font-medium" id="g-timer-lbl">60s</span>
+    </div>
+  </div>
+  <div id="g-lives-row" class="flex justify-center gap-2 py-2" style="display:none">
+    <span class="material-symbols-outlined text-xl text-error-container" id="life-1" style="font-variation-settings:'FILL' 1">favorite</span>
+    <span class="material-symbols-outlined text-xl text-error-container" id="life-2" style="font-variation-settings:'FILL' 1">favorite</span>
+    <span class="material-symbols-outlined text-xl text-error-container" id="life-3" style="font-variation-settings:'FILL' 1">favorite</span>
+  </div>
+  <main class="px-6 pt-2 space-y-3">
+    <div class="text-center">
+      <p class="font-label text-xs font-bold uppercase tracking-widest text-primary opacity-60 mb-1" id="g-category-lbl"></p>
+      <h2 class="font-headline font-bold text-lg text-on-surface" id="g-theme-lbl">Theme</h2>
+      <p class="text-xs text-on-surface-variant font-medium mt-0.5" id="g-progress-lbl">0 / 0 words</p>
+    </div>
+    <div id="words-container" class="space-y-4"></div>
+  </main>
+  <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-4 py-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-full shadow-[0_10px_40px_rgba(46,47,47,0.12)]">
+    <button onclick="useHint()" class="relative flex items-center justify-center p-3 rounded-full bg-primary-container text-white shadow-[0_4px_0_var(--tile-shadow,#ea8000)] active:shadow-none active:translate-y-1 transition-all mr-1">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">lightbulb</span>
+      <span class="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center text-[9px] font-headline font-black text-primary border border-outline-variant" id="g-hints-badge">3</span>
+    </button>
+    <button onclick="watchAd()" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl">youtube_ad</span></button>
+    <button onclick="doShuffle()" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl">shuffle</span></button>
+    <button onclick="nextLevel()" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl">skip_next</span></button>
+  </nav>
+</div>
+
+<!-- ══════════════ VICTORY ══════════════ -->
+<div id="screen-victory" class="screen fixed inset-0 z-50 flex items-center justify-center p-6 bg-on-background/50 backdrop-blur-sm">
+  <div class="w-full max-w-sm bg-surface-container-lowest rounded-lg overflow-hidden shadow-2xl">
+    <div class="w-full bg-gradient-to-b from-primary-container to-surface-container-low pt-10 pb-6 text-center relative overflow-hidden">
+      <div class="absolute -top-6 -left-6 w-28 h-28 bg-white/10 rounded-full"></div>
+      <div class="relative z-10 mb-3 inline-flex items-center justify-center w-20 h-20 bg-surface-container-lowest rounded-full shadow-lg ring-4 ring-white/20">
+        <span class="material-symbols-outlined text-5xl text-primary-container" style="font-variation-settings:'FILL' 1">workspace_premium</span>
+      </div>
+      <h1 class="font-headline font-black text-3xl text-on-primary-container">LEVEL UP!</h1>
+      <p class="font-label font-bold uppercase tracking-widest text-primary text-xs mt-1" id="v-label">Magnificent!</p>
+    </div>
+    <div class="px-6 pb-8 pt-5 space-y-4">
+      <div class="flex justify-center gap-3" id="v-stars">
+        <span class="material-symbols-outlined text-4xl text-outline-variant" id="vs1">star</span>
+        <span class="material-symbols-outlined text-4xl text-outline-variant" id="vs2">star</span>
+        <span class="material-symbols-outlined text-4xl text-outline-variant" id="vs3">star</span>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-lg p-4 flex items-center justify-center gap-3">
+        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1">monetization_on</span>
+        <span class="font-headline font-black text-2xl text-on-surface" id="v-coins">+5</span>
+        <span class="font-label text-sm text-on-surface-variant font-bold uppercase tracking-wide">coins</span>
+      </div>
+      <button onclick="victoryNext()" class="w-full py-4 rounded-full bg-primary-container text-white font-headline font-extrabold text-lg shadow-[0_6px_0_var(--tile-shadow,#ea8000)] active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-2">NEXT LEVEL <span class="material-symbols-outlined text-xl">arrow_forward</span></button>
+      <button onclick="showScreen('screen-home')" class="w-full py-2 text-on-surface-variant font-label font-bold text-sm">Back to menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ LEADERBOARD ══════════════ -->
+<div id="screen-leaderboard" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4">
+    <h1 class="font-headline font-extrabold text-3xl text-on-surface mb-4">Leaderboard</h1>
+    <div class="bg-surface-container-high p-1.5 rounded-full flex gap-1">
+      <button class="lb-tab flex-1 py-2.5 px-4 rounded-full font-headline font-bold text-sm bg-surface-container-lowest text-primary shadow-sm" data-p="daily" onclick="setLbPeriod('daily',this)">Daily</button>
+      <button class="lb-tab flex-1 py-2.5 px-4 rounded-full font-headline font-bold text-sm text-on-surface-variant" data-p="weekly" onclick="setLbPeriod('weekly',this)">Weekly</button>
+      <button class="lb-tab flex-1 py-2.5 px-4 rounded-full font-headline font-bold text-sm text-on-surface-variant" data-p="alltime" onclick="setLbPeriod('alltime',this)">All-Time</button>
+    </div>
+  </header>
+  <main class="px-6 pt-2">
+    <div class="flex items-end justify-center gap-4 mt-4 mb-8 px-2" id="lb-podium"></div>
+    <div class="space-y-3" id="lb-list"></div>
+    <div id="lb-me" class="mt-4 p-4 rounded-lg bg-primary-container/10 border-2 border-primary-container/20" style="display:none">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="font-headline font-extrabold text-primary" id="lb-me-rank">#—</span>
+          <span id="lb-me-av" class="text-2xl">🦁</span>
+          <div><div class="font-headline font-bold text-on-surface" id="lb-me-name">You</div><div class="text-xs text-on-surface-variant" id="lb-me-pct"></div></div>
+        </div>
+        <span class="font-headline font-black text-primary" id="lb-me-score">0</span>
+      </div>
+    </div>
+    <p class="text-center text-xs text-on-surface-variant font-medium mt-4">Set your username in Profile to appear here.</p>
+  </main>
+</div>
+
+<!-- ══════════════ EVENTS ══════════════ -->
+<div id="screen-events" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4">
+    <h1 class="font-headline font-extrabold text-3xl text-on-surface">Events</h1>
+    <p class="text-on-surface-variant text-sm font-medium mt-1">Special challenges & limited-time rewards</p>
+  </header>
+  <main class="px-6 pt-2 space-y-4" id="events-container"></main>
+</div>
+
+<!-- ══════════════ PROFILE ══════════════ -->
+<div id="screen-profile" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+    <button onclick="showScreen('screen-home')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-on-surface">arrow_back</span></button>
+    <h1 class="font-headline font-bold text-lg text-on-surface">Profile</h1>
+    <button onclick="showScreen('screen-settings')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-on-surface">settings</span></button>
+  </header>
+  <main class="px-6 pt-2 space-y-6">
+    <section class="flex flex-col items-center text-center pt-2 space-y-3">
+      <div class="relative">
+        <div class="w-28 h-28 rounded-full border-4 border-primary-container bg-surface-container flex items-center justify-center text-6xl" id="p-avatar">🦁</div>
+        <button onclick="openEditModal()" class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full shadow-md active:scale-90 transition-transform"><span class="material-symbols-outlined text-sm">edit</span></button>
+      </div>
+      <div>
+        <h2 class="font-headline font-black text-3xl text-on-surface" id="p-name">Player</h2>
+        <p class="font-label font-bold text-primary text-sm" id="p-title">Word Newbie</p>
+        <span id="p-vip-badge" class="hidden inline-block mt-1 px-3 py-1 bg-primary-container text-white text-xs font-headline font-bold rounded-full">VIP</span>
+      </div>
+      <button onclick="openEditModal()" class="px-6 py-2.5 rounded-full bg-primary text-white font-headline font-bold text-sm shadow-md active:scale-95 transition-all">Edit Profile</button>
+    </section>
+    <section class="grid grid-cols-2 gap-3" id="p-stats"></section>
+    <section>
+      <h2 class="font-headline font-extrabold text-xl text-on-surface mb-4">Achievements</h2>
+      <div class="grid grid-cols-3 gap-4" id="p-badges"></div>
+    </section>
+    <!-- My Themes -->
+    <section id="p-themes-section" style="display:none">
+      <h2 class="font-headline font-extrabold text-xl text-on-surface mb-3">My Themes</h2>
+      <div class="space-y-3" id="p-themes-list"></div>
+    </section>
+    <section>
+      <h2 class="font-headline font-extrabold text-xl text-on-surface mb-3">Play History</h2>
+      <div class="space-y-2" id="p-history"></div>
+    </section>
+  </main>
+  <!-- Edit modal -->
+  <div id="edit-modal" class="fixed inset-0 z-50 bg-on-background/50 backdrop-blur-sm items-end justify-center hidden">
+    <div class="w-full max-w-md bg-surface-container-lowest rounded-t-[2rem] p-6 space-y-4">
+      <h3 class="font-headline font-black text-xl text-on-surface text-center">Edit Profile</h3>
+      <div class="flex gap-3 flex-wrap justify-center">
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦁">🦁</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦊">🦊</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐯">🐯</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦅">🦅</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐉">🐉</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦋">🦋</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🐺">🐺</button>
+        <button class="mod-av w-14 h-14 text-3xl rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent transition-all" data-av="🦜">🦜</button>
+      </div>
+      <input id="modal-name-inp" type="text" maxlength="16" placeholder="Your name..." class="w-full px-4 py-3 rounded-full bg-surface-container border border-outline-variant font-headline font-semibold text-on-surface focus:border-primary-container focus:outline-none transition-all"/>
+      <button onclick="saveEdit()" class="w-full py-4 rounded-full bg-primary-container text-white font-headline font-extrabold shadow-[0_4px_0_var(--tile-shadow,#ea8000)] active:shadow-none active:translate-y-1 transition-all">Save</button>
+      <button onclick="closeEditModal()" class="w-full py-2 text-on-surface-variant font-label font-bold text-sm">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ STORE ══════════════ -->
+<div id="screen-store" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+    <button onclick="showScreen('screen-home')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-on-surface">arrow_back</span></button>
+    <h1 class="font-headline font-bold text-lg text-on-surface">Store</h1>
+    <div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+      <span class="material-symbols-outlined text-primary-container text-base" style="font-variation-settings:'FILL' 1">monetization_on</span>
+      <span class="font-headline font-bold text-sm" id="st-coins">50</span>
+    </div>
+  </header>
+  <main class="px-6 pt-2 space-y-6">
+    <div id="vip-card" class="relative overflow-hidden rounded-lg bg-gradient-to-br from-secondary to-secondary-dim p-6 text-white">
+      <div class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -mr-12 -mt-12"></div>
+      <div class="relative z-10">
+        <div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">workspace_premium</span><span class="font-label font-bold text-xs uppercase tracking-widest opacity-80">VIP Membership</span></div>
+        <h2 class="font-headline font-black text-2xl mb-3">AyoCross VIP</h2>
+        <ul class="space-y-1 text-sm font-medium mb-5 opacity-90"><li>✓ No ads — ever</li><li>✓ 500 bonus coins instantly</li><li>✓ All packs & themes unlocked</li><li>✓ 20 hints per month</li></ul>
+        <button onclick="buyVIP()" id="vip-btn" class="w-full py-3 rounded-full bg-white text-secondary font-headline font-extrabold text-base shadow-[0_4px_0_rgba(0,0,0,0.2)] active:shadow-none active:translate-y-1 transition-all">Unlock VIP — 999 coins</button>
+      </div>
+    </div>
+    <div><h2 class="font-headline font-black text-lg text-on-surface mb-3">Coin Bundles</h2><div class="space-y-3" id="st-coins-list"></div></div>
+    <div><h2 class="font-headline font-black text-lg text-on-surface mb-3">Hints</h2><div class="space-y-3" id="st-hints-list"></div></div>
+    <div>
+      <h2 class="font-headline font-black text-lg text-on-surface mb-1">Themes</h2>
+      <p class="text-xs text-on-surface-variant mb-3">Themes change the entire look of your game — colors, backgrounds, animations and more.</p>
+      <div class="space-y-3" id="st-themes-list"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ SETTINGS ══════════════ -->
+<div id="screen-settings" class="screen bg-background pb-32">
+  <header class="bg-background sticky top-0 z-40 px-6 py-4 flex items-center gap-4">
+    <button onclick="showScreen('screen-profile')" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-on-surface">arrow_back</span></button>
+    <h1 class="font-headline font-bold text-lg text-primary">Settings</h1>
+  </header>
+  <main class="px-6 pt-2 space-y-6 max-w-lg">
+    <section class="space-y-3">
+      <h2 class="font-label font-extrabold text-on-surface-variant text-xs uppercase tracking-widest px-1">Audio & Visuals</h2>
+      <div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-primary">music_note</span></div><span class="font-headline font-semibold text-on-surface">Music</span></div><button class="tog" id="tog-music" onclick="toggleSetting('music',this)"></button></div>
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center"><span class="material-symbols-outlined text-tertiary">volume_up</span></div><span class="font-headline font-semibold text-on-surface">Sound Effects</span></div><button class="tog on" id="tog-sound" onclick="toggleSetting('sound',this)"></button></div>
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">vibration</span></div><span class="font-headline font-semibold text-on-surface">Haptic Feedback</span></div><button class="tog on" id="tog-haptic" onclick="toggleSetting('haptic',this)"></button></div>
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-on-surface-variant">dark_mode</span></div><span class="font-headline font-semibold text-on-surface">Dark Mode</span></div><button class="tog" id="tog-dark" onclick="toggleSetting('darkMode',this)"></button></div>
+      </div>
+    </section>
+    <section class="space-y-3">
+      <h2 class="font-label font-extrabold text-on-surface-variant text-xs uppercase tracking-widest px-1">Notifications</h2>
+      <div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-error-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-error" style="font-variation-settings:'FILL' 1">notifications</span></div><div><div class="font-headline font-semibold text-on-surface">Daily Reminders</div><div class="text-xs text-on-surface-variant">Don't break your streak</div></div></div><button class="tog on" id="tog-notifyDaily" onclick="toggleSetting('notifyDaily',this)"></button></div>
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-primary">event</span></div><div><div class="font-headline font-semibold text-on-surface">Special Events</div><div class="text-xs text-on-surface-variant">Naija Friday, marathons & more</div></div></div><button class="tog" id="tog-notifyEvents" onclick="toggleSetting('notifyEvents',this)"></button></div>
+      </div>
+    </section>
+    <section class="space-y-3">
+      <h2 class="font-label font-extrabold text-on-surface-variant text-xs uppercase tracking-widest px-1">Account</h2>
+      <div class="bg-surface-container-low rounded-lg p-2 space-y-1">
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT cursor-pointer" onclick="showScreen('screen-store')"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">shopping_bag</span></div><span class="font-headline font-semibold text-on-surface">Store</span></div><span class="material-symbols-outlined text-outline">chevron_right</span></div>
+        <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-DEFAULT cursor-pointer" onclick="doReset()"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center"><span class="material-symbols-outlined text-error">delete_forever</span></div><div><div class="font-headline font-semibold text-error">Reset Progress</div><div class="text-xs text-on-surface-variant">Cannot be undone</div></div></div><span class="material-symbols-outlined text-outline">chevron_right</span></div>
+      </div>
+    </section>
+    <div class="text-center pt-4 pb-8">
+      <p class="font-headline font-bold text-primary uppercase tracking-widest text-xs">AYO CROSS</p>
+      <p class="text-on-surface-variant text-xs mt-1">Version 1.0.0 · Handcrafted with joy © 2025</p>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 w-full z-40 flex justify-around items-center px-4 pb-5 pt-3 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-6px_30px_rgba(46,47,47,0.06)] rounded-t-[2rem]" style="display:none">
+  <button id="nb-home" onclick="showScreen('screen-home')" class="flex flex-col items-center justify-center p-2 text-on-surface-variant active:scale-90 transition-transform gap-0.5"><span class="material-symbols-outlined text-2xl nav-icon">grid_view</span><span class="font-headline font-bold text-[10px] uppercase tracking-wider nav-lbl">Home</span></button>
+  <button id="nb-lb" onclick="showScreen('screen-leaderboard')" class="flex flex-col items-center justify-center p-2 text-on-surface-variant active:scale-90 transition-transform gap-0.5"><span class="material-symbols-outlined text-2xl nav-icon">leaderboard</span><span class="font-headline font-bold text-[10px] uppercase tracking-wider nav-lbl">Rankings</span></button>
+  <button id="nb-events" onclick="showScreen('screen-events')" class="flex flex-col items-center justify-center bg-primary-container text-white rounded-full w-14 h-14 -mt-5 shadow-lg shadow-primary-container/30 active:scale-90 transition-transform"><span class="material-symbols-outlined text-2xl">military_tech</span></button>
+  <button id="nb-store" onclick="showScreen('screen-store')" class="flex flex-col items-center justify-center p-2 text-on-surface-variant active:scale-90 transition-transform gap-0.5"><span class="material-symbols-outlined text-2xl nav-icon">shopping_bag</span><span class="font-headline font-bold text-[10px] uppercase tracking-wider nav-lbl">Store</span></button>
+  <button id="nb-profile" onclick="showScreen('screen-profile')" class="flex flex-col items-center justify-center p-2 text-on-surface-variant active:scale-90 transition-transform gap-0.5"><span class="material-symbols-outlined text-2xl nav-icon">person</span><span class="font-headline font-bold text-[10px] uppercase tracking-wider nav-lbl">Profile</span></button>
+</nav>
 
 <script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+const SK='ayocross_v2';
+const DEF={username:'',avatar:'🦁',vip:false,firstLaunch:true,onboardingPack:'All',coins:50,hints:3,currentLevel:0,pack:'All',mode:'Normal',levelProgress:{},streak:0,lastPlayedDate:'',bestStreak:0,totalLevels:0,totalWords:0,totalCoins:0,dailySolvedDate:'',lastNaijaFridayDate:'',marathonProgress:0,comebackClaimedDate:'',lastActiveDate:'',beginnerBonusExpiry:'',ownedThemes:[],activeTheme:'default',settings:{sound:true,music:false,haptic:true,darkMode:false,notifyDaily:true,notifyEvents:false},leaderboard:[],history:[],extraFound:{},_marathonRewarded:false,_seenRules:{}};
+let S=JSON.parse(JSON.stringify(DEF));
+function loadS(){try{const r=localStorage.getItem(SK);if(r){const p=JSON.parse(r);S=deepMerge(DEF,p);}}catch(e){S=JSON.parse(JSON.stringify(DEF));}}
+function saveS(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
+function deepMerge(t,src){const r={...t};for(const k of Object.keys(src)){if(src[k]&&typeof src[k]==='object'&&!Array.isArray(src[k])){r[k]=deepMerge(t[k]||{},src[k]);}else{r[k]=src[k];}}return r;}
+function today(){return new Date().toISOString().split('T')[0];}
+function addCoins(n){S.coins=Math.max(0,S.coins+n);if(n>0)S.totalCoins=(S.totalCoins||0)+n;saveS();updateCoinDisplays();}
+function spendCoins(n){if(S.coins<n)return false;S.coins-=n;saveS();updateCoinDisplays();return true;}
+function updateCoinDisplays(){['h-coins','g-coins','st-coins','cat-coins'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=S.coins;});}
+loadS();
 
-const correctSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
-const wrongSound = new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg");
-const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");    
-
-// LEVELS (keep your full 100 here)
-let levels = [
-
-/* 🇳🇬 NIGERIAN — EASY */
-{ theme: "Nigerian Basics", category: "Nigerian", words: [
-    { clue: "Nigerian rice dish", answer: "JOLLOF" },
-    { clue: "Capital of Nigeria", answer: "ABUJA" },
-    { clue: "Nigerian currency", answer: "NAIRA" }
-] },
-{ theme: "Nigerian Cities & Culture", category: "Nigerian", words: [
-    { clue: "Largest city in Nigeria", answer: "LAGOS" },
-    { clue: "Popular Nigerian singer", answer: "WIZKID" },
-    { clue: "Nigerian soup with melon seeds", answer: "EGUSI" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian fried bean cake", answer: "AKARA" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Traditional ruler title", answer: "OBA" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Popular Nigerian drink", answer: "ZOBORO" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian language widely spoken", answer: "YORUBA" }
-] },
-
-/* 🇳🇬 MEDIUM */
-{ theme: "Nigerian Foods", category: "Nigerian", words: [
-    { clue: "Spicy roasted meat skewers", answer: "SUYA" },
-    { clue: "Cassava pudding food", answer: "FUFU" },
-    { clue: "Soup made from melon seeds", answer: "EGUSI" }
-] },
-{ theme: "Nigerian Markets & Culture", category: "Nigerian", words: [
-    { clue: "Famous market in Lagos", answer: "BALOGUN" },
-    { clue: "Nigerian staple from cassava", answer: "GARRI" },
-    { clue: "Traditional cloth from north", answer: "BABARIGA" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian pepper soup protein", answer: "GOATMEAT" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Popular Nigerian snack", answer: "SUYA" }
-] },
-
-/* 🇳🇬 HARD */
-{ theme: "Nigerian History & Politics", category: "Nigerian", words: [
-    { clue: "First Nigerian president", answer: "AZIKIWE" },
-    { clue: "Nigerian oil-rich region", answer: "NIGERDELTA" },
-    { clue: "Famous Nigerian author", answer: "ACHEBE" }
-] },
-{ theme: "Nigerian Infrastructure", category: "Nigerian", words: [
-    { clue: "Nigerian tech city", answer: "YABA" },
-    { clue: "Nigerian airline", answer: "AIRPEACE" },
-    { clue: "Famous Lagos bridge", answer: "THIRDMILANDBRIDGE" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian political party", answer: "APC" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian festival", answer: "ARGUNGU" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Nigerian currency subdivision", answer: "KOBO" }
-] },
-{ theme: "Single", category: "Nigerian", words: [
-    { clue: "Major Nigerian tribe", answer: "HAUSA" }
-] },
-
-/* 📘 ENGLISH — EASY */
-{ theme: "Basic Opposites", category: "English", words: [
-    { clue: "Opposite of hot", answer: "COLD" },
-    { clue: "Opposite of big", answer: "SMALL" },
-    { clue: "Animal that barks", answer: "DOG" }
-] },
-{ theme: "Simple Words", category: "English", words: [
-    { clue: "Flying vehicle", answer: "PLANE" },
-    { clue: "Used to write", answer: "PEN" },
-    { clue: "Opposite of fast", answer: "SLOW" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Color of the sky", answer: "BLUE", category: "English" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Day after Monday", answer: "TUESDAY", category: "English" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Number after five", answer: "SIX", category: "English" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Water falls from sky", answer: "RAIN", category: "English" }
-] },
-
-/* 📘 MEDIUM */
-{ theme: "Single", category: "English", words: [
-    { clue: "Synonym of happy", answer: "JOYFUL" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Opposite of early", answer: "LATE" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Tool to cut paper", answer: "SCISSORS" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Person who teaches", answer: "TEACHER" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Place to borrow books", answer: "LIBRARY" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Vehicle with two wheels", answer: "BICYCLE" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Opposite of strong", answer: "WEAK" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "A baby dog", answer: "PUPPY" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Used to see far", answer: "BINOCULARS" }
-] },
-{ theme: "Single", category: "English", words: [
-    { clue: "Opposite of clean", answer: "DIRTY" }
-] },
-
-/* 📘 HARD */
-{ theme: "Single", words: [
-    { clue: "Fear of heights", answer: "ACROPHOBIA" }
-] },
-{ theme: "Single", words: [
-    { clue: "Study of the mind", answer: "PSYCHOLOGY" }
-] },
-{ theme: "Single", words: [
-    { clue: "Word meaning unclear", answer: "AMBIGUOUS" }
-] },
-{ theme: "Single", words: [
-    { clue: "A person who writes books", answer: "AUTHOR" }
-] },
-{ theme: "Single", words: [
-    { clue: "Opposite of expand", answer: "CONTRACT" }
-] },
-{ theme: "Single", words: [
-    { clue: "Scientific study of life", answer: "BIOLOGY" }
-] },
-{ theme: "Single", words: [
-    { clue: "Measure of temperature", answer: "CELSIUS" }
-] },
-{ theme: "Single", words: [
-    { clue: "Tool for measuring time", answer: "CHRONOMETER" }
-] },
-{ theme: "Single", words: [
-    { clue: "Relating to the moon", answer: "LUNAR" }
-] },
-{ theme: "Single", words: [
-    { clue: "Word for very large", answer: "ENORMOUS" }
-] },
-
-/* 🌍 GLOBAL — EASY */
-{ theme: "Single", category: "Global", words: [
-    { clue: "Largest planet", answer: "JUPITER", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Red planet", answer: "MARS", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Ocean on east of Africa", answer: "INDIAN", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Country with Eiffel Tower", answer: "FRANCE", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Famous tech company", answer: "APPLE", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Video platform", answer: "YOUTUBE" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Continent Nigeria is in", answer: "AFRICA" }
-] },
-
-/* 🌍 MEDIUM */
-{ theme: "Single", category: "Global", words: [
-    { clue: "First man on the moon", answer: "ARMSTRONG", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Currency of USA", answer: "DOLLAR", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Famous scientist gravity", answer: "NEWTON", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Largest ocean", answer: "PACIFIC", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Country of pyramids", answer: "EGYPT", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "World largest desert", answer: "SAHARA", category: "Global" }
-] },
-
-/* 🌍 HARD */
-{ theme: "Single", category: "Global", words: [
-    { clue: "Theory by Einstein", answer: "RELATIVITY", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "World organization for peace", answer: "UNITEDNATIONS", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Longest river in world", answer: "NILE", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Country with most population", answer: "CHINA", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "Global economic group", answer: "G20", category: "Global" }
-] },
-{ theme: "Single", category: "Global", words: [
-    { clue: "First country in space race", answer: "USSR", category: "Global" }
-] }
+// ═══════════════════════════════════════════
+// LEVELS
+// ═══════════════════════════════════════════
+const LEVELS=[
+  {theme:'Nigerian Basics',category:'Nigerian',words:[{clue:'Nigerian rice dish',answer:'JOLLOF'},{clue:'Capital of Nigeria',answer:'ABUJA'},{clue:'Nigerian currency',answer:'NAIRA'}]},
+  {theme:'Nigerian Cities & Culture',category:'Nigerian',words:[{clue:'Largest city in Nigeria',answer:'LAGOS'},{clue:'Popular Nigerian singer',answer:'WIZKID'},{clue:'Nigerian soup with melon seeds',answer:'EGUSI'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Nigerian fried bean cake',answer:'AKARA'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Traditional ruler title',answer:'OBA'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Popular Nigerian drink',answer:'ZOBORO'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Nigerian language widely spoken',answer:'YORUBA'}]},
+  {theme:'Nigerian Foods',category:'Nigerian',words:[{clue:'Spicy roasted meat skewers',answer:'SUYA'},{clue:'Cassava pudding food',answer:'FUFU'},{clue:'Soup made from melon seeds',answer:'EGUSI'}]},
+  {theme:'Nigerian Markets & Culture',category:'Nigerian',words:[{clue:'Famous market in Lagos',answer:'BALOGUN'},{clue:'Nigerian staple from cassava',answer:'GARRI'},{clue:'Traditional cloth from north',answer:'BABARIGA'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Nigerian pepper soup protein',answer:'GOATMEAT'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Nigerian political party',answer:'APC'}]},
+  {theme:'Nigerian History & Politics',category:'Nigerian',words:[{clue:'First Nigerian president',answer:'AZIKIWE'},{clue:'Nigerian oil-rich region',answer:'NIGERDELTA'},{clue:'Famous Nigerian author',answer:'ACHEBE'}]},
+  {theme:'Single',category:'Nigerian',words:[{clue:'Major Nigerian tribe',answer:'HAUSA'}]},
+  {theme:'Basic Opposites',category:'English',words:[{clue:'Opposite of hot',answer:'COLD'},{clue:'Opposite of big',answer:'SMALL'},{clue:'Animal that barks',answer:'DOG'}]},
+  {theme:'Simple Words',category:'English',words:[{clue:'Flying vehicle',answer:'PLANE'},{clue:'Used to write',answer:'PEN'},{clue:'Opposite of fast',answer:'SLOW'}]},
+  {theme:'Single',category:'English',words:[{clue:'Color of the sky',answer:'BLUE'}]},
+  {theme:'Single',category:'English',words:[{clue:'Day after Monday',answer:'TUESDAY'}]},
+  {theme:'Single',category:'English',words:[{clue:'Synonym of happy',answer:'JOYFUL'}]},
+  {theme:'Single',category:'English',words:[{clue:'Person who teaches',answer:'TEACHER'}]},
+  {theme:'Single',category:'English',words:[{clue:'Place to borrow books',answer:'LIBRARY'}]},
+  {theme:'Single',category:'English',words:[{clue:'Vehicle with two wheels',answer:'BICYCLE'}]},
+  {theme:'Single',category:'English',words:[{clue:'Fear of heights',answer:'ACROPHOBIA'}]},
+  {theme:'Single',category:'English',words:[{clue:'Study of the mind',answer:'PSYCHOLOGY'}]},
+  {theme:'Single',category:'English',words:[{clue:'Word meaning unclear',answer:'AMBIGUOUS'}]},
+  {theme:'Single',category:'English',words:[{clue:'Scientific study of life',answer:'BIOLOGY'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Largest planet',answer:'JUPITER'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Red planet',answer:'MARS'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Country with Eiffel Tower',answer:'FRANCE'}]},
+  {theme:'Single',category:'Global',words:[{clue:'First man on the moon',answer:'ARMSTRONG'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Largest ocean',answer:'PACIFIC'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Country of pyramids',answer:'EGYPT'}]},
+  {theme:'Single',category:'Global',words:[{clue:'World largest desert',answer:'SAHARA'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Theory by Einstein',answer:'RELATIVITY'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Longest river in world',answer:'NILE'}]},
+  {theme:'Single',category:'Global',words:[{clue:'Country with most population',answer:'CHINA'}]},
 ];
 
-let currentLevel = localStorage.getItem("level")
-    ? parseInt(localStorage.getItem("level"))
-    : 0;
+const DICT=['cat','dog','sun','rain','star','news','fast','lock','cross','word','planet','apple','story','learn','ring','fish','run','walk','team','wood','the','and','for','are','but','not','you','all','can','had','one','our','out','day','get','has','how','new','now','old','see','two','way','who','boy','let','put','say','she','too','use','able','back','ball','bear','bell','bird','boat','body','book','call','came','care','case','city','club','come','cool','copy','cost','dark','data','date','dear','deep','does','done','door','down','draw','drop','each','easy','else','even','ever','face','fact','fall','feel','feet','find','fire','five','food','foot','form','four','free','full','game','gave','girl','give','gold','gone','good','gray','grew','grow','hair','half','hall','hand','hang','hard','head','hear','help','here','high','hill','hold','home','hope','hour','idea','into','jump','just','keep','kind','king','knew','know','land','last','late','left','less','life','like','line','list','live','long','look','lost','love','made','make','many','mark','mean','meet','mile','mind','miss','moon','more','most','move','much','must','name','near','need','next','nice','nine','none','nose','note','once','only','open','over','page','park','part','pass','past','path','pick','plan','play','poor','pull','push','race','read','real','rest','rich','ride','road','rock','room','rule','said','same','save','sea','seat','seem','seen','sell','send','ship','show','side','size','sky','slow','snow','some','song','soon','sort','soul','star','stay','step','stop','such','sure','take','talk','tall','tell','than','that','them','then','they','this','time','told','took','town','tree','true','turn','unit','upon','used','very','wait','wall','want','warm','wave','week','well','went','were','what','when','will','wind','wish','with','work','year','your','zero','log','ago','gas','lag','sag','sol','also','goal','slag','slog','about','above','after','again','agree','allow','along','apply','beach','began','being','below','black','blood','board','break','bring','build','carry','cause','check','child','civil','class','clean','clear','close','color','could','cover','death','doing','dream','drive','early','earth','eight','empty','enter','equal','event','every','exist','field','fight','final','first','floor','force','found','front','glass','going','grand','great','green','group','grown','happy','heart','heavy','horse','house','human','issue','large','later','learn','leave','level','light','limit','local','major','makes','maybe','means','might','money','month','music','never','night','north','often','order','other','paper','party','peace','phone','photo','place','plant','point','power','press','price','quick','quite','radio','raise','reach','ready','right','river','round','route','scale','scene','score','sense','serve','seven','shall','share','short','shown','since','small','solid','solve','sound','south','space','speak','speed','spend','split','stage','stand','start','state','still','stone','stood','store','story','study','style','table','taken','taste','teach','thank','their','there','these','thing','think','those','three','throw','today','total','trade','train','treat','trust','truth','under','union','until','value','video','visit','voice','watch','water','where','which','while','white','whole','woman','women','world','would','write','wrong','young'];
 
-let currentPack = localStorage.getItem("pack") || "All";
-let gameMode = localStorage.getItem("gameMode") || "Normal";
-let activeLevels = [];
+// ═══════════════════════════════════════════
+// THEMES CONFIG
+// ═══════════════════════════════════════════
+const THEMES={
+  default:{name:'Default',icon:'🎨',price:0,premium:false,desc:'The classic AyoCross look.',animType:null},
+  dark:   {name:'Dark Night',icon:'🌙',price:80,premium:false,desc:'Sleek deep-space darkness with purple accents.',animType:'sparkle'},
+  ocean:  {name:'Ocean Blue',icon:'🌊',price:80,premium:false,desc:'Cool ocean vibes with glass-like surfaces.',animType:'bubbles'},
+  sunset: {name:'Sunset Pink',icon:'🌅',price:80,premium:false,desc:'Warm sunset glow with rose tones.',animType:'glow'},
+  forest: {name:'Forest',icon:'🌿',price:80,premium:false,desc:'Deep greens and earthy browns. Breathe in.',animType:'leaves'},
+  midnight:{name:'Midnight Lagos',icon:'🌃',price:80,premium:false,desc:'City lights at night. Lagos never sleeps.',animType:'city'},
+  desert: {name:'Desert Gold',icon:'🏜️',price:80,premium:false,desc:'Warm sands and golden light shimmer.',animType:'shimmer'},
+  snowy:  {name:'Snowy Castle',icon:'🏰',price:1000,premium:true,desc:'Premium. A frost-kissed castle at the top of the world. Full UI overhaul with falling snow.',animType:'snow'},
+};
 
-let coins = localStorage.getItem("coins")
-    ? parseInt(localStorage.getItem("coins"))
-    : 50;
+// ═══════════════════════════════════════════
+// THEME ANIMATION ENGINE
+// ═══════════════════════════════════════════
+let _animFrame=null;
+const canvas=document.getElementById('theme-canvas');
+const ctx=canvas.getContext('2d');
+let _particles=[];
 
-let currentGuess = []; // now array of arrays
-let timerSeconds = 60;
-let timerInterval = null;
-let streak = localStorage.getItem("streak")
-    ? parseInt(localStorage.getItem("streak"))
-    : 0;
-let wordsCompletedToday = localStorage.getItem("wordsCompletedToday")
-    ? parseInt(localStorage.getItem("wordsCompletedToday"))
-    : 0;
-let extraWordsFound = {};
-let dictionary = [
-    "cat", "dog", "sun", "rain", "star", "news", "fast", "lock", "cross", "word", "planet", "apple", "story", "learn", "ring", "fish", "chair", "table", "run", "walk", "team", "wood",
-    "the", "and", "for", "are", "but", "not", "you", "all", "can", "had", "her", "was", "one", "our", "out", "day", "get", "has", "him", "his", "how", "its", "may", "new", "now", "old", "see", "two", "way", "who", "boy", "did", "has", "let", "put", "say", "she", "too", "use",
-    "able", "back", "ball", "bear", "bell", "bird", "boat", "body", "book", "call", "came", "care", "case", "city", "club", "come", "cool", "copy", "cost", "dark", "data", "date", "dear", "deep", "does", "done", "door", "down", "draw", "drop", "each", "easy", "else", "even", "ever", "face", "fact", "fall", "feel", "feet", "fell", "felt", "find", "fire", "five", "food", "foot", "form", "four", "free", "from", "full", "game", "gave", "girl", "give", "glad", "goes", "gold", "gone", "good", "got", "gray", "grew", "grow", "hair", "half", "hall", "hand", "hang", "hard", "head", "hear", "help", "here", "high", "hill", "hold", "home", "hope", "hour", "idea", "into", "jump", "just", "keep", "kind", "king", "knew", "know", "land", "last", "late", "left", "less", "life", "like", "line", "list", "live", "long", "look", "lord", "lost", "love", "made", "make", "many", "mark", "mean", "meet", "mile", "mind", "miss", "moon", "more", "most", "move", "much", "must", "name", "near", "need", "news", "next", "nice", "nine", "none", "nose", "note", "once", "only", "open", "over", "page", "park", "part", "pass", "past", "path", "pick", "plan", "play", "poor", "pull", "push", "race", "rain", "read", "real", "rest", "rich", "ride", "road", "rock", "room", "rule", "said", "same", "save", "saw", "sea", "seat", "seem", "seen", "sell", "send", "ship", "show", "side", "size", "sky", "slow", "snow", "some", "song", "soon", "sort", "soul", "star", "stay", "step", "stop", "such", "sure", "take", "talk", "tall", "team", "tell", "than", "that", "thee", "them", "then", "they", "this", "time", "told", "took", "town", "tree", "true", "turn", "unit", "upon", "used", "very", "wait", "walk", "wall", "want", "warm", "wave", "week", "well", "went", "were", "what", "when", "will", "wind", "wish", "with", "word", "work", "year", "your", "zero",
-    "about", "above", "after", "again", "agree", "allow", "along", "among", "apply", "areas", "avoid", "based", "beach", "began", "begin", "being", "below", "black", "blood", "board", "break", "bring", "build", "built", "carry", "cause", "cells", "chair", "check", "child", "civil", "class", "clean", "clear", "close", "color", "could", "cover", "death", "doing", "dream", "drive", "early", "earth", "eight", "empty", "enemy", "enter", "equal", "event", "every", "exist", "facts", "field", "fight", "final", "first", "floor", "force", "found", "frame", "front", "glass", "going", "grand", "great", "green", "group", "grown", "guess", "happy", "heart", "heavy", "horse", "house", "human", "image", "issue", "large", "later", "learn", "leave", "level", "light", "limit", "local", "major", "makes", "maybe", "means", "might", "money", "month", "music", "never", "night", "north", "often", "order", "other", "paper", "party", "peace", "peter", "phone", "photo", "place", "plant", "point", "power", "press", "price", "quick", "quite", "radio", "raise", "reach", "ready", "right", "river", "round", "route", "rules", "scale", "scene", "score", "sense", "serve", "seven", "shall", "share", "short", "shown", "sides", "since", "sixth", "small", "solid", "solve", "sorry", "sound", "south", "space", "speak", "speed", "spend", "spent", "split", "stage", "stand", "start", "state", "still", "stone", "stood", "store", "story", "study", "style", "table", "taken", "taste", "teach", "thank", "their", "there", "these", "thing", "think", "third", "those", "three", "throw", "today", "total", "trade", "train", "treat", "trust", "truth", "under", "union", "until", "value", "video", "visit", "voice", "watch", "water", "where", "which", "while", "white", "whole", "whose", "woman", "women", "world", "would", "write", "wrong", "young",
-    "log", "logs", "ago", "gas", "gal", "lag", "sag", "sol", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl", "ago", "gal", "lag", "sag", "sol", "log", "logs", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl", "ago", "gal", "lag", "sag", "sol", "log", "logs", "also", "goal", "slag", "slog", "gals", "lags", "sags", "sols", "goa", "ola", "sal", "las", "gos", "als", "agl"
-];
-let lastPickTime = 0;
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize',resizeCanvas);resizeCanvas();
 
-function saveGame() {
-    localStorage.setItem("level", currentLevel);
-    localStorage.setItem("coins", coins);
-    localStorage.setItem("pack", currentPack);
-    localStorage.setItem("streak", streak);
-    localStorage.setItem("wordsCompletedToday", wordsCompletedToday);
+function stopAnim(){if(_animFrame){cancelAnimationFrame(_animFrame);_animFrame=null;}ctx.clearRect(0,0,canvas.width,canvas.height);_particles=[];}
+
+function startAnim(type){
+  stopAnim();
+  if(!type)return;
+  if(type==='snow')initSnow();
+  else if(type==='leaves')initLeaves();
+  else if(type==='sparkle')initSparkles();
+  else if(type==='bubbles')initBubbles();
+  else if(type==='city')initCity();
+  else if(type==='shimmer')initShimmer();
+  animLoop(type);
 }
 
-function getPackLevels(packName) {
-    if (packName === "All") return levels;
-    let lower = packName.toLowerCase();
-    return levels.filter(l => {
-        let themeLabel = l.theme ? l.theme.toLowerCase() : '';
-        let categoryLabel = l.category ? l.category.toLowerCase() : '';
+function animLoop(type){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(type==='snow')drawSnow();
+  else if(type==='leaves')drawLeaves();
+  else if(type==='sparkle')drawSparkles();
+  else if(type==='bubbles')drawBubbles();
+  else if(type==='city')drawCity();
+  else if(type==='shimmer')drawShimmer();
+  _animFrame=requestAnimationFrame(()=>animLoop(type));
+}
 
-        // For wrapped single entries (theme "Single"), try its first word category
-        let singleWordCategory = '';
-        if (l.theme === 'Single' && l.words && l.words[0] && l.words[0].category) {
-            singleWordCategory = l.words[0].category.toLowerCase();
-        }
+// Snow
+function initSnow(){_particles=[];for(let i=0;i<80;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,speed:Math.random()*1.5+0.5,wind:Math.random()*0.5-0.25,opacity:Math.random()*0.6+0.3});}}
+function drawSnow(){_particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${p.opacity})`;ctx.fill();p.y+=p.speed;p.x+=p.wind;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;});}
 
-        return themeLabel.includes(lower) || categoryLabel.includes(lower) || singleWordCategory.includes(lower);
+// Leaves
+function initLeaves(){_particles=[];const colors=['#16a34a','#15803d','#166534','#4d7c0f','#65a30d','#a16207'];for(let i=0;i<35;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*12+6,speed:Math.random()*1.2+0.4,sway:Math.random()*2-1,swayDir:Math.random()<0.5?1:-1,rot:Math.random()*360,rotSpeed:Math.random()*3-1.5,color:colors[Math.floor(Math.random()*colors.length)],opacity:Math.random()*0.5+0.3});}}
+function drawLeaves(){_particles.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.globalAlpha=p.opacity;ctx.beginPath();ctx.ellipse(0,0,p.size,p.size/2,0,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.restore();p.y+=p.speed;p.x+=p.sway;p.rot+=p.rotSpeed;p.sway+=p.swayDir*0.02;if(Math.abs(p.sway)>2)p.swayDir*=-1;if(p.y>canvas.height){p.y=-20;p.x=Math.random()*canvas.width;}});}
+
+// Sparkles (dark theme)
+function initSparkles(){_particles=[];for(let i=0;i<60;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,life:Math.random()*100,maxLife:Math.random()*80+40,opacity:0});}}
+function drawSparkles(){_particles.forEach(p=>{p.life++;const t=p.life/p.maxLife;p.opacity=t<0.5?t*2:(1-t)*2;if(p.life>=p.maxLife){p.life=0;p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(167,139,250,${p.opacity*0.8})`;ctx.fill();});}
+
+// Bubbles (ocean)
+function initBubbles(){_particles=[];for(let i=0;i<25;i++){_particles.push({x:Math.random()*canvas.width,y:canvas.height+Math.random()*100,r:Math.random()*12+4,speed:Math.random()*0.8+0.3,opacity:Math.random()*0.2+0.05,sway:Math.random()*1-0.5});}}
+function drawBubbles(){_particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.strokeStyle=`rgba(14,165,233,${p.opacity})`;ctx.lineWidth=1.5;ctx.stroke();p.y-=p.speed;p.x+=p.sway;if(p.y<-20){p.y=canvas.height+20;p.x=Math.random()*canvas.width;}});}
+
+// City lights (midnight lagos)
+function initCity(){_particles=[];for(let i=0;i<50;i++){const colors=['#f59e0b','#fbbf24','#60a5fa','#a78bfa','#f472b6','#34d399'];_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height*0.8+canvas.height*0.2,r:Math.random()*2+0.5,color:colors[Math.floor(Math.random()*colors.length)],blink:Math.random()*100,blinkRate:Math.random()*2+1,opacity:Math.random()*0.6+0.2});}}
+function drawCity(){_particles.forEach(p=>{p.blink+=p.blinkRate;const flicker=Math.sin(p.blink*0.1)*0.3+0.7;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color.replace(')',`,${p.opacity*flicker})`).replace('rgb','rgba');ctx.shadowBlur=p.r*4;ctx.shadowColor=p.color;ctx.fill();ctx.shadowBlur=0;});}
+
+// Desert shimmer
+let _shimmerOffset=0;
+function initShimmer(){_particles=[];}
+function drawShimmer(){_shimmerOffset+=0.5;const grad=ctx.createLinearGradient(0,canvas.height*0.7,canvas.width,canvas.height);const a=Math.abs(Math.sin(_shimmerOffset*0.02))*0.08;grad.addColorStop(0,`rgba(252,211,77,0)`);grad.addColorStop(0.5,`rgba(252,211,77,${a})`);grad.addColorStop(1,`rgba(252,211,77,0)`);ctx.fillStyle=grad;ctx.fillRect(0,canvas.height*0.7,canvas.width,canvas.height*0.3);}
+
+function applyThemeAnim(themeId){
+  const t=THEMES[themeId];
+  if(!t){stopAnim();return;}
+  if(themeId==='default'||themeId==='sunset'){stopAnim();return;}
+  startAnim(t.animType);
+}
+
+// ═══════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════
+const NAV_SCREENS=['screen-home','screen-leaderboard','screen-events','screen-store','screen-profile'];
+const NAV_MAP={'screen-home':'nb-home','screen-leaderboard':'nb-lb','screen-events':'nb-events','screen-store':'nb-store','screen-profile':'nb-profile'};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('active');});
+  const t=document.getElementById(id);if(!t)return;
+  t.style.display='block';t.classList.add('active');
+  const nav=document.getElementById('bottom-nav');
+  if(nav)nav.style.display=NAV_SCREENS.includes(id)?'flex':'none';
+  Object.entries(NAV_MAP).forEach(([sc,btnId])=>{const btn=document.getElementById(btnId);if(!btn)return;btn.classList.toggle('nav-active',sc===id);});
+  if(id==='screen-home')renderHome();
+  if(id==='screen-leaderboard')renderLeaderboard();
+  if(id==='screen-events')renderEvents();
+  if(id==='screen-profile')renderProfile();
+  if(id==='screen-store')renderStore();
+  if(id==='screen-settings')renderSettings();
+  // game back arrow goes to category, not home, for daily
+  const backBtn=document.querySelector('#screen-game header button');
+  if(id==='screen-game'&&backBtn){backBtn.onclick=()=>showScreen(S.pack==='Daily'?'screen-home':'screen-category');}
+}
+
+// ═══════════════════════════════════════════
+// TOAST & UTILS
+// ═══════════════════════════════════════════
+let _toastT;
+function showToast(msg,dur=2200){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('show'),dur);}
+function vib(p=40){if(S.settings&&S.settings.haptic&&navigator.vibrate)navigator.vibrate(p);}
+
+// ═══════════════════════════════════════════
+// SOUND
+// ═══════════════════════════════════════════
+const SND={};
+function initSounds(){if(typeof Howl==='undefined')return;SND.correct=new Howl({src:['assets/sounds/correct.mp3'],volume:0.8});SND.wrong=new Howl({src:['assets/sounds/wrong.mp3'],volume:0.7});SND.click=new Howl({src:['assets/sounds/click.mp3'],volume:0.5});SND.levelup=new Howl({src:['assets/sounds/levelup.mp3'],volume:1.0});}
+function playSound(name){if(!S.settings||!S.settings.sound)return;if(SND[name]){SND[name].stop();SND[name].play();}}
+initSounds();
+
+// ═══════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════
+let _obSlide=0,_obAvatar='🦁',_obPack='All';
+
+function obShowSlide(n){
+  document.querySelectorAll('.ob-slide').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('[data-dot]').forEach((d,i)=>{d.className='h-2 rounded-full transition-all '+(i===n?'w-8 bg-primary-container':'w-2 bg-surface-container-high');});
+  const btn=document.getElementById('ob-btn');if(btn)btn.textContent=n===3?'Start Playing!':n===0?'Get Started':'Continue';
+  const skip=document.getElementById('ob-skip');if(skip)skip.style.display=n===3?'none':'block';
+}
+
+function obNext(){
+  if(_obSlide===1){const name=(document.getElementById('ob-name-input')||{}).value?.trim();if(!name){showToast('Please enter your name');return;}S.username=name;S.avatar=_obAvatar;const rn=document.getElementById('ob-ready-name');const ra=document.getElementById('ob-ready-av');if(rn)rn.textContent=name;if(ra)ra.textContent=_obAvatar;}
+  if(_obSlide===2)S.pack=_obPack;
+  if(_obSlide===3){obFinish();return;}
+  _obSlide++;obShowSlide(_obSlide);
+}
+
+function obSkip(){obFinish();}
+
+function obFinish(){
+  S.firstLaunch=false;
+  const exp=new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+  S.beginnerBonusExpiry=exp;S.lastActiveDate=today();saveS();
+  showScreen('screen-home');
+}
+
+function initObPickers(){
+  document.querySelectorAll('.ob-av').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.ob-av').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/10');b.classList.add('border-transparent');});
+      btn.classList.add('border-primary-container','bg-primary-container/10');btn.classList.remove('border-transparent');_obAvatar=btn.dataset.av;
     });
-}
-
-function getDailyLevel() {
-    let today = new Date().toISOString().split('T')[0];
-    let hash = 0;
-    for (let i = 0; i < today.length; i++) {
-        hash = (hash * 31 + today.charCodeAt(i)) % 2147483647;
-    }
-    let index = Math.abs(hash) % levels.length;
-    return levels[index];
-}
-
-function renderPackSelection() {
-    const packs = ["All", "Nigerian", "English", "Global"];
-    let html = "";
-    html += `<button class="pack-btn" onclick="applyDaily()" ${currentPack === 'Daily' ? 'disabled' : ''}>Daily</button>`;
-    packs.forEach(p => {
-        html += `<button class="pack-btn" onclick="applyPack('${p}')" ${p===currentPack ? 'disabled' : ''}>${p}</button>`;
+  });
+  document.querySelectorAll('.ob-pack').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.ob-pack').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/5');b.classList.add('border-outline-variant');});
+      btn.classList.add('border-primary-container','bg-primary-container/5');btn.classList.remove('border-outline-variant');_obPack=btn.dataset.pack;
     });
-    document.getElementById("pack-selection").innerHTML = html;
-    renderModeSelection();
+  });
 }
 
-function renderModeSelection() {
-    const modes = ["Normal", "Timed", "Bonus"];
-    let html = "<span style='font-size:13px; margin-right:8px;'>Mode:</span>";
-    modes.forEach(m => {
-        html += `<button class="pack-btn" onclick="applyGameMode('${m}')" ${m===gameMode ? 'disabled' : ''}>${m}</button>`;
-    });
-    document.getElementById("mode-selection").innerHTML = html;
+// ═══════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════
+function renderHome(){
+  const el=id=>document.getElementById(id);
+  if(el('h-streak'))el('h-streak').textContent=S.streak;
+  if(el('h-coins'))el('h-coins').textContent=S.coins;
+  if(el('h-avatar'))el('h-avatar').textContent=S.avatar||'🦁';
+  if(el('h-total-levels'))el('h-total-levels').textContent=S.totalLevels||0;
+  if(el('h-streak-stat'))el('h-streak-stat').textContent=S.streak||0;
+  if(el('h-total-coins'))el('h-total-coins').textContent=S.totalCoins||0;
+  const ds=S.dailySolvedDate===today();
+  if(el('h-daily-title'))el('h-daily-title').textContent=ds?'Daily Complete!':'Today\'s Puzzle';
+  if(el('h-daily-sub'))el('h-daily-sub').textContent=ds?'Come back tomorrow':'+20 bonus coins · Tap to play';
+  if(el('h-daily-badge'))el('h-daily-badge').textContent=ds?'DONE':'NORMAL';
 }
 
-function applyGameMode(mode) {
-    gameMode = mode;
-    localStorage.setItem("gameMode", gameMode);
-    renderModeSelection();
-    loadLevel();
+// ═══════════════════════════════════════════
+// CATEGORY SCREEN
+// ═══════════════════════════════════════════
+const MODE_INFO={
+  Normal: {icon:'🎯',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Timed:  {icon:'⏱',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Bonus:  {icon:'✨',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Blitz:  {icon:'⚡',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Survival:{icon:'💀',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Zen:    {icon:'🧘',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Duel:   {icon:'🆚',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+  Hard:   {icon:'🔒',color:'bg-surface-container text-on-surface border-outline-variant',activeColor:'bg-primary-container text-white border-primary-container'},
+};
+
+let _currentCategory='All';
+
+function openCategory(pack){
+  _currentCategory=pack;
+  S.pack=pack;
+  if(!S.mode)S.mode='Normal';
+  saveS();
+  const el=id=>document.getElementById(id);
+  const catNames={Nigerian:'🇳🇬 Nigerian',English:'📘 English',Global:'🌍 Global',All:'🎲 All Categories'};
+  if(el('cat-title'))el('cat-title').textContent=catNames[pack]||pack;
+  if(el('cat-coins'))el('cat-coins').textContent=S.coins;
+  renderCatModeRow();
+  renderCatLevelGrid();
+  showScreen('screen-category');
 }
 
-function isTimedMode() {
-    return gameMode === 'Timed';
+function renderCatModeRow(){
+  const row=document.getElementById('cat-mode-row');if(!row)return;
+  const modes=Object.keys(MODE_INFO);
+  row.innerHTML=modes.map(m=>{
+    const info=MODE_INFO[m];
+    const active=m===S.mode;
+    return`<button class="shrink-0 px-4 py-2 rounded-full font-label font-bold text-sm border-2 transition-all ${active?info.activeColor:info.color}" onclick="setCatMode('${m}')">${info.icon} ${m}</button>`;
+  }).join('');
 }
 
-function isBonusMode() {
-    return gameMode === 'Bonus';
+function setCatMode(mode){S.mode=mode;saveS();renderCatModeRow();}
+
+function renderCatLevelGrid(){
+  const grid=document.getElementById('cat-level-grid');if(!grid)return;
+  const levels=getCategoryLevels(_currentCategory);
+  const prog=document.getElementById('cat-progress');
+  const done=levels.filter((_,i)=>{const gi=getGlobalIndex(_currentCategory,i);return getLevelProg(gi).completed;}).length;
+  if(prog)prog.textContent=`${done}/${levels.length} completed`;
+  if(document.getElementById('cat-subtitle'))document.getElementById('cat-subtitle').textContent=`${S.mode} mode — tap a level to play`;
+
+  grid.innerHTML=levels.map((lv,i)=>{
+    const gi=getGlobalIndex(_currentCategory,i);
+    const p=getLevelProg(gi);
+    const unlocked=i===0||getLevelProg(getGlobalIndex(_currentCategory,i-1)).completed;
+    const isCur=!p.completed&&unlocked;
+    if(!unlocked){return`<div class="bg-surface-container rounded-lg p-4 flex flex-col items-center justify-center aspect-square opacity-50 grayscale border border-outline-variant/10"><span class="material-symbols-outlined text-3xl text-on-surface-variant" style="font-variation-settings:'FILL' 1">lock</span><span class="mt-2 font-headline font-bold text-base text-on-surface-variant">${String(i+1).padStart(2,'0')}</span></div>`;}
+    const stars=p.stars||0;
+    const starH=[1,2,3].map(n=>`<span class="material-symbols-outlined text-sm ${n<=stars?'text-primary-container':'text-outline-variant'}" style="font-variation-settings:'FILL' ${n<=stars?1:0}">star</span>`).join('');
+    if(isCur){return`<div onclick="startLevelFromCat(${i})" class="bg-tertiary-container rounded-lg p-4 flex flex-col items-center justify-between aspect-square ring-2 ring-tertiary/30 cursor-pointer scale-105 shadow-xl transition-all active:scale-100"><span class="font-headline font-black text-3xl text-on-tertiary-container">${String(i+1).padStart(2,'0')}</span><div class="flex gap-0.5">${starH}</div><span class="bg-on-tertiary-container text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase">Play</span></div>`;}
+    return`<div onclick="startLevelFromCat(${i})" class="bg-surface-container-lowest rounded-lg p-4 flex flex-col items-center justify-between aspect-square border border-outline-variant/10 cursor-pointer transition-all active:scale-95"><span class="font-headline font-black text-3xl text-primary-container">${String(i+1).padStart(2,'0')}</span><div class="flex gap-0.5">${starH}</div><span class="text-[10px] font-bold text-on-surface-variant uppercase">${p.completed?'Done':'Play'}</span></div>`;
+  }).join('');
 }
 
-function applyDaily() {
-    currentPack = 'Daily';
-    const dailyLevel = getDailyLevel();
-    activeLevels = [dailyLevel];
-    currentLevel = 0;
-    saveGame();
-    renderPackSelection();
-    loadLevel();
-    renderDailyInfo();
+function getCategoryLevels(pack){if(pack==='All')return LEVELS;return LEVELS.filter(l=>l.category===pack);}
+
+function getGlobalIndex(pack,localIdx){
+  if(pack==='All')return localIdx;
+  const filtered=LEVELS.filter(l=>l.category===pack);
+  if(localIdx<0||localIdx>=filtered.length)return 0;
+  return LEVELS.indexOf(filtered[localIdx]);
 }
 
-function getToday() {
-    return new Date().toISOString().split('T')[0];
+function getLevelProg(i){return S.levelProgress[i]||{stars:0,completed:false};}
+
+function startLevelFromCat(localIdx){
+  const gi=getGlobalIndex(_currentCategory,localIdx);
+  S.currentLevel=gi;saveS();
+  // Show rules if non-Normal and not seen this session
+  if(S.mode!=='Normal'&&!S._seenRules[S.mode]){
+    showRulesScreen(S.mode,gi);
+  } else {
+    startGame(gi);
+  }
 }
 
-function isDailySolved() {
-    return localStorage.getItem('dailySolvedDate') === getToday();
+// ═══════════════════════════════════════════
+// RULES SCREEN
+// ═══════════════════════════════════════════
+const RULES_DATA={
+  Timed:{icon:'⏱',iconBg:'bg-blue-100',desc:'Race against a 60-second timer. Solve the word before time runs out!',bullets:['60 seconds per word','Wrong answer costs 3 coins if time runs out','Speed bonus: +1 coin for finishing fast','No penalty for wrong guesses mid-attempt']},
+  Bonus:{icon:'✨',iconBg:'bg-yellow-100',desc:'Find as many hidden words as possible using the letters of the main answer.',bullets:['Letters come from the main answer','Each valid word you find: +3 coins','Words verified online for accuracy','Skip anytime to move on']},
+  Blitz:{icon:'⚡',iconBg:'bg-orange-100',desc:'60 seconds total — solve as many words as possible. Speed is everything.',bullets:['One 60-second timer for the whole session','Solve words as fast as you can','Score = words solved × speed','No penalty for skipping']},
+  Survival:{icon:'💀',iconBg:'bg-red-100',desc:'3 lives. Every wrong answer costs you one. How far can you go?',bullets:['Start with 3 lives (hearts)','Each wrong answer loses a life','Lose all lives — game over','Complete 10 in a row for the Marathon badge + 100 coins']},
+  Zen:{icon:'🧘',iconBg:'bg-green-100',desc:'No timer. No penalties. Just you and the words. Pure chill mode.',bullets:['No time limit whatsoever','Wrong answers have no consequence','Hints still cost coins','Perfect for learning and relaxing']},
+  Duel:{icon:'🆚',iconBg:'bg-purple-100',desc:'Two players, one device. Take turns solving words. First to 5 wins!',bullets:['Enter both player names below','Players alternate turns','Wrong answer passes the turn','First player to score 5 correct answers wins']},
+  Hard:{icon:'🔒',iconBg:'bg-gray-100',desc:'No letter tiles. Type your answer from memory. Think you know your words?',bullets:['No shuffled letter tiles shown','Type the answer using the keyboard','Wrong answers cost 2 coins','Hints are disabled in Hard Mode']},
+};
+
+let _rulesLevelIndex=0;
+
+function showRulesScreen(mode,levelIndex){
+  _rulesLevelIndex=levelIndex;
+  const data=RULES_DATA[mode];if(!data)return;
+  const el=id=>document.getElementById(id);
+  if(el('rules-title'))el('rules-title').textContent=`${mode} Mode`;
+  if(el('rules-mode-name'))el('rules-mode-name').textContent=`${data.icon} ${mode} Mode`;
+  if(el('rules-desc'))el('rules-desc').textContent=data.desc;
+  const iconWrap=el('rules-icon-wrap');
+  if(iconWrap){iconWrap.className=`w-24 h-24 rounded-full flex items-center justify-center text-5xl ${data.iconBg}`;iconWrap.textContent=data.icon;}
+  const bullets=el('rules-bullets');
+  if(bullets)bullets.innerHTML=data.bullets.map(b=>`<div class="flex items-start gap-3 p-3 bg-surface-container-lowest rounded-lg"><span class="material-symbols-outlined text-tertiary text-base mt-0.5" style="font-variation-settings:'FILL' 1">check_circle</span><span class="text-sm font-medium text-on-surface leading-relaxed">${b}</span></div>`).join('');
+  const duelNames=el('duel-names');
+  if(duelNames)duelNames.style.display=mode==='Duel'?'block':'none';
+  const backBtn=el('rules-back-btn');
+  if(backBtn)backBtn.onclick=()=>showScreen('screen-category');
+  showScreen('screen-rules');
 }
 
-function setDailySolved() {
-    localStorage.setItem('dailySolvedDate', getToday());
+function startFromRules(){
+  S._seenRules[S.mode]=true;saveS();
+  if(S.mode==='Duel'){
+    const p1=document.getElementById('duel-p1')?.value?.trim()||'Player 1';
+    const p2=document.getElementById('duel-p2')?.value?.trim()||'Player 2';
+    _duelP1Name=p1;_duelP2Name=p2;
+  }
+  startGame(_rulesLevelIndex);
 }
 
-function renderDailyInfo() {
-    const today = getToday();
-    if (currentPack === 'Daily') {
-        if (isDailySolved()) {
-            document.getElementById('daily').innerText = `Daily challenge [${today}] solved. Come back tomorrow.`;
-            disableActionButtons();
-        } else {
-            document.getElementById('daily').innerText = `Daily challenge: ${today} (50 coins reward)`;
-            enableActionButtons();
-        }
-    } else {
-        document.getElementById('daily').innerText = '';
-        enableActionButtons();
+// ═══════════════════════════════════════════
+// DAILY
+// ═══════════════════════════════════════════
+function startDaily(){
+  if(S.dailySolvedDate===today()){showToast('Daily already solved! Come back tomorrow.');return;}
+  const t=today();let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))%2147483647;
+  const idx=Math.abs(h)%LEVELS.length;
+  S.pack='Daily';S.mode='Normal';S.currentLevel=idx;saveS();
+  startGame(idx);
+}
+
+// ═══════════════════════════════════════════
+// GAME ENGINE
+// ═══════════════════════════════════════════
+let activeLevels=[];
+let currentGuess=[];
+let timerSec=60,timerMax=60,timerInt=null;
+let wrongAnswers=0,hintsUsed=0;
+let survivalLives=3;
+let duelTurn=0,duelScores=[0,0],_duelP1Name='Player 1',_duelP2Name='Player 2';
+let _lastPick=0;
+let _lbPeriod='daily';
+
+function startGame(levelIndex){
+  S.currentLevel=levelIndex;saveS();
+  activeLevels=S.pack==='Daily'||S.pack==='All'?LEVELS:LEVELS.filter(l=>l.category===S.pack);
+  showScreen('screen-game');
+  loadLevel();
+}
+
+function loadLevel(){
+  if(!activeLevels.length)activeLevels=LEVELS;
+  let idx=S.currentLevel;
+  if(idx>=LEVELS.length)idx=0;
+  // Find the level in LEVELS by index
+  const lv=LEVELS[idx];if(!lv)return;
+
+  currentGuess=lv.words.map(()=>[]);
+  wrongAnswers=0;hintsUsed=0;survivalLives=3;duelTurn=0;duelScores=[0,0];
+
+  const el=id=>document.getElementById(id);
+  if(el('g-level-lbl'))el('g-level-lbl').textContent=`Level ${idx+1}`;
+  if(el('g-theme-lbl'))el('g-theme-lbl').textContent=lv.theme==='Single'?'Quick Puzzle':lv.theme;
+  if(el('g-category-lbl'))el('g-category-lbl').textContent=lv.category||'';
+  if(el('g-mode-badge'))el('g-mode-badge').textContent=S.mode.toUpperCase();
+  if(el('g-coins'))el('g-coins').textContent=S.coins;
+  if(el('g-streak'))el('g-streak').textContent=S.streak;
+  if(el('g-hints-badge'))el('g-hints-badge').textContent=S.hints;
+  updateProgressLabel();
+
+  const livesRow=el('g-lives-row');
+  if(livesRow)livesRow.style.display=S.mode==='Survival'?'flex':'none';
+  updateLivesDisplay();
+
+  stopTimer();
+  if(['Timed','Blitz'].includes(S.mode)){
+    if(el('g-timer-wrap'))el('g-timer-wrap').style.display='block';
+    startTimer(60);
+  } else {
+    if(el('g-timer-wrap'))el('g-timer-wrap').style.display='none';
+  }
+
+  if(S.mode==='Bonus')renderBonusLevel(lv);
+  else if(S.mode==='Hard')renderHardLevel(lv);
+  else if(S.mode==='Duel')renderDuelLevel(lv);
+  else renderNormalLevel(lv);
+}
+
+function updateProgressLabel(){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const done=currentGuess.filter((g,i)=>g.join('')===lv.words[i].answer).length;
+  const el=document.getElementById('g-progress-lbl');
+  if(el)el.textContent=`${done} / ${lv.words.length} words`;
+}
+
+function updateLivesDisplay(){
+  for(let i=1;i<=3;i++){const el=document.getElementById(`life-${i}`);if(el)el.style.color=i<=survivalLives?'#f95630':'#adadac';}
+}
+
+// ─── NORMAL / TIMED / ZEN / BLITZ / SURVIVAL ─────────────────────────────────
+function renderNormalLevel(lv){
+  const c=document.getElementById('words-container');if(!c)return;
+  c.innerHTML=lv.words.map((w,i)=>`
+    <div class="bg-surface-container-low rounded-lg p-5 space-y-3">
+      <p class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Clue</p>
+      <p class="font-body text-base font-semibold text-on-surface leading-snug">${w.clue}</p>
+      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${i}"></div>
+      <div class="flex justify-center gap-2 flex-wrap" id="ltrs-${i}"></div>
+    </div>`).join('');
+  lv.words.forEach((_,i)=>{renderBoxes(i);renderLetters(i);setupSwipe(i);});
+}
+
+function renderBoxes(wi){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const word=lv.words[wi].answer;
+  const g=currentGuess[wi]||[];
+  const done=g.join('')===word;
+  const el=document.getElementById(`ans-${wi}`);if(!el)return;
+  el.innerHTML=word.split('').map((ch,i)=>{
+    const c=g[i]||'';
+    let cls='ans-slot w-11 min-h-[48px] border-2 rounded-sm font-headline font-bold text-xl cursor-pointer select-none ';
+    cls+=done?'correct bg-tertiary-container border-tertiary text-on-tertiary-container':c?'filled bg-surface-container-lowest border-primary-container text-primary':'bg-surface-container-high border-outline-variant/40';
+    return`<div class="${cls}" style="min-width:40px" onclick="eraseLetter(${wi},${i})">${c||''}</div>`;
+  }).join('');
+}
+
+function renderLetters(wi){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const word=lv.words[wi].answer;
+  const letters=[...word].sort(()=>Math.random()-0.5);
+  const el=document.getElementById(`ltrs-${wi}`);if(!el)return;
+  el.innerHTML=letters.map(l=>`<button class="letter-tile w-12 h-12 bg-surface-container-lowest rounded-sm flex items-center justify-center font-headline font-extrabold text-xl text-on-surface border border-outline-variant/20 select-none" data-l="${l}" data-wi="${wi}">${l}</button>`).join('');
+}
+
+// THE BUG FIX — clone container to remove all old listeners
+function setupSwipe(wi){
+  const container=document.getElementById(`ltrs-${wi}`);if(!container)return;
+  const fresh=container.cloneNode(true);
+  container.parentNode.replaceChild(fresh,container);
+  let swiping=false,touched=new Set();
+  const pick=btn=>{if(!btn||touched.has(btn))return;btn.classList.add('selected');touched.add(btn);pickLetter(wi,btn.dataset.l);};
+  fresh.addEventListener('pointerdown',e=>{e.preventDefault();swiping=true;touched.clear();const btn=e.target.closest('[data-l]');if(btn)pick(btn);},{passive:false});
+  fresh.addEventListener('pointermove',e=>{if(!swiping)return;const el=document.elementFromPoint(e.clientX,e.clientY);if(el){const btn=el.closest('[data-l]');if(btn&&fresh.contains(btn))pick(btn);}});
+  const end=()=>{swiping=false;fresh.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));touched.clear();};
+  fresh.addEventListener('pointerup',end);fresh.addEventListener('pointercancel',end);fresh.addEventListener('pointerleave',end);
+}
+
+function pickLetter(wi,letter){
+  if(!letter)return;
+  const now=Date.now();if(now-_lastPick<80)return;_lastPick=now;
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const word=lv.words[wi].answer;
+  if(!currentGuess[wi])currentGuess[wi]=[];
+  if(currentGuess[wi].join('')===word||currentGuess[wi].length>=word.length)return;
+  currentGuess[wi].push(letter);
+  playSound('click');vib(15);
+  renderBoxes(wi);checkAnswer(wi);
+}
+
+function eraseLetter(wi,idx){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  if(!currentGuess[wi])return;
+  if(currentGuess[wi].join('')===lv.words[wi].answer)return;
+  currentGuess[wi].splice(idx,1);renderBoxes(wi);
+}
+
+function checkAnswer(wi){
+  if(S.mode==='Duel'){checkDuelAnswer(wi);return;}
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const word=lv.words[wi].answer;
+  const guess=(currentGuess[wi]||[]).join('');
+  if(guess.length!==word.length)return;
+  if(guess===word){
+    playSound('correct');vib([20,20,40]);
+    renderBoxes(wi);updateProgressLabel();
+    const allDone=currentGuess.every((g,i)=>g.join('')===lv.words[i].answer);
+    if(allDone)setTimeout(()=>handleLevelComplete(),400);
+  } else {
+    playSound('wrong');vib([60,30,60]);
+    wrongAnswers++;currentGuess[wi]=[];
+    if(S.mode==='Survival'){
+      survivalLives--;updateLivesDisplay();
+      if(survivalLives<=0){stopTimer();showToast('💀 Game over!',3000);setTimeout(()=>showScreen('screen-home'),2500);return;}
+      showToast(`Wrong! ${survivalLives} lives left`);
+    } else if(S.mode!=='Zen'){
+      addCoins(-2);showToast('Wrong! -2 coins');
+    } else {showToast('Not quite — try again!');}
+    const ansEl=document.getElementById(`ans-${wi}`);
+    if(ansEl){ansEl.style.animation='none';ansEl.offsetHeight;ansEl.style.animation='shake 0.3s ease';}
+    renderBoxes(wi);
+  }
+}
+
+function handleLevelComplete(){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  stopTimer();
+  const stars=wrongAnswers===0&&timerSec>=30&&hintsUsed===0?3:wrongAnswers<=1&&hintsUsed===0?2:1;
+  let earned=2*lv.words.length;
+  if(timerSec>=40)earned+=1;
+  const isDaily=S.pack==='Daily'&&S.dailySolvedDate!==today();
+  if(isDaily){earned+=20;S.dailySolvedDate=today();}
+  if(S.beginnerBonusExpiry&&today()<=S.beginnerBonusExpiry)earned*=2;
+  if(new Date().getDay()===5&&lv.category==='Nigerian')earned*=2;
+  addCoins(earned);
+
+  // Streak
+  const t=today();
+  const yesterday=new Date(Date.now()-86400000).toISOString().split('T')[0];
+  if(S.lastPlayedDate===t){}else if(S.lastPlayedDate===yesterday)S.streak++;else S.streak=1;
+  S.bestStreak=Math.max(S.streak,S.bestStreak||0);S.lastPlayedDate=t;S.lastActiveDate=t;
+
+  const prev=getLevelProg(S.currentLevel);
+  S.levelProgress[S.currentLevel]={stars:Math.max(prev.stars||0,stars),completed:true};
+  S.totalLevels=Object.values(S.levelProgress).filter(p=>p.completed).length;
+  S.totalWords=(S.totalWords||0)+lv.words.length;
+  S.history=[{date:t,theme:lv.theme,stars,coins:earned,ts:Date.now()},...(S.history||[])].slice(0,30);
+
+  if(S.mode==='Survival'){
+    S.marathonProgress=(S.marathonProgress||0)+1;
+    if(S.marathonProgress>=10&&!S._marathonRewarded){S._marathonRewarded=true;addCoins(100);showToast('🏅 Marathon done! +100 coins!',4000);}
+  }
+
+  recordScore();
+
+  // Advance to next level in same category
+  const catLevels=getCategoryLevels(_currentCategory);
+  const localIdx=catLevels.indexOf(lv);
+  const nextLocal=localIdx+1<catLevels.length?localIdx+1:0;
+  S.currentLevel=getGlobalIndex(_currentCategory,nextLocal);
+  saveS();
+  playSound('levelup');
+  showVictory(stars,earned);
+}
+
+function recordScore(){
+  const entry={name:S.username||'Anonymous',avatar:S.avatar||'🦁',score:S.coins,date:today(),ts:Date.now(),theme:LEVELS[S.currentLevel]?.theme||''};
+  S.leaderboard=[entry,...(S.leaderboard||[])].sort((a,b)=>b.score-a.score).slice(0,100);saveS();
+}
+
+function showVictory(stars,coins){
+  const labels=['','Not bad!','Great work!','Magnificent!'];
+  [1,2,3].forEach(n=>{const el=document.getElementById(`vs${n}`);if(el){el.style.fontVariationSettings=n<=stars?"'FILL' 1":"'FILL' 0";el.style.color=n<=stars?'#fd8b00':'';}});
+  const vc=document.getElementById('v-coins');if(vc)vc.textContent=`+${coins}`;
+  const vl=document.getElementById('v-label');if(vl)vl.textContent=labels[stars]||'Level Complete!';
+  showScreen('screen-victory');launchConfetti();
+}
+
+function victoryNext(){showScreen('screen-game');loadLevel();}
+
+function launchConfetti(){
+  const colors=['#fd8b00','#8930b0','#006859','#f95630','#6bfde0'];
+  for(let i=0;i<25;i++){const p=document.createElement('div');p.className='confetti-p';p.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};animation:confetti-fall ${1.5+Math.random()*2}s ease ${Math.random()*0.4}s forwards;transform:rotate(${Math.random()*360}deg)`;document.body.appendChild(p);setTimeout(()=>p.remove(),4000);}
+}
+
+// ─── TIMER ──────────────────────────────────────────────────────────────────
+function startTimer(sec){
+  stopTimer();timerSec=sec;timerMax=sec;
+  const fill=document.getElementById('g-timer-fill');const lbl=document.getElementById('g-timer-lbl');
+  function tick(){
+    if(lbl)lbl.textContent=timerSec+'s';
+    if(fill){fill.style.width=Math.round((timerSec/timerMax)*100)+'%';fill.style.background=timerSec<=10?'#f95630':timerSec<=20?'#fd8b00':'#006859';}
+    if(timerSec<=0){stopTimer();if(S.mode==='Blitz'){showToast(`Time's up!`,3000);setTimeout(()=>showScreen('screen-home'),2500);}else{addCoins(-3);showToast('Time up! -3 coins.');setTimeout(()=>{S.currentLevel=(S.currentLevel+1)%LEVELS.length;loadLevel();},1200);}return;}
+    timerSec--;
+  }
+  tick();timerInt=setInterval(tick,1000);
+}
+function stopTimer(){clearInterval(timerInt);timerInt=null;}
+
+// ─── GAME ACTIONS ────────────────────────────────────────────────────────────
+function useHint(){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  if(S.mode==='Hard'){showToast('Hints disabled in Hard Mode!');return;}
+  if(S.hints<=0&&S.coins<5){showToast('No hints! Buy some in the Store.');return;}
+  for(let wi=0;wi<lv.words.length;wi++){
+    const word=lv.words[wi].answer;
+    if(!currentGuess[wi])currentGuess[wi]=[];
+    if(currentGuess[wi].join('')===word)continue;
+    for(let i=0;i<word.length;i++){
+      if(currentGuess[wi][i]!==word[i]){
+        currentGuess[wi][i]=word[i];hintsUsed++;
+        if(S.hints>0){S.hints--;const b=document.getElementById('g-hints-badge');if(b)b.textContent=S.hints;}else spendCoins(5);
+        saveS();renderBoxes(wi);checkAnswer(wi);showToast('Hint used!');return;
+      }
     }
+  }
 }
 
-function updateTimerDisplay() {
-    document.getElementById('timer').innerText = `Timer: ${timerSeconds}s`;
+function doShuffle(){
+  if(!spendCoins(3)){showToast('Need 3 coins to shuffle');return;}
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const wi=currentGuess.findIndex((g,i)=>(g||[]).join('')!==lv.words[i].answer);
+  if(wi>=0)renderLetters(wi);showToast('Shuffled! -3 coins');
 }
 
-function updateStreakDisplay() {
-    document.getElementById('streak').innerText = `Streak: ${streak} 🔥`;
-    document.getElementById('bonus-info').innerText = `Today completion: ${wordsCompletedToday}`;
+function watchAd(){const bonus=S.vip?15:10;addCoins(bonus);showToast(`+${bonus} coins!`+(S.vip?' (VIP bonus)':''));}
+
+function nextLevel(){
+  stopTimer();
+  const catLevels=getCategoryLevels(_currentCategory);
+  const lv=LEVELS[S.currentLevel];
+  const localIdx=catLevels.indexOf(lv);
+  const nextLocal=localIdx>=0&&localIdx+1<catLevels.length?localIdx+1:0;
+  S.currentLevel=getGlobalIndex(_currentCategory,nextLocal);
+  saveS();loadLevel();
 }
 
-function startTimer(seconds = 60) {
-    clearInterval(timerInterval);
-    timerSeconds = seconds;
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-        timerSeconds -= 1;
-        if (timerSeconds <= 0) {
-            clearInterval(timerInterval);
-            document.getElementById('timer').innerText = 'Timer: 0s - Time up!';
-            coins = Math.max(0, coins - 3);
-            streak = 0;
-            saveGame();
-            updateStreakDisplay();
-            alert('Time is up! -3 coins. Try next word.');
-            nextLevel();
-            return;
-        }
-        updateTimerDisplay();
-    }, 1000);
-}
+// ─── BONUS MODE ──────────────────────────────────────────────────────────────
+function canMakeWord(word,answer){let t=answer.toLowerCase().split('');for(const c of word.toLowerCase()){const i=t.indexOf(c);if(i===-1)return false;t.splice(i,1);}return true;}
+function getPossibleWords(answer){return[...new Set(DICT.filter(w=>w.length>=3&&canMakeWord(w,answer)&&w.toUpperCase()!==answer).map(w=>w.toUpperCase()))].sort((a,b)=>a.length-b.length).slice(0,15);}
 
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-
-function disableActionButtons() {
-    document.querySelectorAll('.actions button').forEach(btn => btn.disabled = true);
-    document.querySelectorAll('.letters button').forEach(btn => btn.disabled = true);
-}
-
-function enableActionButtons() {
-    document.querySelectorAll('.actions button').forEach(btn => btn.disabled = false);
-    document.querySelectorAll('.letters button').forEach(btn => btn.disabled = false);
-}
-
-function applyPack(packName) {
-    currentPack = packName;
-    activeLevels = getPackLevels(packName);
-    currentLevel = 0;
-    saveGame();
-    renderPackSelection();
-    loadLevel();
-}
-
-function loadLevel() {
-    if (!activeLevels.length) {
-        activeLevels = levels;
-    }
-
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        // Multi-word level
-        currentGuess = activeLevels[currentLevel].words.map(word => []);
-    } else {
-        // Single-word level (backward compatibility)
-        currentGuess = [[]];
-    }
-
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        document.getElementById("theme").innerText = activeLevels[currentLevel].theme;
-        // Set themed background
-        if (activeLevels[currentLevel].theme.includes("Nigerian")) {
-            document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
-        } else if (activeLevels[currentLevel].theme.includes("English")) {
-            document.body.style.background = "linear-gradient(to bottom, #e0f7ff, #ffffff)";
-        } else if (activeLevels[currentLevel].theme.includes("Global")) {
-            document.body.style.background = "linear-gradient(to bottom, #f0f0f0, #ffffff)";
-        } else {
-            document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
-        }
-        // Add progress indicator
-        if (!document.getElementById("progress")) {
-            document.getElementById("theme").insertAdjacentHTML('afterend', '<div id="progress"></div>');
-        }
-        updateProgress();
-    } else {
-        document.getElementById("theme").innerText = "Puzzle";
-        document.body.style.background = "linear-gradient(to bottom, #ffe0b3, #ffffff)";
-        // Remove progress if exists
-        const prog = document.getElementById("progress");
-        if (prog) prog.remove();
-    }
-
-    document.getElementById("coins").innerText = "Coins: " + coins;
-    document.getElementById("level").innerText = "Level " + (currentLevel + 1);
-
-    // Use single-word renderer for explicitly wrapped Single levels (and legacy single entries)
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme && activeLevels[currentLevel].theme !== 'Single') {
-        renderWords();
-    } else {
-        renderSingleWord();
-    }
-    renderDailyInfo();
-
-    if (isTimedMode()) {
-        startTimer(gameMode === 'Timed' ? 60 : 45); // if we add mayhem later we can adjust
-    } else {
-        stopTimer();
-        document.getElementById('timer').innerText = 'Timer: Off';
-    }
-
-    updateStreakDisplay();
-}
-
-function renderSingleWord() {
-    let levelItem = activeLevels[currentLevel] || {};
-    let wordObject = (levelItem.words && levelItem.words[0]) ? levelItem.words[0] : levelItem;
-    let clue = wordObject.clue || levelItem.clue || 'No clue';
-
-    if (isBonusMode()) {
-        let html = `<div class="word-section" id="bonus-word-0"></div>`;
-        document.getElementById("words-container").innerHTML = html;
-        renderBonusMode(0);
-    } else {
-        let html = `<div class="word-section">
-            <p class="clue">Clue: ${clue}</p>
-            <div class="answer" id="answer-0"></div>
-            <div class="letters" id="letters-0"></div>
-        </div>`;
-        document.getElementById("words-container").innerHTML = html;
-        renderBoxes(0);
-        renderLetters(0);
-        setupSwipe(0);
-    }
-}
-
-function updateProgress() {
-    if (!activeLevels[currentLevel] || !activeLevels[currentLevel].theme) return;
-    let completed = 0;
-    activeLevels[currentLevel].words.forEach((word, idx) => {
-        if (currentGuess[idx].join('') === word.answer) completed++;
-    });
-    document.getElementById("progress").innerText = `Words completed: ${completed} / ${activeLevels[currentLevel].words.length}`;
-}
-
-function setupSwipe(wordIndex) {
-    let container = document.getElementById(`letters-${wordIndex}`);
-    if (!container) return;
-
-    let isSwiping = false;
-    let touched = new Set();
-
-    container.addEventListener('pointerdown', function(e) {
-        e.preventDefault();
-        isSwiping = true;
-        touched.clear();
-        if (e.target.tagName === 'BUTTON') {
-            let letter = e.target.innerText;
-            if (!touched.has(e.target)) {
-                e.target.classList.add('selected');
-                touched.add(e.target);
-                pickLetter(wordIndex, letter);
-            }
-        }
-    });
-
-    container.addEventListener('pointerenter', function(e) {
-        if (isSwiping && e.target.tagName === 'BUTTON') {
-            let letter = e.target.innerText;
-            if (!touched.has(e.target)) {
-                e.target.classList.add('selected');
-                touched.add(e.target);
-                pickLetter(wordIndex, letter);
-            }
-        }
-    }, true);
-
-    container.addEventListener('pointerup', function() {
-        isSwiping = false;
-        container.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-    });
-
-    container.addEventListener('pointerleave', function() {
-        isSwiping = false;
-        container.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-    });
-}
-
-function getPossibleExtraWords(answer) {
-    let base = answer.toLowerCase();
-    let baseLetters = base.split('');
-
-    return dictionary.filter(word => {
-        if (word.toLowerCase() === base || word.length < 3) return false;
-        let tmp = baseLetters.slice();
-        for (let ch of word.toLowerCase()) {
-            let idx = tmp.indexOf(ch);
-            if (idx === -1) return false;
-            tmp.splice(idx, 1);
-        }
-        return true;
-    }).slice(0, 8);
-}
-
-function canMakeWord(word, answer) {
-    let tmp = answer.toLowerCase().split('');
-    for (let ch of word.toLowerCase()) {
-        let idx = tmp.indexOf(ch);
-        if (idx === -1) return false;
-        tmp.splice(idx, 1);
-    }
-    return true;
-}
-
-function getPossibleWordsForAnswer(answer) {
-    let base = answer.toLowerCase();
-    let results = [];
-
-    // 1️⃣ dictionary words
-    for (let word of dictionary) {
-        if (word.length >= 3 && canMakeWord(word, base)) {
-            results.push(word.toUpperCase());
-        }
-    }
-
-    // 2️⃣ FORCE generate basic combos (this is KEY fix) - but limit to avoid crashes
-    let letters = base.split('');
-    if (letters.length <= 8) {
-        function generateCombos(prefix, remaining) {
-            if (prefix.length >= 3 && prefix.length <= 6) { // limit length to prevent too many
-                results.push(prefix.toUpperCase());
-            }
-            if (prefix.length < 6) { // limit depth
-                for (let i = 0; i < remaining.length; i++) {
-                    generateCombos(
-                        prefix + remaining[i],
-                        remaining.slice(0, i).concat(remaining.slice(i + 1))
-                    );
-                }
-            }
-        }
-
-        generateCombos("", letters);
-    }
-
-    // Remove duplicates
-    results = [...new Set(results)];
-
-    // Remove the original full word
-    results = results.filter(w => w !== answer.toUpperCase());
-
-    // Sort nicely
-    results.sort((a, b) => a.length - b.length);
-
-    // Limit between 5–15 words
-    if (results.length < 5) {
-        return results; // allow small sets instead of saying none
-    }
-
-    return results.slice(0, 15);
-}
-
-function renderBonusMode(wordIndex) {
-    let levelItem = activeLevels[currentLevel] || {};
-    let wordObject = (levelItem.words && levelItem.words[wordIndex]) ? levelItem.words[wordIndex] : levelItem;
-    let answer = wordObject.answer || levelItem.answer || '';
-    let clue = wordObject.clue || levelItem.clue || 'No clue';
-
-    let debugMsg = `DEBUG: mode=${gameMode} currentLevel=${currentLevel} theme=${levelItem.theme || 'N/A'} answer=${answer || 'N/A'} clue=${clue || 'N/A'}`;
-    document.getElementById('bonus-info').innerText = debugMsg;
-    console.log(debugMsg);
-
-    if (!answer) {
-        console.warn('renderBonusMode: no answer for', currentLevel, levelItem);
-        document.getElementById(`bonus-word-${wordIndex}`).innerText = 'No word available for this level.';
-        return;
-    }
-
-    // Check if element exists
-    let targetDiv = document.getElementById(`bonus-word-${wordIndex}`);
-    if (!targetDiv) {
-        console.error(`Element bonus-word-${wordIndex} NOT FOUND. Creating it now.`);
-        let wordsContainer = document.getElementById('words-container');
-        if (wordsContainer) {
-            wordsContainer.innerHTML = `<div class="word-section" id="bonus-word-${wordIndex}"></div>`;
-            targetDiv = document.getElementById(`bonus-word-${wordIndex}`);
-        }
-    }
-
-    if (!targetDiv) {
-        console.error('FATAL: Could not find or create bonus-word div');
-        return;
-    }
-
-    let found = extraWordsFound[`${currentLevel}-${wordIndex}`] || [];
-    let pointsEarned = found.length * 5;
-    let possibleWords = getPossibleWordsForAnswer(answer);
-    let possibleCount = possibleWords.length;
-
-    let progressPercent = possibleCount > 0 ? Math.floor((found.length / possibleCount) * 100) : 0;
-
-    let html = `<div class="word-section" style="border: 3px solid red; background: #ffe0b3;">
-        <p style="font-size: 16px; color: #333; margin-bottom: 10px; font-weight: bold;">CLUE: ${clue}</p>
-        <p style="font-size: 20px; font-weight: bold; color: #000; background: #fff; padding: 10px; border: 2px solid #ff8800; border-radius: 10px; margin-bottom: 10px;">WORD: ${answer}</p>
-        <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Find words using these letters. (${possibleCount} possible)</p>
-        <div class="letters" id="bonus-letters-${wordIndex}" style="border: 1px solid blue; min-height: 50px;"></div>
-        <div style="margin-bottom: 10px;">
-            <input id="bonus-input-${wordIndex}" type="text" placeholder="Type or click letters..." style="width: 55%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" />
-            <button onclick="confirmBonusWord(${wordIndex})" style="width: 42%; padding: 8px; background: #ff9900; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Submit</button>
-        </div>
-        <p style="font-size: 14px; color: #ff8800;">Progress: ${progressPercent}%</p>
-        <div style="font-size: 13px; color: green; background: #f0f0f0; padding: 8px; border-radius: 5px;">Found: ${found.length > 0 ? found.join(', ') : 'None yet'}</div>
-        <button onclick="skipBonusWord(${wordIndex})" style="width: 100%; padding: 10px; background: #70a1ff; color: white; border: none; border-radius: 5px; margin-top: 8px;">Next</button>
+function renderBonusLevel(lv){
+  const c=document.getElementById('words-container');if(!c)return;
+  const idx=S.currentLevel;
+  c.innerHTML=lv.words.map((w,i)=>{
+    const key=`${idx}-${i}`;
+    const found=(S.extraFound||{})[key]||[];
+    const possible=getPossibleWords(w.answer);
+    const pct=possible.length>0?Math.round((found.length/possible.length)*100):0;
+    const letters=[...w.answer].sort(()=>Math.random()-0.5);
+    return`<div class="bg-surface-container-low rounded-lg p-5 space-y-3">
+      <div class="flex items-center justify-between"><p class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Find hidden words</p><span class="text-xs font-headline font-bold text-tertiary">${pct}% found</span></div>
+      <p class="font-body text-sm font-semibold text-on-surface">${w.clue}</p>
+      <p class="text-xs text-on-surface-variant">Letters from: <strong>${w.answer}</strong> · ${possible.length} possible</p>
+      <div class="flex justify-center gap-2 flex-wrap">${letters.map(l=>`<button class="letter-tile w-11 h-11 bg-surface-container-lowest rounded-sm font-headline font-extrabold text-lg text-on-surface border border-outline-variant/20" onclick="addBonusLetter(${i},'${l}')">${l}</button>`).join('')}</div>
+      <div class="flex gap-2">
+        <input id="bonus-inp-${i}" type="text" placeholder="Type a word..." autocapitalize="characters" style="text-transform:uppercase;flex:1;padding:10px 16px;border-radius:9999px;border:1.5px solid #adadac;font-family:Plus Jakarta Sans;font-weight:600;outline:none;background:white;color:#2e2f2f;font-size:14px"/>
+        <button onclick="submitBonus(${i})" style="padding:10px 18px;border-radius:9999px;background:#fd8b00;color:white;font-family:Plus Jakarta Sans;font-weight:700;border:none;cursor:pointer;box-shadow:0 3px 0 #ea8000;font-size:14px">Go</button>
+      </div>
+      ${found.length>0?`<div class="bg-tertiary-container/20 rounded-lg p-3 text-xs font-medium text-on-tertiary-container leading-relaxed">${found.join(' · ')}</div>`:''}
+      <button onclick="nextLevel()" class="w-full py-2 text-on-surface-variant font-label font-bold text-xs">Skip to next level</button>
     </div>`;
-
-    console.log('Setting innerHTML on', `bonus-word-${wordIndex}`, 'with html:', html.substring(0, 100));
-    targetDiv.innerHTML = html;
-    console.log('After innerHTML. Div now contains:', targetDiv.innerHTML.substring(0, 100));
-    
-    renderBonusLetters(wordIndex);
+  }).join('');
 }
 
-function confirmBonusWord(wordIndex) {
-    let userWord = document.getElementById(`bonus-input-${wordIndex}`).value.trim().toUpperCase();
-    if (!userWord) {
-        alert('Please type a word first.');
-        return;
-    }
+function addBonusLetter(wi,l){const inp=document.getElementById(`bonus-inp-${wi}`);if(inp)inp.value=(inp.value+l).toUpperCase();}
 
-    let answer = activeLevels[currentLevel] && activeLevels[currentLevel].theme
-        ? activeLevels[currentLevel].words[wordIndex].answer
-        : activeLevels[currentLevel] && activeLevels[currentLevel].answer;
+async function submitBonus(wi){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const inp=document.getElementById(`bonus-inp-${wi}`);
+  const word=(inp?.value||'').trim().toUpperCase();
+  if(!word)return;
+  const answer=lv.words[wi].answer;
+  const key=`${S.currentLevel}-${wi}`;
+  if(!S.extraFound)S.extraFound={};
+  S.extraFound[key]=S.extraFound[key]||[];
+  if(S.extraFound[key].includes(word)){showToast('Already found!');inp.value='';return;}
+  if(word.length<3){showToast('Min 3 letters');inp.value='';return;}
+  if(!canMakeWord(word,answer)){showToast("Can't make that from these letters");inp.value='';return;}
 
-    if (!answer) return;
+  // Always verify online first, local dict as fallback
+  showToast('Checking…');
+  let valid=false;
+  try{
+    const r=await fetch(`https://api.datamuse.com/words?sp=${word.toLowerCase()}&max=1`);
+    const d=await r.json();
+    valid=d.length>0&&d[0].word.toLowerCase()===word.toLowerCase();
+  }catch(e){
+    // Offline fallback to local dict
+    valid=getPossibleWords(answer).includes(word);
+  }
 
-    let key = `${currentLevel}-${wordIndex}`;
-    extraWordsFound[key] = extraWordsFound[key] || [];
-
-    // Check if already found
-    if (extraWordsFound[key].includes(userWord)) {
-        alert('Already found that word!');
-        document.getElementById(`bonus-input-${wordIndex}`).value = '';
-        return;
-    }
-
-    // Check if it's the main answer word - they can submit it to complete
-    if (userWord === answer.toUpperCase()) {
-        correctSound.play();
-        coins += 20;
-        alert('Correct! You found the main word. +20 coins!');
-        
-        // Clear the found list for this word before moving on
-        extraWordsFound[key] = [];
-        
-        currentLevel++;
-        if (currentLevel >= activeLevels.length) {
-            alert('You finished all levels! 🔥');
-            currentLevel = 0;
-        }
-        saveGame();
-        document.getElementById('coins').innerText = 'Coins: ' + coins;
-        setTimeout(() => loadLevel(), 800);
-        return;
-    }
-
-    // Check minimum length
-    if (userWord.length < 3) {
-        alert('Word must be at least 3 letters long.');
-        return;
-    }
-
-    // Get possible words for this answer
-    let possibleWords = getPossibleWordsForAnswer(answer);
-    console.log('Possible words for', answer, ':', possibleWords);
-
-    // Check if the word is in the possible words list
-    if (possibleWords.includes(userWord)) {
-        extraWordsFound[key].push(userWord);
-        coins += 5;
-        document.getElementById('coins').innerText = 'Coins: ' + coins;
-        saveGame();
-        document.getElementById(`bonus-input-${wordIndex}`).value = '';
-        clickSound.play();
-        alert(`Great! Found "${userWord}" (+5 coins)`);
-        renderBonusMode(wordIndex);
-    } else {
-        alert('That word cannot be made from these letters or is not a valid English word.');
-        document.getElementById(`bonus-input-${wordIndex}`).value = '';
-    }
+  if(valid){
+    S.extraFound[key].push(word);addCoins(3);saveS();playSound('correct');
+    showToast(`+3 coins! Found "${word}"`);inp.value='';renderBonusLevel(lv);
+  } else {showToast('Not a valid English word');inp.value='';}
 }
 
-function skipBonusWord(wordIndex) {
-    if (currentPack === 'Daily' && isDailySolved()) {
-        alert('Daily challenge already solved; come back tomorrow.');
-        return;
-    }
-    currentLevel++;
-    if (currentLevel >= activeLevels.length) {
-        alert('You finished all levels! 🔥');
-        currentLevel = 0;
-    }
-    saveGame();
-    loadLevel();
+// ─── HARD MODE ───────────────────────────────────────────────────────────────
+function renderHardLevel(lv){
+  const c=document.getElementById('words-container');if(!c)return;
+  c.innerHTML=lv.words.map((w,i)=>`
+    <div class="bg-surface-container-low rounded-lg p-5 space-y-3">
+      <p class="font-label text-xs font-bold uppercase tracking-widest text-error opacity-70">Hard Mode — type from memory</p>
+      <p class="font-body text-base font-semibold text-on-surface">${w.clue}</p>
+      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${i}"></div>
+      <div class="flex gap-2">
+        <input id="hard-inp-${i}" type="text" maxlength="${w.answer.length}" placeholder="Type answer..." autocapitalize="characters" style="text-transform:uppercase;flex:1;padding:10px 16px;border-radius:9999px;border:2px solid #adadac;font-family:Plus Jakarta Sans;font-weight:600;outline:none;background:white;color:#2e2f2f"/>
+        <button onclick="submitHard(${i})" style="padding:10px 18px;border-radius:9999px;background:#fd8b00;color:white;font-family:Plus Jakarta Sans;font-weight:700;border:none;cursor:pointer;box-shadow:0 3px 0 #ea8000">Go</button>
+      </div>
+    </div>`).join('');
+  lv.words.forEach((_,i)=>renderBoxes(i));
 }
 
-function renderWords() {
-    if (isBonusMode()) {
-        let html = "";
-        activeLevels[currentLevel].words.forEach((word, index) => {
-            html += `<div class="word-section" id="bonus-word-${index}"></div>`;
-        });
-        document.getElementById("words-container").innerHTML = html;
-        activeLevels[currentLevel].words.forEach((word, index) => {
-            renderBonusMode(index);
-        });
-    } else {
-        let html = "";
-        activeLevels[currentLevel].words.forEach((word, index) => {
-            html += `<div class="word-section">
-                <p class="clue">Clue: ${word.clue}</p>
-                <div class="answer" id="answer-${index}"></div>
-                <div class="letters" id="letters-${index}"></div>
-            </div>`;
-        });
-        document.getElementById("words-container").innerHTML = html;
-
-        activeLevels[currentLevel].words.forEach((word, index) => {
-            renderBoxes(index);
-            renderLetters(index);
-            setupSwipe(index);
-        });
-    }
+function submitHard(wi){
+  const inp=document.getElementById(`hard-inp-${wi}`);
+  const val=(inp?.value||'').trim().toUpperCase();if(!val)return;
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  currentGuess[wi]=val.split('');renderBoxes(wi);checkAnswer(wi);if(inp)inp.value='';
 }
 
-function renderBoxes(wordIndex) {
-    let answerWord;
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
-    } else {
-        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
-    }
-    let html = "";
-
-    for (let i = 0; i < answerWord.length; i++) {
-        let char = currentGuess[wordIndex][i] || "";
-        if (char) {
-            html += `<div class="box" onclick="eraseLetter(${wordIndex}, ${i})">${char}</div>`;
-        } else {
-            html += `<div class="box">${char}</div>`;
-        }
-    }
-
-    document.getElementById(`answer-${wordIndex}`).innerHTML = html;
+// ─── DUEL MODE ───────────────────────────────────────────────────────────────
+function renderDuelLevel(lv){
+  const c=document.getElementById('words-container');if(!c)return;
+  const wi=duelTurn%lv.words.length;const word=lv.words[wi];const p=duelTurn%2===0;
+  const p1=_duelP1Name||'Player 1';const p2=_duelP2Name||'Player 2';
+  c.innerHTML=`
+    <div class="flex justify-center gap-4 mb-2">
+      <div class="flex flex-col items-center px-5 py-3 rounded-lg ${p?'bg-primary-container text-white':'bg-surface-container-high text-on-surface'}"><span class="font-headline font-black text-2xl">${duelScores[0]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p1}</span></div>
+      <div class="flex items-center px-3 text-on-surface-variant font-headline font-black text-lg">VS</div>
+      <div class="flex flex-col items-center px-5 py-3 rounded-lg ${!p?'bg-secondary text-white':'bg-surface-container-high text-on-surface'}"><span class="font-headline font-black text-2xl">${duelScores[1]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p2}</span></div>
+    </div>
+    <div class="bg-surface-container-low rounded-lg p-5 space-y-4 border-2 ${p?'border-primary-container/30':'border-secondary/30'}">
+      <p class="font-label text-xs font-bold uppercase tracking-widest ${p?'text-primary':'text-secondary'} opacity-70">${p?p1:p2}'s Turn</p>
+      <p class="font-body text-base font-semibold text-on-surface">${word.clue}</p>
+      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-0"></div>
+      <div class="flex justify-center gap-2 flex-wrap" id="ltrs-0"></div>
+    </div>
+    <p class="text-center text-xs text-on-surface-variant font-medium">First to 5 correct wins!</p>`;
+  currentGuess[0]=[];renderBoxes(0);renderLetters(0);setupSwipe(0);
 }
 
-function renderLetters(wordIndex) {
-    let answerWord;
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
-    } else {
-        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
-    }
-    let letters = answerWord.split("").sort(() => Math.random() - 0.5);
-
-    let html = "";
-    letters.forEach(l => {
-        html += `<button data-letter="${l}" data-word="${wordIndex}">${l}</button>`;
-    });
-
-    document.getElementById(`letters-${wordIndex}`).innerHTML = html;
-    setupSwipe(wordIndex);
+function checkDuelAnswer(wi){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  const wIdx=duelTurn%lv.words.length;const word=lv.words[wIdx].answer;
+  const guess=(currentGuess[0]||[]).join('');if(guess.length!==word.length)return;
+  if(guess===word){
+    duelScores[duelTurn%2]++;playSound('correct');
+    showToast(`${duelTurn%2===0?(_duelP1Name||'P1'):(_duelP2Name||'P2')} scores!`);
+    if(duelScores[0]>=5||duelScores[1]>=5){const w=duelScores[0]>=5?(_duelP1Name||'P1'):(_duelP2Name||'P2');setTimeout(()=>{showToast(`🎉 ${w} wins!`,3000);setTimeout(()=>showScreen('screen-home'),2500);},400);return;}
+    duelTurn++;setTimeout(()=>renderDuelLevel(lv),600);
+  } else {
+    playSound('wrong');currentGuess[0]=[];showToast('Wrong! Passing turn…');
+    duelTurn++;setTimeout(()=>renderDuelLevel(lv),800);
+  }
 }
 
-function renderBonusLetters(wordIndex) {
-    let answerWord;
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
-    } else {
-        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
-    }
-    let letters = answerWord.split("").sort(() => Math.random() - 0.5);
-
-    let html = "";
-    letters.forEach(l => {
-        html += `<button data-letter="${l}" data-word="${wordIndex}" onclick="pickBonusLetter(${wordIndex}, '${l}')">${l}</button>`;
-    });
-
-    document.getElementById(`bonus-letters-${wordIndex}`).innerHTML = html;
+// ═══════════════════════════════════════════
+// LEADERBOARD
+// ═══════════════════════════════════════════
+function renderLeaderboard(){
+  const t=today(),now=Date.now();
+  let lb=[...(S.leaderboard||[])];
+  if(_lbPeriod==='daily')lb=lb.filter(e=>e.date===t);
+  if(_lbPeriod==='weekly')lb=lb.filter(e=>now-e.ts<7*86400000);
+  lb=lb.sort((a,b)=>b.score-a.score);
+  const podium=document.getElementById('lb-podium');
+  if(podium){
+    const top3=lb.slice(0,3);const order=[top3[1],top3[0],top3[2]];
+    const medals=['#94a3b8','#fd8b00','#cd7f32'];const sizes=['w-20 h-20','w-28 h-28','w-20 h-20'];const yOff=['','translate-y-[-24px]',''];
+    podium.innerHTML=order.map((e,pos)=>{if(!e)return`<div class="flex-1"></div>`;const rank=pos===0?2:pos===1?1:3;const isMe=e.name===(S.username||'Anonymous');
+      return`<div class="flex flex-col items-center flex-1 ${yOff[pos]}"><div class="relative mb-2">${rank===1?`<span class="material-symbols-outlined text-primary-container text-3xl absolute -top-8 left-1/2 -translate-x-1/2" style="font-variation-settings:'FILL' 1">emoji_events</span>`:''}<div class="${sizes[pos]} rounded-full bg-surface-container flex items-center justify-center text-4xl border-4" style="border-color:${medals[rank-1]}">${e.avatar||'🦁'}</div><div class="absolute -bottom-2 -right-1 w-7 h-7 rounded-full flex items-center justify-center border-2 border-surface text-xs font-headline font-black text-white" style="background:${medals[rank-1]}">${rank}</div></div><span class="font-headline font-bold text-sm text-center truncate w-full ${isMe?'text-primary':''}">${e.name}${isMe?' (you)':''}</span><span class="font-headline font-bold text-xs text-primary-container">${e.score}</span></div>`;
+    }).join('');
+  }
+  const list=document.getElementById('lb-list');
+  if(list){
+    const rest=lb.slice(3);
+    if(!rest.length&&!lb.length){list.innerHTML='<div class="text-center py-8 text-on-surface-variant font-medium text-sm">No scores yet. Play some levels!</div>';return;}
+    list.innerHTML=rest.map((e,i)=>{const rank=i+4;const isMe=e.name===(S.username||'Anonymous');
+      return`<div class="flex items-center justify-between p-4 rounded-lg ${isMe?'bg-primary-container/10 border-2 border-primary-container/20':'bg-surface-container-lowest'}"><div class="flex items-center gap-3"><span class="w-6 font-headline font-bold text-outline text-sm text-center">${rank}</span><span class="text-2xl">${e.avatar||'🦁'}</span><div><div class="font-headline font-bold text-sm ${isMe?'text-primary':''}">${e.name}${isMe?' (you)':''}</div><div class="text-xs text-on-surface-variant">${e.theme||''}</div></div></div><span class="font-headline font-black text-sm ${isMe?'text-primary':'text-on-surface-variant'}">${e.score}</span></div>`;
+    }).join('');
+  }
+  const myName=S.username||'Anonymous';const myIdx=lb.findIndex(e=>e.name===myName);const meEl=document.getElementById('lb-me');
+  if(meEl){
+    if(myIdx>=0){meEl.style.display='block';const e=lb[myIdx];const pct=lb.length>0?Math.round(((lb.length-myIdx)/lb.length)*100):0;document.getElementById('lb-me-rank').textContent=`#${myIdx+1}`;document.getElementById('lb-me-av').textContent=e.avatar||'🦁';document.getElementById('lb-me-name').textContent=myName;document.getElementById('lb-me-pct').textContent=`Top ${pct}%`;document.getElementById('lb-me-score').textContent=e.score;}
+    else meEl.style.display='none';
+  }
 }
 
-function pickLetter(wordIndex, letter) { 
-    if (Date.now() - lastPickTime < 100) return;
-    lastPickTime = Date.now();
-
-    if (currentPack === 'Daily' && isDailySolved()) {
-        return;
-    }
-
-    let answerWord;
-    if (activeLevels[currentLevel] && activeLevels[currentLevel].theme) {
-        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
-    } else {
-        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
-    }
-
-    if (currentGuess[wordIndex].join('') === answerWord) {
-        return;
-    }
-
-    if (currentGuess[wordIndex].length < answerWord.length) {
-        currentGuess[wordIndex].push(letter);
-        renderBoxes(wordIndex);
-        checkAnswer(wordIndex);
-        clickSound.play();
-    }
+function setLbPeriod(p,btn){
+  _lbPeriod=p;
+  document.querySelectorAll('.lb-tab').forEach(b=>{const active=b===btn;b.classList.toggle('bg-surface-container-lowest',active);b.classList.toggle('text-primary',active);b.classList.toggle('shadow-sm',active);b.classList.toggle('text-on-surface-variant',!active);});
+  renderLeaderboard();
 }
 
-function pickBonusLetter(wordIndex, letter) {
-    let input = document.getElementById(`bonus-input-${wordIndex}`);
-    if (input) {
-        input.value += letter;
-    }
+// ═══════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════
+function isComebackAvailable(){const last=S.lastActiveDate;if(!last)return false;const days=Math.floor((Date.now()-new Date(last).getTime())/86400000);return days>=3&&S.comebackClaimedDate!==today();}
+function daysUntilFriday(){const d=new Date().getDay();return d<=5?5-d:7-d+5;}
+
+function renderEvents(){
+  const c=document.getElementById('events-container');if(!c)return;
+  const t=today();const isFriday=new Date().getDay()===5;
+  const events=[
+    {color:'from-primary to-primary-dim',icon:'calendar_today',badge:S.dailySolvedDate===t?'DONE':'DAILY',badgeClass:S.dailySolvedDate===t?'bg-tertiary text-on-tertiary':'bg-white/20 text-white',title:'Daily Word',desc:S.dailySolvedDate===t?'Solved! Come back tomorrow.':'Solve today\'s word for +20 bonus coins.',action:S.dailySolvedDate===t?null:'startDaily()',actionLabel:S.dailySolvedDate===t?'Completed!':'Play Now'},
+    {color:'from-green-700 to-green-600',icon:'star',badge:isFriday?(S.lastNaijaFridayDate===t?'DONE':'LIVE'):`${daysUntilFriday()}d`,badgeClass:isFriday&&S.lastNaijaFridayDate!==t?'bg-white text-green-700':'bg-white/20 text-white',title:'🇳🇬 Naija Friday',desc:'Every Friday — Nigerian-only puzzles with 2× coin rewards!',action:isFriday&&S.lastNaijaFridayDate!==t?'startNaijaFriday()':null,actionLabel:isFriday?S.lastNaijaFridayDate===t?'Completed!':'Play 2× Coins':'Not yet — check back Friday'},
+    {color:'from-secondary to-secondary-dim',icon:'directions_run',badge:`${S.marathonProgress||0}/10`,badgeClass:'bg-white/20 text-white',title:'Word Marathon',desc:'10 words in a row without a mistake. Reward: badge + 100 coins!',progress:S.marathonProgress||0,progressMax:10,action:(S.marathonProgress||0)>=10?null:'startMarathon()',actionLabel:(S.marathonProgress||0)>=10?'Completed! 🎉':'Start Marathon'},
+    {color:'from-amber-600 to-amber-500',icon:'auto_awesome',badge:S.beginnerBonusExpiry&&t<=S.beginnerBonusExpiry?'ACTIVE':'ENDED',badgeClass:S.beginnerBonusExpiry&&t<=S.beginnerBonusExpiry?'bg-white text-amber-700':'bg-white/20 text-white',title:"🌟 Beginner's Luck",desc:S.beginnerBonusExpiry&&t<=S.beginnerBonusExpiry?`Double coins until ${S.beginnerBonusExpiry}!`:'First 3 days bonus. Welcome!',action:S.beginnerBonusExpiry&&t<=S.beginnerBonusExpiry?'openCategory(\'All\')':null,actionLabel:S.beginnerBonusExpiry&&t<=S.beginnerBonusExpiry?'Earn Double Coins!':'Bonus Ended'},
+    {color:'from-pink-600 to-rose-500',icon:'favorite',badge:isComebackAvailable()?'CLAIM':'PLAYING',badgeClass:isComebackAvailable()?'bg-white text-pink-700':'bg-white/20 text-white',title:'💝 Comeback Bonus',desc:isComebackAvailable()?'Welcome back! Claim 50 free coins!':'Keep playing daily!',action:isComebackAvailable()?'claimComeback()':null,actionLabel:isComebackAvailable()?'Claim 50 Coins!':'Keep it up!'},
+  ];
+  c.innerHTML=events.map(ev=>`
+    <div class="relative overflow-hidden rounded-lg bg-gradient-to-br ${ev.color} p-5 text-white">
+      <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-6 -mt-6"></div>
+      <div class="relative z-10">
+        <div class="flex items-center justify-between mb-2"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">${ev.icon}</span><span class="font-headline font-black text-lg">${ev.title}</span></div><span class="text-xs font-headline font-bold px-2 py-1 rounded-full ${ev.badgeClass}">${ev.badge}</span></div>
+        <p class="text-white/85 text-sm font-medium mb-3 leading-relaxed">${ev.desc}</p>
+        ${ev.progress!==undefined?`<div class="w-full h-2 bg-white/20 rounded-full overflow-hidden mb-3"><div class="h-full bg-white rounded-full" style="width:${Math.round((ev.progress/ev.progressMax)*100)}%"></div></div>`:''}
+        ${ev.action?`<button onclick="${ev.action}" class="w-full py-2.5 rounded-full bg-white/20 border border-white/30 font-headline font-bold text-sm active:scale-95 transition-transform">${ev.actionLabel}</button>`:`<div class="w-full py-2.5 rounded-full bg-white/10 font-headline font-bold text-sm text-center opacity-60">${ev.actionLabel}</div>`}
+      </div>
+    </div>`).join('');
 }
 
-function eraseLetter(wordIndex, index) {
-    if (currentPack === 'Daily' && isDailySolved()) {
-        return;
-    }
-    if (index >= 0 && index < currentGuess[wordIndex].length) {
-        currentGuess[wordIndex].splice(index, 1);
-        renderBoxes(wordIndex);
-    }
+function startNaijaFriday(){S.lastNaijaFridayDate=today();_currentCategory='Nigerian';S.mode='Normal';saveS();openCategory('Nigerian');}
+function startMarathon(){S.marathonProgress=0;S.mode='Survival';_currentCategory='All';saveS();showRulesScreen('Survival',S.currentLevel);}
+function claimComeback(){S.comebackClaimedDate=today();S.lastActiveDate=today();addCoins(50);showToast('Welcome back! +50 coins!',3000);renderEvents();}
+
+// ═══════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════
+const TITLES=[{min:0,l:'Word Newbie'},{min:5,l:'Letter Learner'},{min:20,l:'Puzzle Solver'},{min:50,l:'Word Ninja'},{min:100,l:'Vocab Expert'},{min:250,l:'Word Master'},{min:500,l:'Linguist Legend'}];
+function getTitle(){let t=TITLES[0].l;for(const x of TITLES)if((S.totalLevels||0)>=x.min)t=x.l;return t;}
+
+const BADGES=[
+  {icon:'emoji_events',color:'bg-primary-container/20 border-primary-container',label:'First Win',desc:'Complete your first level',check:()=>(S.totalLevels||0)>=1},
+  {icon:'local_fire_department',color:'bg-error-container/20 border-error-container',label:'5 Day Streak',desc:'5 days in a row',check:()=>(S.streak||0)>=5},
+  {icon:'flare',color:'bg-error-container/20 border-error-container',label:'10 Day Streak',desc:'10 days in a row',check:()=>(S.streak||0)>=10},
+  {icon:'monetization_on',color:'bg-amber-100 border-amber-400',label:'Rich',desc:'Collect 500 coins',check:()=>(S.totalCoins||0)>=500},
+  {icon:'auto_awesome',color:'bg-secondary/10 border-secondary',label:'Word Master',desc:'Solve 50 words',check:()=>(S.totalWords||0)>=50},
+  {icon:'directions_run',color:'bg-tertiary/10 border-tertiary',label:'Marathon',desc:'Complete the Word Marathon',check:()=>S._marathonRewarded===true},
+  {icon:'workspace_premium',color:'bg-secondary/10 border-secondary',label:'VIP',desc:'Become a VIP member',check:()=>S.vip===true},
+  {icon:'stars',color:'bg-surface-container border-outline-variant',label:'Legend',desc:'Complete 100 levels',check:()=>(S.totalLevels||0)>=100},
+  {icon:'travel_explore',color:'bg-surface-container border-outline-variant',label:'Explorer',desc:'Play all 3 categories',check:()=>false},
+];
+
+function renderProfile(){
+  const el=id=>document.getElementById(id);
+  if(el('p-avatar'))el('p-avatar').textContent=S.avatar||'🦁';
+  if(el('p-name'))el('p-name').textContent=S.username||'Player';
+  if(el('p-title'))el('p-title').textContent=getTitle();
+  if(el('p-vip-badge'))el('p-vip-badge').className=S.vip?'inline-block mt-1 px-3 py-1 bg-primary-container text-white text-xs font-headline font-bold rounded-full':'hidden';
+  if(el('modal-name-inp'))el('modal-name-inp').value=S.username||'';
+
+  const myRank=(()=>{const lb=S.leaderboard||[];const me=S.username||'Anonymous';const i=lb.findIndex(e=>e.name===me);return i>=0?i+1:'—';})();
+  const stats=[
+    {icon:'monetization_on',color:'text-primary-container',border:'border-primary-container',val:S.coins,label:'Coins'},
+    {icon:'local_fire_department',color:'text-error-container',border:'border-error-container',val:S.streak,label:'Streak'},
+    {icon:'extension',color:'text-tertiary',border:'border-tertiary',val:S.totalLevels||0,label:'Levels Done'},
+    {icon:'leaderboard',color:'text-secondary',border:'border-secondary',val:'#'+myRank,label:'Global Rank'},
+  ];
+  const sg=el('p-stats');
+  if(sg)sg.innerHTML=stats.map(st=>`<div class="bg-surface-container-lowest p-4 rounded-lg flex flex-col items-center space-y-2 border-b-4 ${st.border} shadow-sm"><span class="material-symbols-outlined ${st.color} text-2xl" style="font-variation-settings:'FILL' 1">${st.icon}</span><span class="font-headline font-black text-2xl text-on-surface">${st.val}</span><span class="text-on-surface-variant text-xs font-medium">${st.label}</span></div>`).join('');
+
+  const bg=el('p-badges');
+  if(bg)bg.innerHTML=BADGES.map(b=>{const unlocked=b.check();return`<div class="group relative flex flex-col items-center gap-2"><div class="w-20 h-20 rounded-full flex items-center justify-center border-2 ${unlocked?b.color:'bg-surface-container border-outline-variant/30 grayscale opacity-40'}"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' ${unlocked?1:0}">${b.icon}</span></div><span class="font-headline font-bold text-xs text-center text-on-surface leading-tight">${b.label}</span></div>`;}).join('');
+
+  // My Themes
+  const owned=[...(S.ownedThemes||[])];
+  const sec=el('p-themes-section');
+  if(sec)sec.style.display=owned.length>0||S.vip?'block':'none';
+  const pt=el('p-themes-list');
+  if(pt){
+    const available=S.vip?Object.keys(THEMES).filter(k=>k!=='default'):owned;
+    pt.innerHTML=available.map(tid=>{
+      const th=THEMES[tid];if(!th)return'';
+      const active=S.activeTheme===tid;
+      return`<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/10">
+        <div class="flex items-center gap-3"><span class="text-2xl">${th.icon}</span><div><div class="font-headline font-bold text-on-surface">${th.name}</div><div class="text-xs text-on-surface-variant">${th.desc}</div></div></div>
+        <div class="flex items-center gap-2">
+          <button onclick="applyTheme('${tid}')" class="px-3 py-1.5 rounded-full font-label font-bold text-xs border-2 transition-all ${active?'bg-primary-container text-white border-primary-container':'border-outline-variant text-on-surface'}">${active?'✓ Active':'Apply'}</button>
+          <button onclick="deleteTheme('${tid}')" class="w-7 h-7 flex items-center justify-center rounded-full text-error hover:bg-error/10 transition-all" title="Remove theme"><span class="material-symbols-outlined text-sm">delete</span></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const ph=el('p-history');
+  const h=S.history||[];
+  if(ph)ph.innerHTML=h.length===0?'<p class="text-on-surface-variant font-medium text-sm text-center py-4">No history yet. Play some levels!</p>':h.slice(0,10).map(e=>`<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg"><div><div class="font-headline font-semibold text-sm text-on-surface">${e.theme||'Level'}</div><div class="text-xs text-on-surface-variant">${e.date}</div></div><div class="flex items-center gap-1">${e.stars?[1,2,3].map(n=>`<span class="material-symbols-outlined text-sm ${n<=(e.stars||0)?'text-primary-container':'text-outline-variant'}" style="font-variation-settings:'FILL' ${n<=(e.stars||0)?1:0}">star</span>`).join(''):''}<span class="ml-1 font-headline font-bold text-sm text-primary-container">+${e.coins||0}</span></div></div>`).join('');
+
+  document.querySelectorAll('.mod-av').forEach(btn=>{const active=btn.dataset.av===S.avatar;btn.classList.toggle('border-primary-container',active);btn.classList.toggle('bg-primary-container/10',active);btn.classList.toggle('border-transparent',!active);});
 }
 
-function checkAnswer(wordIndex) {
-    if (currentPack === 'Daily' && isDailySolved()) {
-        alert('Daily challenge already solved; come back tomorrow.');
-        return;
-    }
+let _modalAvatar='🦁';
+function openEditModal(){
+  _modalAvatar=S.avatar||'🦁';
+  const modal=document.getElementById('edit-modal');
+  if(modal){modal.classList.remove('hidden');modal.style.display='flex';}
+  document.querySelectorAll('.mod-av').forEach(btn=>{
+    btn.onclick=()=>{_modalAvatar=btn.dataset.av;document.querySelectorAll('.mod-av').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/10');b.classList.add('border-transparent');});btn.classList.add('border-primary-container','bg-primary-container/10');btn.classList.remove('border-transparent');};
+    const active=btn.dataset.av===S.avatar;btn.classList.toggle('border-primary-container',active);btn.classList.toggle('bg-primary-container/10',active);btn.classList.toggle('border-transparent',!active);
+  });
+}
+function closeEditModal(){const m=document.getElementById('edit-modal');if(m){m.classList.add('hidden');m.style.display='none';}}
+function saveEdit(){const inp=document.getElementById('modal-name-inp');const name=inp?.value?.trim();if(!name){showToast('Please enter a name');return;}S.username=name;S.avatar=_modalAvatar;saveS();closeEditModal();renderProfile();const ha=document.getElementById('h-avatar');if(ha)ha.textContent=S.avatar;showToast('Profile saved!');}
 
-    let answerWord;
-    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
-    if (isMulti) {
-        answerWord = activeLevels[currentLevel].words[wordIndex].answer;
-    } else {
-        answerWord = activeLevels[currentLevel] ? activeLevels[currentLevel].answer : '';
-    }
-
-    if (currentGuess[wordIndex].length === answerWord.length) {
-        let guessString = currentGuess[wordIndex].join("");
-
-        if (guessString === answerWord) {
-            document.getElementById(`answer-${wordIndex}`).classList.add("win");
-            clickSound.play();
-
-            if (isMulti) {
-                updateProgress();
-                // Check if all words are complete
-                let allComplete = currentGuess.every((guess, idx) => {
-                    let ans = activeLevels[currentLevel].words[idx].answer;
-                    return guess.join("") === ans;
-                });
-
-                if (allComplete) {
-                    correctSound.play();
-                    let levelBase = 10 * activeLevels[currentLevel].words.length;
-                    let speedBonus = timerSeconds >= 40 ? 15 : (timerSeconds >= 20 ? 8 : 0);
-                    coins += levelBase + speedBonus;
-                    wordsCompletedToday += 1;
-                    streak += 1;
-                    recordScore(coins);
-
-                    // mark daily solved for daily mode
-                    if (currentPack === 'Daily') {
-                        setDailySolved();
-                        alert('Daily solved! +50 bonus coins. Come back tomorrow for a new daily challenge.');
-                        // daily bonus extra coins already may be applied in single path, but for multi pattern, add 50 here
-                        coins += 50;
-                    }
-
-                    currentLevel++;
-                    if (currentLevel >= activeLevels.length) {
-                        alert("You finished all levels! 🔥");
-                        currentLevel = 0;
-                    }
-                    saveGame();
-                    updateStreakDisplay();
-                    setTimeout(() => {
-                        loadLevel();
-                        renderDailyInfo();
-                    }, 1000);
-                }
-            } else {
-                // Single word
-                correctSound.play();
-                let bonus = 10;
-                if (currentPack === 'Daily' && !isDailySolved()) {
-                    bonus += 50;
-                    setDailySolved();
-                    alert('Daily solved! +50 bonus coins. Come back tomorrow for a new daily challenge.');
-                }
-                if (timerSeconds >= 40) bonus += 15;
-                else if (timerSeconds >= 20) bonus += 8;
-                coins += bonus;
-                wordsCompletedToday += 1;
-                streak += 1;
-                updateStreakDisplay();
-
-                currentLevel++;
-                if (currentLevel >= activeLevels.length) {
-                    alert("You finished all levels! 🔥");
-                    currentLevel = 0;
-                }
-                saveGame();
-                setTimeout(() => {
-                    loadLevel();
-                    renderDailyInfo();
-                }, 500);
-            }
-
-            document.getElementById("coins").innerText = "Coins: " + coins;
-            return;
-        }
-
-        // incorrect
-        alert("Wrong!");
-        coins -= 5;
-        currentGuess[wordIndex] = [];
-        wrongSound.play();
-        saveGame();
-        renderBoxes(wordIndex);
-    }
-
-    document.getElementById("coins").innerText = "Coins: " + coins;
+function applyTheme(id){
+  S.activeTheme=id;saveS();
+  document.documentElement.setAttribute('data-theme',id==='default'?'':id);
+  // Dark mode off when theme is applied (theme handles its own dark)
+  if(id!=='default')document.documentElement.classList.remove('dark');
+  applyThemeAnim(id);
+  showToast('Theme applied!');
+  renderProfile();renderStore();
 }
 
-function useHint() {
-    if (coins < 5) {
-        alert("Not enough coins!");
-        return;
-    }
-
-    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
-    let words = isMulti ? activeLevels[currentLevel].words : [{ clue: activeLevels[currentLevel].clue, answer: activeLevels[currentLevel].answer }];
-
-    // Find the first incomplete word
-    for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-        let answerWord = words[wordIndex].answer;
-        let guess = currentGuess[wordIndex];
-
-        if (guess.join("") !== answerWord) {
-            // Find first missing letter
-            for (let i = 0; i < answerWord.length; i++) {
-                if (guess[i] !== answerWord[i]) {
-                    currentGuess[wordIndex][i] = answerWord[i];
-                    coins -= 5;
-                    saveGame();
-                    document.getElementById("coins").innerText = "Coins: " + coins;
-                    renderBoxes(wordIndex);
-                    return;
-                }
-            }
-        }
-    }
+function deleteTheme(id){
+  if(!confirm(`Remove "${THEMES[id]?.name}" from your collection? You can buy it again anytime.`))return;
+  S.ownedThemes=(S.ownedThemes||[]).filter(t=>t!==id);
+  if(S.activeTheme===id)applyTheme('default');
+  saveS();renderProfile();showToast('Theme removed.');
 }
 
-function shuffleLetters() {
-    if (coins < 5) {
-        alert('Not enough coins to shuffle (5).');
-        return;
-    }
+// ═══════════════════════════════════════════
+// STORE
+// ═══════════════════════════════════════════
+const STORE_COINS=[
+  {id:'ad',name:'10 Coins',desc:'Watch a short ad',price:0,reward:10,icon:'🎬',ad:true},
+  {id:'c100',name:'100 Coins',desc:'Quick top-up',price:40,reward:100,icon:'💰'},
+  {id:'c300',name:'300 Coins',desc:'Popular choice',price:100,reward:300,icon:'💰',popular:true},
+  {id:'c750',name:'750 Coins',desc:'Best value pack',price:220,reward:750,icon:'💰'},
+];
+const STORE_HINTS=[
+  {id:'h5',name:'5 Hints',desc:'Unstick yourself',price:20,reward:5,icon:'💡'},
+  {id:'h15',name:'15 Hints',desc:'Hint bundle',price:50,reward:15,icon:'💡'},
+];
 
-    let isMulti = !!(activeLevels[currentLevel] && activeLevels[currentLevel].theme);
-    let coerceIndex = 0;
+function renderStore(){
+  updateCoinDisplays();
+  const vipCard=document.getElementById('vip-card');if(vipCard)vipCard.style.display=S.vip?'none':'block';
+  const vipBtn=document.getElementById('vip-btn');if(vipBtn)vipBtn.textContent=S.vip?'VIP Active ✓':'Unlock VIP — 999 coins';
 
-    function shuffleFor(wordIndex, answerWord) {
-        let letters = answerWord.split('');
-        letters.sort(() => Math.random() - 0.5);
-        let html = '';
-        letters.forEach(l => html += `<button data-letter="${l}" data-word="${wordIndex}">${l}</button>`);
-        document.getElementById(`letters-${wordIndex}`).innerHTML = html;
-    }
+  const coinList=document.getElementById('st-coins-list');
+  if(coinList)coinList.innerHTML=STORE_COINS.map(it=>`<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/10"><div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-2xl flex-shrink-0">${it.icon}</div><div class="flex-1"><div class="font-headline font-bold text-on-surface">${it.name}${it.popular?` <span class="text-xs bg-primary-container text-white px-2 py-0.5 rounded-full font-bold">Popular</span>`:''}</div><div class="text-xs text-on-surface-variant font-medium">${it.desc}</div></div>${it.ad?`<button onclick="watchAd()" class="px-4 py-2 rounded-full bg-tertiary text-on-tertiary font-headline font-bold text-sm active:scale-95">Watch Ad</button>`:`<button onclick="storeBuyCoins(${it.price},${it.reward})" class="px-4 py-2 rounded-full bg-primary-container text-white font-headline font-bold text-sm shadow-[0_3px_0_#ea8000] active:shadow-none active:translate-y-0.5 transition-all">${it.price}🪙</button>`}</div>`).join('');
 
-    if (isMulti) {
-        let firstIncomplete = currentGuess.findIndex((guess, idx) => guess.join('') !== activeLevels[currentLevel].words[idx].answer);
-        if (firstIncomplete === -1) firstIncomplete = 0;
-        coerceIndex = firstIncomplete;
-        shuffleFor(coerceIndex, activeLevels[currentLevel].words[coerceIndex].answer);
-    } else {
-        shuffleFor(0, activeLevels[currentLevel].answer);
-    }
+  const hintList=document.getElementById('st-hints-list');
+  if(hintList)hintList.innerHTML=STORE_HINTS.map(it=>`<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/10"><div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center text-2xl flex-shrink-0">${it.icon}</div><div class="flex-1"><div class="font-headline font-bold text-on-surface">${it.name}</div><div class="text-xs text-on-surface-variant font-medium">${it.desc}</div></div><button onclick="storeBuyHints(${it.price},${it.reward})" class="px-4 py-2 rounded-full bg-tertiary text-on-tertiary font-headline font-bold text-sm active:scale-95">${it.price}🪙</button></div>`).join('');
 
-    coins -= 5;
-    saveGame();
-    document.getElementById('coins').innerText = 'Coins: ' + coins;
+  const themeList=document.getElementById('st-themes-list');
+  if(themeList){
+    const themeKeys=Object.keys(THEMES).filter(k=>k!=='default');
+    themeList.innerHTML=themeKeys.map(tid=>{
+      const th=THEMES[tid];
+      const owned=S.vip||(S.ownedThemes||[]).includes(tid);
+      const active=S.activeTheme===tid;
+      const gradients={dark:'from-gray-900 to-purple-900',ocean:'from-blue-700 to-sky-500',sunset:'from-pink-600 to-rose-400',forest:'from-green-800 to-emerald-600',midnight:'from-slate-900 to-indigo-900',desert:'from-amber-600 to-yellow-400',snowy:'from-blue-200 to-indigo-200'};
+      return`<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-lg border ${active?'border-primary-container border-2':'border-outline-variant/10'}">
+        <div class="w-14 h-14 rounded-lg flex-shrink-0 bg-gradient-to-br ${gradients[tid]||'from-gray-400 to-gray-600'} flex items-center justify-center text-2xl relative overflow-hidden">
+          <span class="relative z-10">${th.icon}</span>
+          ${th.premium?'<div class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-yellow-400/20 to-transparent"></div>':''}
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2"><div class="font-headline font-bold text-on-surface">${th.name}</div>${th.premium?'<span class="text-xs bg-amber-400 text-amber-900 px-1.5 py-0.5 rounded font-bold uppercase">Premium</span>':''}</div>
+          <div class="text-xs text-on-surface-variant font-medium mt-0.5">${th.desc}</div>
+        </div>
+        ${owned?`<div class="flex flex-col items-center gap-1"><span class="text-xs font-headline font-bold text-tertiary bg-tertiary/10 px-2 py-1 rounded-full">Owned</span>${active?'<span class="text-xs text-primary-container font-bold">Active</span>':''}</div>`:
+          `<button onclick="storeBuyTheme('${tid}',${th.price},'${th.name}')" class="px-3 py-2 rounded-full bg-primary-container text-white font-headline font-bold text-xs shadow-[0_3px_0_#ea8000] active:shadow-none active:translate-y-0.5 transition-all whitespace-nowrap">${th.price}🪙</button>`}
+      </div>`;
+    }).join('');
+  }
 }
 
-function watchAd() {
-    alert("Ad watched! (+10 coins)");
-    coins += 10;
-    saveGame();
-    document.getElementById("coins").innerText = "Coins: " + coins;
+function buyVIP(){if(S.vip){showToast('Already VIP!');return;}if(!spendCoins(999)){showToast('Need 999 coins for VIP');return;}S.vip=true;S.ownedThemes=Object.keys(THEMES).filter(k=>k!=='default');addCoins(500);saveS();showToast('VIP unlocked! All perks active. +500 coins!',4000);renderStore();}
+function storeBuyCoins(price,reward){if(!spendCoins(price)){showToast('Not enough coins!');return;}addCoins(reward);showToast(`+${reward} coins!`);}
+function storeBuyHints(price,reward){if(!spendCoins(price)){showToast('Not enough coins!');return;}S.hints+=reward;saveS();showToast(`+${reward} hints!`);const b=document.getElementById('g-hints-badge');if(b)b.textContent=S.hints;}
+function storeBuyTheme(id,price,name){if(!spendCoins(price)){showToast('Not enough coins!');return;}S.ownedThemes=[...(S.ownedThemes||[])];if(!S.ownedThemes.includes(id))S.ownedThemes.push(id);applyTheme(id);saveS();showToast(`${name} unlocked!`);renderStore();}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function renderSettings(){
+  const keys=['music','sound','haptic','darkMode','notifyDaily','notifyEvents'];
+  const togIds={music:'tog-music',sound:'tog-sound',haptic:'tog-haptic',darkMode:'tog-dark',notifyDaily:'tog-notifyDaily',notifyEvents:'tog-notifyEvents'};
+  keys.forEach(k=>{const tog=document.getElementById(togIds[k]);if(tog)tog.classList.toggle('on',!!(S.settings||{})[k]);});
 }
 
-function recordScore(score) {
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-    let today = new Date().toISOString().split('T')[0];
-    leaderboard.push({ date: today, score: score, time: new Date().toLocaleTimeString() });
-    leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    renderLeaderboard();
+function toggleSetting(key,el){
+  if(!S.settings)S.settings={};
+  const newVal=!S.settings[key];S.settings[key]=newVal;
+  el.classList.toggle('on',newVal);
+  if(key==='darkMode'){
+    document.documentElement.classList.toggle('dark',newVal);
+    if(newVal&&S.activeTheme&&S.activeTheme!=='default'){applyTheme('default');showToast('Theme reset for dark mode');}
+  }
+  saveS();
 }
 
-function renderLeaderboard() {
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-    let html = '<div id="leaderboard" style="margin-top: 10px; font-size: 14px;"><strong>Leaderboard</strong><br/>';
-    if (!leaderboard.length) {
-        html += '- No scores yet -';
-    } else {
-        leaderboard.forEach((entry, idx) => {
-            html += `${idx + 1}. ${entry.date} ${entry.time}: ${entry.score} pts<br/>`;
-        });
-    }
-    html += '</div>';
-    let existing = document.getElementById('leaderboard');
-    if (existing) existing.remove();
-    document.getElementById('daily').insertAdjacentHTML('afterend', html);
+function doReset(){if(!confirm('Reset ALL progress? This cannot be undone.'))return;S=JSON.parse(JSON.stringify(DEF));saveS();document.documentElement.classList.remove('dark');document.documentElement.removeAttribute('data-theme');stopAnim();showToast('Progress reset.');showScreen('screen-onboarding');obShowSlide(0);}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+function init(){
+  // Apply saved theme
+  if(S.activeTheme&&S.activeTheme!=='default'){document.documentElement.setAttribute('data-theme',S.activeTheme);applyThemeAnim(S.activeTheme);}
+  if(S.settings?.darkMode)document.documentElement.classList.add('dark');
+
+  initObPickers();
+  obShowSlide(0);
+
+  if(S.firstLaunch||!S.username){showScreen('screen-onboarding');}
+  else{_currentCategory=S.pack==='Daily'?'All':S.pack;showScreen('screen-home');}
+
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});
 }
 
-function nextLevel() {
-    currentLevel++;
-    if (currentLevel >= activeLevels.length) {
-        currentLevel = 0;
-    }
-    saveGame();
-    loadLevel();
-}
-
-renderPackSelection();
-activeLevels = currentPack === 'Daily' ? [getDailyLevel()] : getPackLevels(currentPack);
-renderDailyInfo();
-renderLeaderboard();
-loadLevel();
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-}
+init();
 </script>
-
 </body>
 </html>
