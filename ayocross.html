@@ -614,9 +614,9 @@ function updateCoinDisplays(){['h-coins','g-coins','st-coins','cat-coins'].forEa
 loadS();
 
 // ═══════════════════════════════════════════
-// LEVELS
+// LEVELS & DICT (Minified for brevity - Keep your existing arrays here)
 // ═══════════════════════════════════════════
-const LEVELS=[
+const LEVELS = [
   {theme:'Nigerian Basics',category:'Nigerian',words:[{clue:'Nigerian rice dish',answer:'JOLLOF'},{clue:'Capital of Nigeria',answer:'ABUJA'},{clue:'Nigerian currency',answer:'NAIRA'}]},
   {theme:'Nigerian Cities & Culture',category:'Nigerian',words:[{clue:'Largest city in Nigeria',answer:'LAGOS'},{clue:'Popular Nigerian singer',answer:'WIZKID'},{clue:'Nigerian soup with melon seeds',answer:'EGUSI'}]},
   {theme:'Single',category:'Nigerian',words:[{clue:'Nigerian fried bean cake',answer:'AKARA'}]},
@@ -652,12 +652,8 @@ const LEVELS=[
   {theme:'Single',category:'Global',words:[{clue:'Longest river in world',answer:'NILE'}]},
   {theme:'Single',category:'Global',words:[{clue:'Country with most population',answer:'CHINA'}]},
 ];
-
 const DICT=['cat','dog','sun','rain','star','news','fast','lock','cross','word','planet','apple','story','learn','ring','fish','run','walk','team','wood','the','and','for','are','but','not','you','all','can','had','one','our','out','day','get','has','how','new','now','old','see','two','way','who','boy','let','put','say','she','too','use','able','back','ball','bear','bell','bird','boat','body','book','call','came','care','case','city','club','come','cool','copy','cost','dark','data','date','dear','deep','does','done','door','down','draw','drop','each','easy','else','even','ever','face','fact','fall','feel','feet','find','fire','five','food','foot','form','four','free','full','game','gave','girl','give','gold','gone','good','gray','grew','grow','hair','half','hall','hand','hang','hard','head','hear','help','here','high','hill','hold','home','hope','hour','idea','into','jump','just','keep','kind','king','knew','know','land','last','late','left','less','life','like','line','list','live','long','look','lost','love','made','make','many','mark','mean','meet','mile','mind','miss','moon','more','most','move','much','must','name','near','need','next','nice','nine','none','nose','note','once','only','open','over','page','park','part','pass','past','path','pick','plan','play','poor','pull','push','race','read','real','rest','rich','ride','road','rock','room','rule','said','same','save','sea','seat','seem','seen','sell','send','ship','show','side','size','sky','slow','snow','some','song','soon','sort','soul','star','stay','step','stop','such','sure','take','talk','tall','tell','than','that','them','then','they','this','time','told','took','town','tree','true','turn','unit','upon','used','very','wait','wall','want','warm','wave','week','well','went','were','what','when','will','wind','wish','with','work','year','your','zero','log','ago','gas','lag','sag','sol','also','goal','slag','slog','about','above','after','again','agree','allow','along','apply','beach','began','being','below','black','blood','board','break','bring','build','carry','cause','check','child','civil','class','clean','clear','close','color','could','cover','death','doing','dream','drive','early','earth','eight','empty','enter','equal','event','every','exist','field','fight','final','first','floor','force','found','front','glass','going','grand','great','green','group','grown','happy','heart','heavy','horse','house','human','issue','large','later','learn','leave','level','light','limit','local','major','makes','maybe','means','might','money','month','music','never','night','north','often','order','other','paper','party','peace','phone','photo','place','plant','point','power','press','price','quick','quite','radio','raise','reach','ready','right','river','round','route','scale','scene','score','sense','serve','seven','shall','share','short','shown','since','small','solid','solve','sound','south','space','speak','speed','spend','split','stage','stand','start','state','still','stone','stood','store','story','study','style','table','taken','taste','teach','thank','their','there','these','thing','think','those','three','throw','today','total','trade','train','treat','trust','truth','under','union','until','value','video','visit','voice','watch','water','where','which','while','white','whole','woman','women','world','would','write','wrong','young'];
 
-// ═══════════════════════════════════════════
-// THEMES CONFIG
-// ═══════════════════════════════════════════
 const THEMES={
   default:{name:'Default',icon:'🎨',price:0,premium:false,desc:'The classic AyoCross look.',animType:null},
   dark:   {name:'Dark Night',icon:'🌙',price:80,premium:false,desc:'Sleek deep-space darkness with purple accents.',animType:'sparkle'},
@@ -705,27 +701,16 @@ function animLoop(type){
   _animFrame=requestAnimationFrame(()=>animLoop(type));
 }
 
-// Snow
 function initSnow(){_particles=[];for(let i=0;i<80;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,speed:Math.random()*1.5+0.5,wind:Math.random()*0.5-0.25,opacity:Math.random()*0.6+0.3});}}
 function drawSnow(){_particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${p.opacity})`;ctx.fill();p.y+=p.speed;p.x+=p.wind;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;});}
-
-// Leaves
 function initLeaves(){_particles=[];const colors=['#16a34a','#15803d','#166534','#4d7c0f','#65a30d','#a16207'];for(let i=0;i<35;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*12+6,speed:Math.random()*1.2+0.4,sway:Math.random()*2-1,swayDir:Math.random()<0.5?1:-1,rot:Math.random()*360,rotSpeed:Math.random()*3-1.5,color:colors[Math.floor(Math.random()*colors.length)],opacity:Math.random()*0.5+0.3});}}
 function drawLeaves(){_particles.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.globalAlpha=p.opacity;ctx.beginPath();ctx.ellipse(0,0,p.size,p.size/2,0,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.restore();p.y+=p.speed;p.x+=p.sway;p.rot+=p.rotSpeed;p.sway+=p.swayDir*0.02;if(Math.abs(p.sway)>2)p.swayDir*=-1;if(p.y>canvas.height){p.y=-20;p.x=Math.random()*canvas.width;}});}
-
-// Sparkles (dark theme)
 function initSparkles(){_particles=[];for(let i=0;i<60;i++){_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,life:Math.random()*100,maxLife:Math.random()*80+40,opacity:0});}}
 function drawSparkles(){_particles.forEach(p=>{p.life++;const t=p.life/p.maxLife;p.opacity=t<0.5?t*2:(1-t)*2;if(p.life>=p.maxLife){p.life=0;p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(167,139,250,${p.opacity*0.8})`;ctx.fill();});}
-
-// Bubbles (ocean)
 function initBubbles(){_particles=[];for(let i=0;i<25;i++){_particles.push({x:Math.random()*canvas.width,y:canvas.height+Math.random()*100,r:Math.random()*12+4,speed:Math.random()*0.8+0.3,opacity:Math.random()*0.2+0.05,sway:Math.random()*1-0.5});}}
 function drawBubbles(){_particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.strokeStyle=`rgba(14,165,233,${p.opacity})`;ctx.lineWidth=1.5;ctx.stroke();p.y-=p.speed;p.x+=p.sway;if(p.y<-20){p.y=canvas.height+20;p.x=Math.random()*canvas.width;}});}
-
-// City lights (midnight lagos)
 function initCity(){_particles=[];for(let i=0;i<50;i++){const colors=['#f59e0b','#fbbf24','#60a5fa','#a78bfa','#f472b6','#34d399'];_particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height*0.8+canvas.height*0.2,r:Math.random()*2+0.5,color:colors[Math.floor(Math.random()*colors.length)],blink:Math.random()*100,blinkRate:Math.random()*2+1,opacity:Math.random()*0.6+0.2});}}
 function drawCity(){_particles.forEach(p=>{p.blink+=p.blinkRate;const flicker=Math.sin(p.blink*0.1)*0.3+0.7;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color.replace(')',`,${p.opacity*flicker})`).replace('rgb','rgba');ctx.shadowBlur=p.r*4;ctx.shadowColor=p.color;ctx.fill();ctx.shadowBlur=0;});}
-
-// Desert shimmer
 let _shimmerOffset=0;
 function initShimmer(){_particles=[];}
 function drawShimmer(){_shimmerOffset+=0.5;const grad=ctx.createLinearGradient(0,canvas.height*0.7,canvas.width,canvas.height);const a=Math.abs(Math.sin(_shimmerOffset*0.02))*0.08;grad.addColorStop(0,`rgba(252,211,77,0)`);grad.addColorStop(0.5,`rgba(252,211,77,${a})`);grad.addColorStop(1,`rgba(252,211,77,0)`);ctx.fillStyle=grad;ctx.fillRect(0,canvas.height*0.7,canvas.width,canvas.height*0.3);}
@@ -756,21 +741,18 @@ function showScreen(id){
   if(id==='screen-profile')renderProfile();
   if(id==='screen-store')renderStore();
   if(id==='screen-settings')renderSettings();
-  // game back arrow goes to category, not home, for daily
+  
   const backBtn=document.querySelector('#screen-game header button');
   if(id==='screen-game'&&backBtn){backBtn.onclick=()=>showScreen(S.pack==='Daily'?'screen-home':'screen-category');}
 }
 
 // ═══════════════════════════════════════════
-// TOAST & UTILS
+// TOAST, UTILS & SOUND
 // ═══════════════════════════════════════════
 let _toastT;
 function showToast(msg,dur=2200){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('show'),dur);}
 function vib(p=40){if(S.settings&&S.settings.haptic&&navigator.vibrate)navigator.vibrate(p);}
 
-// ═══════════════════════════════════════════
-// SOUND
-// ═══════════════════════════════════════════
 const SND={};
 function initSounds(){if(typeof Howl==='undefined')return;SND.correct=new Howl({src:['assets/sounds/correct.mp3'],volume:0.8});SND.wrong=new Howl({src:['assets/sounds/wrong.mp3'],volume:0.7});SND.click=new Howl({src:['assets/sounds/click.mp3'],volume:0.5});SND.levelup=new Howl({src:['assets/sounds/levelup.mp3'],volume:1.0});}
 function playSound(name){if(!S.settings||!S.settings.sound)return;if(SND[name]){SND[name].stop();SND[name].play();}}
@@ -976,10 +958,11 @@ function startDaily(){
 }
 
 // ═══════════════════════════════════════════
-// GAME ENGINE
+// GAME ENGINE (Fixed Routing & State)
 // ═══════════════════════════════════════════
 let activeLevels=[];
 let currentGuess=[];
+let scrambledCache={};
 let timerSec=60,timerMax=60,timerInt=null;
 let wrongAnswers=0,hintsUsed=0;
 let survivalLives=3;
@@ -989,20 +972,34 @@ let _lbPeriod='daily';
 
 function startGame(levelIndex){
   S.currentLevel=levelIndex;saveS();
-  activeLevels=S.pack==='Daily'||S.pack==='All'?LEVELS:LEVELS.filter(l=>l.category===S.pack);
+  
+  // Ensure we fallback to 'All' category internally if we're on a daily
+  _currentCategory = S.pack === 'Daily' ? 'All' : S.pack;
+  activeLevels = S.pack === 'Daily' || S.pack === 'All' ? LEVELS : LEVELS.filter(l => l.category === S.pack);
+  
   showScreen('screen-game');
-  loadLevel();
+  loadLevel(true); // true means new session -> resets global mode states (lives, blitz timer)
 }
 
-function loadLevel(){
+function loadLevel(isNewSession = false){
   if(!activeLevels.length)activeLevels=LEVELS;
   let idx=S.currentLevel;
   if(idx>=LEVELS.length)idx=0;
-  // Find the level in LEVELS by index
+  
   const lv=LEVELS[idx];if(!lv)return;
 
+  // Level specific resets
   currentGuess=lv.words.map(()=>[]);
-  wrongAnswers=0;hintsUsed=0;survivalLives=3;duelTurn=0;duelScores=[0,0];
+  wrongAnswers=0;hintsUsed=0;
+  
+  // Session specific resets (Only clear when manually starting a fresh game, not between levels in survival)
+  if (isNewSession) {
+      survivalLives = 3;
+      duelTurn = 0; duelScores = [0,0];
+      scrambledCache = {}; // Purge cache on a totally new game
+  } else if (S.mode !== 'Survival' && S.mode !== 'Blitz') {
+      scrambledCache = {}; // Purge cache on standard level transition
+  }
 
   const el=id=>document.getElementById(id);
   if(el('g-level-lbl'))el('g-level-lbl').textContent=`Level ${idx+1}`;
@@ -1018,12 +1015,16 @@ function loadLevel(){
   if(livesRow)livesRow.style.display=S.mode==='Survival'?'flex':'none';
   updateLivesDisplay();
 
-  stopTimer();
-  if(['Timed','Blitz'].includes(S.mode)){
-    if(el('g-timer-wrap'))el('g-timer-wrap').style.display='block';
-    startTimer(60);
+  // TIMER LOGIC: Only restart blitz timer on a NEW session. 
+  if (S.mode === 'Timed') {
+      if(el('g-timer-wrap'))el('g-timer-wrap').style.display='block';
+      startTimer(60); // Restarts every level
+  } else if (S.mode === 'Blitz') {
+      if(el('g-timer-wrap'))el('g-timer-wrap').style.display='block';
+      if (isNewSession) startTimer(60); // Starts ONCE per session
   } else {
-    if(el('g-timer-wrap'))el('g-timer-wrap').style.display='none';
+      stopTimer();
+      if(el('g-timer-wrap'))el('g-timer-wrap').style.display='none';
   }
 
   if(S.mode==='Bonus')renderBonusLevel(lv);
@@ -1044,138 +1045,217 @@ function updateLivesDisplay(){
 }
 
 // ─── NORMAL / TIMED / ZEN / BLITZ / SURVIVAL ─────────────────────────────────
-function renderNormalLevel(lv){
-  const c=document.getElementById('words-container');if(!c)return;
-  c.innerHTML=lv.words.map((w,i)=>`
+
+function renderNormalLevel(lv) {
+  const c = document.getElementById('words-container'); if (!c) return;
+  c.innerHTML = lv.words.map((w, i) => `
     <div class="bg-surface-container-low rounded-lg p-5 space-y-3">
       <p class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Clue</p>
       <p class="font-body text-base font-semibold text-on-surface leading-snug">${w.clue}</p>
       <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${i}"></div>
       <div class="flex justify-center gap-2 flex-wrap" id="ltrs-${i}"></div>
     </div>`).join('');
-  lv.words.forEach((_,i)=>{renderBoxes(i);renderLetters(i);setupSwipe(i);});
+    
+  lv.words.forEach((_, i) => { renderBoxes(i); renderLetters(i); });
 }
 
-function renderBoxes(wi){
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const word=lv.words[wi].answer;
-  const g=currentGuess[wi]||[];
-  const done=g.join('')===word;
-  const el=document.getElementById(`ans-${wi}`);if(!el)return;
-  el.innerHTML=word.split('').map((ch,i)=>{
-    const c=g[i]||'';
-    let cls='ans-slot w-11 min-h-[48px] border-2 rounded-sm font-headline font-bold text-xl cursor-pointer select-none ';
-    cls+=done?'correct bg-tertiary-container border-tertiary text-on-tertiary-container':c?'filled bg-surface-container-lowest border-primary-container text-primary':'bg-surface-container-high border-outline-variant/40';
-    return`<div class="${cls}" style="min-width:40px" onclick="eraseLetter(${wi},${i})">${c||''}</div>`;
+function renderBoxes(wi) {
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  const word = lv.words[wi].answer;
+  const g = currentGuess[wi] || [];
+  const done = g.join('') === word;
+  
+  const el = document.getElementById(`ans-${wi}`); if (!el) return;
+  el.innerHTML = word.split('').map((ch, i) => {
+    const c = g[i] || ''; // Handle empty slots visually without shifting
+    let cls = 'ans-slot w-11 min-h-[48px] border-2 rounded-sm font-headline font-bold text-xl cursor-pointer select-none transition-all duration-200 ';
+    if (done) cls += 'correct bg-tertiary-container border-tertiary text-on-tertiary-container';
+    else if (c) cls += 'filled bg-surface-container-lowest border-primary-container text-primary shadow-sm';
+    else cls += 'bg-surface-container-high border-outline-variant/40';
+    
+    return `<div class="${cls}" style="min-width:40px" onclick="eraseLetter(${wi}, ${i})">${c || ''}</div>`;
   }).join('');
 }
 
-function renderLetters(wi){
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const word=lv.words[wi].answer;
-  const letters=[...word].sort(()=>Math.random()-0.5);
-  const el=document.getElementById(`ltrs-${wi}`);if(!el)return;
-  el.innerHTML=letters.map(l=>`<button class="letter-tile w-12 h-12 bg-surface-container-lowest rounded-sm flex items-center justify-center font-headline font-extrabold text-xl text-on-surface border border-outline-variant/20 select-none" data-l="${l}" data-wi="${wi}">${l}</button>`).join('');
+function renderLetters(wi) {
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  const word = lv.words[wi].answer;
+  const el = document.getElementById(`ltrs-${wi}`); if (!el) return;
+
+  // Init/Cache scrambled order so tiles don't shuffle mid-play
+  if (!scrambledCache[wi]) scrambledCache[wi] = [...word].sort(() => Math.random() - 0.5);
+  const letters = scrambledCache[wi];
+
+  const guessCounts = {};
+  (currentGuess[wi] || []).forEach(char => { if(char) guessCounts[char] = (guessCounts[char] || 0) + 1; });
+
+  if (el.children.length === 0) {
+      el.innerHTML = letters.map((l, index) => `<button class="letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl select-none transition-all duration-150" data-l="${l}" data-idx="${index}"></button>`).join('');
+      setupSwipe(wi); // Attach high-perf swipe listener ONCE
+  }
+
+  // Update classes instead of rebuilding DOM (fixes swipe lag)
+  Array.from(el.children).forEach(btn => {
+      const l = btn.dataset.l;
+      btn.textContent = l;
+      if (guessCounts[l] > 0) {
+          guessCounts[l]--;
+          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl select-none transition-all duration-150 bg-surface-container-high text-on-surface-variant/30 border border-transparent scale-95 pointer-events-none"; 
+      } else {
+          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl select-none transition-all duration-150 bg-surface-container-lowest text-on-surface border border-outline-variant/30 shadow-sm cursor-pointer hover:bg-surface-container-low active:scale-95"; 
+      }
+  });
 }
 
-// THE BUG FIX — clone container to remove all old listeners
-function setupSwipe(wi){
-  const container=document.getElementById(`ltrs-${wi}`);if(!container)return;
-  const fresh=container.cloneNode(true);
-  container.parentNode.replaceChild(fresh,container);
-  let swiping=false,touched=new Set();
-  const pick=btn=>{if(!btn||touched.has(btn))return;btn.classList.add('selected');touched.add(btn);pickLetter(wi,btn.dataset.l);};
-  fresh.addEventListener('pointerdown',e=>{e.preventDefault();swiping=true;touched.clear();const btn=e.target.closest('[data-l]');if(btn)pick(btn);},{passive:false});
-  fresh.addEventListener('pointermove',e=>{if(!swiping)return;const el=document.elementFromPoint(e.clientX,e.clientY);if(el){const btn=el.closest('[data-l]');if(btn&&fresh.contains(btn))pick(btn);}});
-  const end=()=>{swiping=false;fresh.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));touched.clear();};
-  fresh.addEventListener('pointerup',end);fresh.addEventListener('pointercancel',end);fresh.addEventListener('pointerleave',end);
+function setupSwipe(wi) {
+  const container = document.getElementById(`ltrs-${wi}`); if (!container) return;
+  if (container._swipeAbort) container._swipeAbort.abort();
+  const ac = new AbortController();
+  container._swipeAbort = ac;
+  let swiping = false;
+
+  const handlePick = (btn) => {
+      if (!btn || btn.classList.contains('pointer-events-none')) return;
+      pickLetter(wi, btn.dataset.l);
+  };
+
+  container.addEventListener('pointerdown', e => {
+      e.preventDefault(); swiping = true; handlePick(e.target.closest('[data-l]'));
+  }, { signal: ac.signal, passive: false });
+
+  container.addEventListener('pointermove', e => {
+      if (!swiping) return;
+      const touch = e.touches ? e.touches[0] : e;
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (el) { const btn = el.closest('[data-l]'); if (btn && container.contains(btn)) handlePick(btn); }
+  }, { signal: ac.signal });
+
+  const endSwipe = () => { swiping = false; };
+  window.addEventListener('pointerup', endSwipe, { signal: ac.signal });
+  window.addEventListener('pointercancel', endSwipe, { signal: ac.signal });
 }
 
-function pickLetter(wi,letter){
-  if(!letter)return;
-  const now=Date.now();if(now-_lastPick<80)return;_lastPick=now;
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const word=lv.words[wi].answer;
-  if(!currentGuess[wi])currentGuess[wi]=[];
-  if(currentGuess[wi].join('')===word||currentGuess[wi].length>=word.length)return;
-  currentGuess[wi].push(letter);
-  playSound('click');vib(15);
-  renderBoxes(wi);checkAnswer(wi);
+function pickLetter(wi, letter) {
+  if (!letter) return;
+  const now = Date.now();
+  if (now - _lastPick < 50) return; 
+  _lastPick = now;
+  
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  const word = lv.words[wi].answer;
+  if (!currentGuess[wi]) currentGuess[wi] = [];
+  
+  // Insert into first empty gap, or at end
+  let insertIndex = currentGuess[wi].indexOf('');
+  if (insertIndex === -1) insertIndex = currentGuess[wi].length;
+  
+  if (insertIndex >= word.length || currentGuess[wi].join('') === word) return;
+  
+  currentGuess[wi][insertIndex] = letter;
+  playSound('click'); vib(15);
+  renderBoxes(wi); renderLetters(wi); checkAnswer(wi);
 }
 
-function eraseLetter(wi,idx){
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  if(!currentGuess[wi])return;
-  if(currentGuess[wi].join('')===lv.words[wi].answer)return;
-  currentGuess[wi].splice(idx,1);renderBoxes(wi);
+function eraseLetter(wi, idx) {
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  if (!currentGuess[wi] || !currentGuess[wi][idx]) return;
+  if (currentGuess[wi].join('') === lv.words[wi].answer) return; // Prevent erasing solved
+
+  currentGuess[wi][idx] = ''; // Nullify slot instead of shrinking array
+  while(currentGuess[wi].length > 0 && currentGuess[wi][currentGuess[wi].length - 1] === '') currentGuess[wi].pop();
+
+  renderBoxes(wi); renderLetters(wi); 
 }
 
-function checkAnswer(wi){
-  if(S.mode==='Duel'){checkDuelAnswer(wi);return;}
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const word=lv.words[wi].answer;
-  const guess=(currentGuess[wi]||[]).join('');
-  if(guess.length!==word.length)return;
-  if(guess===word){
-    playSound('correct');vib([20,20,40]);
-    renderBoxes(wi);updateProgressLabel();
-    const allDone=currentGuess.every((g,i)=>g.join('')===lv.words[i].answer);
-    if(allDone)setTimeout(()=>handleLevelComplete(),400);
+function checkAnswer(wi) {
+  if (S.mode === 'Duel') { checkDuelAnswer(wi); return; }
+  
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  const word = lv.words[wi].answer;
+  
+  const guessArr = currentGuess[wi] || [];
+  if (guessArr.includes('') || guessArr.length !== word.length) return;
+  
+  const guess = guessArr.join('');
+  
+  if (guess === word) {
+    playSound('correct'); vib([20, 20, 40]);
+    renderBoxes(wi); updateProgressLabel();
+    
+    const allDone = currentGuess.every((g, i) => g.join('') === lv.words[i].answer);
+    if (allDone) setTimeout(() => handleLevelComplete(), 400);
   } else {
-    playSound('wrong');vib([60,30,60]);
-    wrongAnswers++;currentGuess[wi]=[];
-    if(S.mode==='Survival'){
-      survivalLives--;updateLivesDisplay();
-      if(survivalLives<=0){stopTimer();showToast('💀 Game over!',3000);setTimeout(()=>showScreen('screen-home'),2500);return;}
+    playSound('wrong'); vib([60, 30, 60]);
+    wrongAnswers++; currentGuess[wi] = [];
+    
+    if (S.mode === 'Survival') {
+      survivalLives--; updateLivesDisplay();
+      if (survivalLives <= 0) {
+          stopTimer(); showToast('💀 Game over!', 3000); 
+          setTimeout(() => showScreen('screen-home'), 2500); return;
+      }
       showToast(`Wrong! ${survivalLives} lives left`);
-    } else if(S.mode!=='Zen'){
-      addCoins(-2);showToast('Wrong! -2 coins');
-    } else {showToast('Not quite — try again!');}
-    const ansEl=document.getElementById(`ans-${wi}`);
-    if(ansEl){ansEl.style.animation='none';ansEl.offsetHeight;ansEl.style.animation='shake 0.3s ease';}
-    renderBoxes(wi);
+    } else if (S.mode !== 'Zen') {
+      addCoins(-2); showToast('Wrong! -2 coins');
+    } else { showToast('Not quite — try again!'); }
+    
+    const ansEl = document.getElementById(`ans-${wi}`);
+    if (ansEl) { ansEl.style.animation = 'none'; ansEl.offsetHeight; ansEl.style.animation = 'shake 0.3s ease'; }
+    renderBoxes(wi); renderLetters(wi);
   }
 }
 
-function handleLevelComplete(){
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
-  stopTimer();
-  const stars=wrongAnswers===0&&timerSec>=30&&hintsUsed===0?3:wrongAnswers<=1&&hintsUsed===0?2:1;
-  let earned=2*lv.words.length;
-  if(timerSec>=40)earned+=1;
-  const isDaily=S.pack==='Daily'&&S.dailySolvedDate!==today();
-  if(isDaily){earned+=20;S.dailySolvedDate=today();}
-  if(S.beginnerBonusExpiry&&today()<=S.beginnerBonusExpiry)earned*=2;
-  if(new Date().getDay()===5&&lv.category==='Nigerian')earned*=2;
+function handleLevelComplete() {
+  const lv = LEVELS[S.currentLevel]; if (!lv) return;
+  
+  if (S.mode !== 'Blitz') stopTimer(); // Don't stop blitz timer
+  
+  const stars = wrongAnswers === 0 && timerSec >= 30 && hintsUsed === 0 ? 3 : wrongAnswers <= 1 && hintsUsed === 0 ? 2 : 1;
+  let earned = 2 * lv.words.length;
+  if (timerSec >= 40) earned += 1;
+  const isDaily = S.pack === 'Daily' && S.dailySolvedDate !== today();
+  if (isDaily) { earned += 20; S.dailySolvedDate = today(); }
+  if (S.beginnerBonusExpiry && today() <= S.beginnerBonusExpiry) earned *= 2;
+  if (new Date().getDay() === 5 && lv.category === 'Nigerian') earned *= 2;
   addCoins(earned);
 
-  // Streak
-  const t=today();
-  const yesterday=new Date(Date.now()-86400000).toISOString().split('T')[0];
-  if(S.lastPlayedDate===t){}else if(S.lastPlayedDate===yesterday)S.streak++;else S.streak=1;
-  S.bestStreak=Math.max(S.streak,S.bestStreak||0);S.lastPlayedDate=t;S.lastActiveDate=t;
+  const t = today();
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (S.lastPlayedDate === t) {} else if (S.lastPlayedDate === yesterday) S.streak++; else S.streak = 1;
+  S.bestStreak = Math.max(S.streak, S.bestStreak || 0); S.lastPlayedDate = t; S.lastActiveDate = t;
 
-  const prev=getLevelProg(S.currentLevel);
-  S.levelProgress[S.currentLevel]={stars:Math.max(prev.stars||0,stars),completed:true};
-  S.totalLevels=Object.values(S.levelProgress).filter(p=>p.completed).length;
-  S.totalWords=(S.totalWords||0)+lv.words.length;
-  S.history=[{date:t,theme:lv.theme,stars,coins:earned,ts:Date.now()},...(S.history||[])].slice(0,30);
+  const prev = getLevelProg(S.currentLevel);
+  S.levelProgress[S.currentLevel] = { stars: Math.max(prev.stars || 0, stars), completed: true };
+  S.totalLevels = Object.values(S.levelProgress).filter(p => p.completed).length;
+  S.totalWords = (S.totalWords || 0) + lv.words.length;
+  S.history = [{ date: t, theme: lv.theme, stars, coins: earned, ts: Date.now() }, ...(S.history || [])].slice(0, 30);
 
-  if(S.mode==='Survival'){
-    S.marathonProgress=(S.marathonProgress||0)+1;
-    if(S.marathonProgress>=10&&!S._marathonRewarded){S._marathonRewarded=true;addCoins(100);showToast('🏅 Marathon done! +100 coins!',4000);}
+  if (S.mode === 'Survival') {
+    S.marathonProgress = (S.marathonProgress || 0) + 1;
+    if (S.marathonProgress >= 10 && !S._marathonRewarded) { 
+        S._marathonRewarded = true; addCoins(100); showToast('🏅 Marathon done! +100 coins!', 4000); 
+    }
   }
 
   recordScore();
 
-  // Advance to next level in same category
-  const catLevels=getCategoryLevels(_currentCategory);
-  const localIdx=catLevels.indexOf(lv);
-  const nextLocal=localIdx+1<catLevels.length?localIdx+1:0;
-  S.currentLevel=getGlobalIndex(_currentCategory,nextLocal);
+  // Route to Next Level automatically
+  const catLevels = getCategoryLevels(_currentCategory);
+  const localIdx = catLevels.indexOf(lv);
+  const nextLocal = localIdx + 1 < catLevels.length ? localIdx + 1 : 0;
+  S.currentLevel = getGlobalIndex(_currentCategory, nextLocal);
   saveS();
+  
+  // Continuous Modes immediately route without victory screen
+  if (S.mode === 'Survival' || S.mode === 'Blitz') {
+      playSound('levelup');
+      showToast(`+${earned} coins! Keep going!`, 1500);
+      setTimeout(() => loadLevel(false), 800); // Pass false so we don't reset lives/timers
+      return;
+  }
+
   playSound('levelup');
-  showVictory(stars,earned);
+  showVictory(stars, earned);
 }
 
 function recordScore(){
@@ -1183,7 +1263,7 @@ function recordScore(){
   S.leaderboard=[entry,...(S.leaderboard||[])].sort((a,b)=>b.score-a.score).slice(0,100);saveS();
 }
 
-function showVictory(stars,coins){
+function showVictory(stars, coins){
   const labels=['','Not bad!','Great work!','Magnificent!'];
   [1,2,3].forEach(n=>{const el=document.getElementById(`vs${n}`);if(el){el.style.fontVariationSettings=n<=stars?"'FILL' 1":"'FILL' 0";el.style.color=n<=stars?'#fd8b00':'';}});
   const vc=document.getElementById('v-coins');if(vc)vc.textContent=`+${coins}`;
@@ -1191,7 +1271,14 @@ function showVictory(stars,coins){
   showScreen('screen-victory');launchConfetti();
 }
 
-function victoryNext(){showScreen('screen-game');loadLevel();}
+function victoryNext() { 
+  if (S.pack === 'Daily') {
+      showScreen('screen-home'); // Daily maps back to home
+  } else {
+      showScreen('screen-game'); 
+      loadLevel(false); 
+  }
+}
 
 function launchConfetti(){
   const colors=['#fd8b00','#8930b0','#006859','#f95630','#6bfde0'];
@@ -1200,12 +1287,20 @@ function launchConfetti(){
 
 // ─── TIMER ──────────────────────────────────────────────────────────────────
 function startTimer(sec){
-  stopTimer();timerSec=sec;timerMax=sec;
-  const fill=document.getElementById('g-timer-fill');const lbl=document.getElementById('g-timer-lbl');
+  stopTimer(); timerSec=sec; timerMax=sec;
+  const fill=document.getElementById('g-timer-fill'); const lbl=document.getElementById('g-timer-lbl');
   function tick(){
     if(lbl)lbl.textContent=timerSec+'s';
     if(fill){fill.style.width=Math.round((timerSec/timerMax)*100)+'%';fill.style.background=timerSec<=10?'#f95630':timerSec<=20?'#fd8b00':'#006859';}
-    if(timerSec<=0){stopTimer();if(S.mode==='Blitz'){showToast(`Time's up!`,3000);setTimeout(()=>showScreen('screen-home'),2500);}else{addCoins(-3);showToast('Time up! -3 coins.');setTimeout(()=>{S.currentLevel=(S.currentLevel+1)%LEVELS.length;loadLevel();},1200);}return;}
+    if(timerSec<=0){
+        stopTimer();
+        if(S.mode==='Blitz'){ showToast(`Time's up!`,3000); setTimeout(()=>showScreen('screen-home'),2500); }
+        else {
+            addCoins(-3); showToast('Time up! -3 coins.');
+            setTimeout(() => { S.currentLevel = (S.currentLevel + 1) % LEVELS.length; loadLevel(false); }, 1200);
+        }
+        return;
+    }
     timerSec--;
   }
   tick();timerInt=setInterval(tick,1000);
@@ -1216,16 +1311,17 @@ function stopTimer(){clearInterval(timerInt);timerInt=null;}
 function useHint(){
   const lv=LEVELS[S.currentLevel];if(!lv)return;
   if(S.mode==='Hard'){showToast('Hints disabled in Hard Mode!');return;}
-  if(S.hints<=0&&S.coins<5){showToast('No hints! Buy some in the Store.');return;}
+  if (S.hints <= 0) { if (S.coins < 5) { showToast('Not enough coins or hints! Visit Store.'); return; } if (!spendCoins(5)) return; } 
+  else { S.hints--; const b = document.getElementById('g-hints-badge'); if (b) b.textContent = S.hints; }
+
   for(let wi=0;wi<lv.words.length;wi++){
     const word=lv.words[wi].answer;
     if(!currentGuess[wi])currentGuess[wi]=[];
     if(currentGuess[wi].join('')===word)continue;
     for(let i=0;i<word.length;i++){
       if(currentGuess[wi][i]!==word[i]){
-        currentGuess[wi][i]=word[i];hintsUsed++;
-        if(S.hints>0){S.hints--;const b=document.getElementById('g-hints-badge');if(b)b.textContent=S.hints;}else spendCoins(5);
-        saveS();renderBoxes(wi);checkAnswer(wi);showToast('Hint used!');return;
+        currentGuess[wi][i]=word[i]; hintsUsed++; saveS();
+        renderBoxes(wi); renderLetters(wi); checkAnswer(wi); showToast('Hint used!'); return;
       }
     }
   }
@@ -1234,20 +1330,26 @@ function useHint(){
 function doShuffle(){
   if(!spendCoins(3)){showToast('Need 3 coins to shuffle');return;}
   const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const wi=currentGuess.findIndex((g,i)=>(g||[]).join('')!==lv.words[i].answer);
-  if(wi>=0)renderLetters(wi);showToast('Shuffled! -3 coins');
+  lv.words.forEach((w, wi) => {
+      if ((currentGuess[wi] || []).join('') !== w.answer) {
+          scrambledCache[wi] = [...w.answer].sort(() => Math.random() - 0.5);
+          renderLetters(wi);
+      }
+  });
+  showToast('Shuffled! -3 coins');
 }
 
 function watchAd(){const bonus=S.vip?15:10;addCoins(bonus);showToast(`+${bonus} coins!`+(S.vip?' (VIP bonus)':''));}
 
-function nextLevel(){
-  stopTimer();
-  const catLevels=getCategoryLevels(_currentCategory);
-  const lv=LEVELS[S.currentLevel];
-  const localIdx=catLevels.indexOf(lv);
-  const nextLocal=localIdx>=0&&localIdx+1<catLevels.length?localIdx+1:0;
-  S.currentLevel=getGlobalIndex(_currentCategory,nextLocal);
-  saveS();loadLevel();
+function nextLevel() {
+  if (S.mode !== 'Blitz') stopTimer();
+  if (S.pack === 'Daily') { showScreen('screen-home'); return; }
+  const catLevels = getCategoryLevels(_currentCategory);
+  const lv = LEVELS[S.currentLevel];
+  const localIdx = catLevels.indexOf(lv);
+  const nextLocal = localIdx >= 0 && localIdx + 1 < catLevels.length ? localIdx + 1 : 0;
+  S.currentLevel = getGlobalIndex(_currentCategory, nextLocal);
+  saveS(); loadLevel(false);
 }
 
 // ─── BONUS MODE ──────────────────────────────────────────────────────────────
@@ -1262,18 +1364,19 @@ function renderBonusLevel(lv){
     const found=(S.extraFound||{})[key]||[];
     const possible=getPossibleWords(w.answer);
     const pct=possible.length>0?Math.round((found.length/possible.length)*100):0;
-    const letters=[...w.answer].sort(()=>Math.random()-0.5);
+    if (!scrambledCache[i]) scrambledCache[i] = [...w.answer].sort(() => Math.random() - 0.5);
+    const letters = scrambledCache[i];
     return`<div class="bg-surface-container-low rounded-lg p-5 space-y-3">
       <div class="flex items-center justify-between"><p class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Find hidden words</p><span class="text-xs font-headline font-bold text-tertiary">${pct}% found</span></div>
       <p class="font-body text-sm font-semibold text-on-surface">${w.clue}</p>
       <p class="text-xs text-on-surface-variant">Letters from: <strong>${w.answer}</strong> · ${possible.length} possible</p>
-      <div class="flex justify-center gap-2 flex-wrap">${letters.map(l=>`<button class="letter-tile w-11 h-11 bg-surface-container-lowest rounded-sm font-headline font-extrabold text-lg text-on-surface border border-outline-variant/20" onclick="addBonusLetter(${i},'${l}')">${l}</button>`).join('')}</div>
+      <div class="flex justify-center gap-2 flex-wrap">${letters.map(l=>`<button class="letter-tile w-11 h-11 bg-surface-container-lowest rounded-sm font-headline font-extrabold text-lg text-on-surface border border-outline-variant/20 shadow-sm active:scale-95 transition-transform" onclick="addBonusLetter(${i},'${l}')">${l}</button>`).join('')}</div>
       <div class="flex gap-2">
         <input id="bonus-inp-${i}" type="text" placeholder="Type a word..." autocapitalize="characters" style="text-transform:uppercase;flex:1;padding:10px 16px;border-radius:9999px;border:1.5px solid #adadac;font-family:Plus Jakarta Sans;font-weight:600;outline:none;background:white;color:#2e2f2f;font-size:14px"/>
         <button onclick="submitBonus(${i})" style="padding:10px 18px;border-radius:9999px;background:#fd8b00;color:white;font-family:Plus Jakarta Sans;font-weight:700;border:none;cursor:pointer;box-shadow:0 3px 0 #ea8000;font-size:14px">Go</button>
       </div>
       ${found.length>0?`<div class="bg-tertiary-container/20 rounded-lg p-3 text-xs font-medium text-on-tertiary-container leading-relaxed">${found.join(' · ')}</div>`:''}
-      <button onclick="nextLevel()" class="w-full py-2 text-on-surface-variant font-label font-bold text-xs">Skip to next level</button>
+      <button onclick="nextLevel()" class="w-full py-2 mt-4 text-on-surface-variant font-label font-bold text-xs hover:text-on-surface transition-colors">Skip to next level</button>
     </div>`;
   }).join('');
 }
@@ -1293,22 +1396,17 @@ async function submitBonus(wi){
   if(word.length<3){showToast('Min 3 letters');inp.value='';return;}
   if(!canMakeWord(word,answer)){showToast("Can't make that from these letters");inp.value='';return;}
 
-  // Always verify online first, local dict as fallback
   showToast('Checking…');
   let valid=false;
-  try{
-    const r=await fetch(`https://api.datamuse.com/words?sp=${word.toLowerCase()}&max=1`);
-    const d=await r.json();
-    valid=d.length>0&&d[0].word.toLowerCase()===word.toLowerCase();
-  }catch(e){
-    // Offline fallback to local dict
-    valid=getPossibleWords(answer).includes(word);
+  const localPossible = getPossibleWords(answer);
+  if (localPossible.includes(word)) valid = true;
+  else {
+      try{ const r=await fetch(`https://api.datamuse.com/words?sp=${word.toLowerCase()}&max=1`); const d=await r.json(); valid=d.length>0&&d[0].word.toLowerCase()===word.toLowerCase(); }
+      catch(e){ valid=false; }
   }
 
-  if(valid){
-    S.extraFound[key].push(word);addCoins(3);saveS();playSound('correct');
-    showToast(`+3 coins! Found "${word}"`);inp.value='';renderBonusLevel(lv);
-  } else {showToast('Not a valid English word');inp.value='';}
+  if(valid){ S.extraFound[key].push(word);addCoins(3);saveS();playSound('correct'); showToast(`+3 coins! Found "${word}"`);inp.value='';renderBonusLevel(lv); } 
+  else {showToast('Not a valid English word');inp.value='';}
 }
 
 // ─── HARD MODE ───────────────────────────────────────────────────────────────
@@ -1328,9 +1426,10 @@ function renderHardLevel(lv){
 }
 
 function submitHard(wi){
+  const lv=LEVELS[S.currentLevel];if(!lv)return;
   const inp=document.getElementById(`hard-inp-${wi}`);
   const val=(inp?.value||'').trim().toUpperCase();if(!val)return;
-  const lv=LEVELS[S.currentLevel];if(!lv)return;
+  if(val.length !== lv.words[wi].answer.length){ showToast(`Word must be ${lv.words[wi].answer.length} letters!`); return; }
   currentGuess[wi]=val.split('');renderBoxes(wi);checkAnswer(wi);if(inp)inp.value='';
 }
 
@@ -1341,31 +1440,34 @@ function renderDuelLevel(lv){
   const p1=_duelP1Name||'Player 1';const p2=_duelP2Name||'Player 2';
   c.innerHTML=`
     <div class="flex justify-center gap-4 mb-2">
-      <div class="flex flex-col items-center px-5 py-3 rounded-lg ${p?'bg-primary-container text-white':'bg-surface-container-high text-on-surface'}"><span class="font-headline font-black text-2xl">${duelScores[0]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p1}</span></div>
+      <div class="flex flex-col items-center px-5 py-3 rounded-lg transition-colors ${p?'bg-primary-container text-white shadow-md scale-105':'bg-surface-container-high text-on-surface opacity-70'}"><span class="font-headline font-black text-2xl">${duelScores[0]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p1}</span></div>
       <div class="flex items-center px-3 text-on-surface-variant font-headline font-black text-lg">VS</div>
-      <div class="flex flex-col items-center px-5 py-3 rounded-lg ${!p?'bg-secondary text-white':'bg-surface-container-high text-on-surface'}"><span class="font-headline font-black text-2xl">${duelScores[1]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p2}</span></div>
+      <div class="flex flex-col items-center px-5 py-3 rounded-lg transition-colors ${!p?'bg-secondary text-white shadow-md scale-105':'bg-surface-container-high text-on-surface opacity-70'}"><span class="font-headline font-black text-2xl">${duelScores[1]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p2}</span></div>
     </div>
-    <div class="bg-surface-container-low rounded-lg p-5 space-y-4 border-2 ${p?'border-primary-container/30':'border-secondary/30'}">
-      <p class="font-label text-xs font-bold uppercase tracking-widest ${p?'text-primary':'text-secondary'} opacity-70">${p?p1:p2}'s Turn</p>
+    <div class="bg-surface-container-low rounded-lg p-5 space-y-4 border-2 transition-colors ${p?'border-primary-container':'border-secondary'}">
+      <p class="font-label text-xs font-bold uppercase tracking-widest ${p?'text-primary':'text-secondary'} opacity-90">${p?p1:p2}'s Turn</p>
       <p class="font-body text-base font-semibold text-on-surface">${word.clue}</p>
-      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-0"></div>
-      <div class="flex justify-center gap-2 flex-wrap" id="ltrs-0"></div>
+      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${wi}"></div>
+      <div class="flex justify-center gap-2 flex-wrap" id="ltrs-${wi}"></div>
     </div>
-    <p class="text-center text-xs text-on-surface-variant font-medium">First to 5 correct wins!</p>`;
-  currentGuess[0]=[];renderBoxes(0);renderLetters(0);setupSwipe(0);
+    <p class="text-center text-xs text-on-surface-variant font-medium mt-4">First to 5 correct wins!</p>`;
+  currentGuess[wi]=[];renderBoxes(wi);renderLetters(wi);
 }
 
 function checkDuelAnswer(wi){
   const lv=LEVELS[S.currentLevel];if(!lv)return;
-  const wIdx=duelTurn%lv.words.length;const word=lv.words[wIdx].answer;
-  const guess=(currentGuess[0]||[]).join('');if(guess.length!==word.length)return;
+  const word=lv.words[wi].answer;
+  const guessArr=currentGuess[wi]||[];
+  if (guessArr.includes('') || guessArr.length!==word.length) return;
+  const guess = guessArr.join('');
+  
   if(guess===word){
     duelScores[duelTurn%2]++;playSound('correct');
     showToast(`${duelTurn%2===0?(_duelP1Name||'P1'):(_duelP2Name||'P2')} scores!`);
     if(duelScores[0]>=5||duelScores[1]>=5){const w=duelScores[0]>=5?(_duelP1Name||'P1'):(_duelP2Name||'P2');setTimeout(()=>{showToast(`🎉 ${w} wins!`,3000);setTimeout(()=>showScreen('screen-home'),2500);},400);return;}
     duelTurn++;setTimeout(()=>renderDuelLevel(lv),600);
   } else {
-    playSound('wrong');currentGuess[0]=[];showToast('Wrong! Passing turn…');
+    playSound('wrong');currentGuess[wi]=[];showToast('Wrong! Passing turn…');
     duelTurn++;setTimeout(()=>renderDuelLevel(lv),800);
   }
 }
@@ -1479,7 +1581,6 @@ function renderProfile(){
   const bg=el('p-badges');
   if(bg)bg.innerHTML=BADGES.map(b=>{const unlocked=b.check();return`<div class="group relative flex flex-col items-center gap-2"><div class="w-20 h-20 rounded-full flex items-center justify-center border-2 ${unlocked?b.color:'bg-surface-container border-outline-variant/30 grayscale opacity-40'}"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' ${unlocked?1:0}">${b.icon}</span></div><span class="font-headline font-bold text-xs text-center text-on-surface leading-tight">${b.label}</span></div>`;}).join('');
 
-  // My Themes
   const owned=[...(S.ownedThemes||[])];
   const sec=el('p-themes-section');
   if(sec)sec.style.display=owned.length>0||S.vip?'block':'none';
@@ -1522,7 +1623,6 @@ function saveEdit(){const inp=document.getElementById('modal-name-inp');const na
 function applyTheme(id){
   S.activeTheme=id;saveS();
   document.documentElement.setAttribute('data-theme',id==='default'?'':id);
-  // Dark mode off when theme is applied (theme handles its own dark)
   if(id!=='default')document.documentElement.classList.remove('dark');
   applyThemeAnim(id);
   showToast('Theme applied!');
@@ -1537,7 +1637,7 @@ function deleteTheme(id){
 }
 
 // ═══════════════════════════════════════════
-// STORE
+// STORE & SETTINGS
 // ═══════════════════════════════════════════
 const STORE_COINS=[
   {id:'ad',name:'10 Coins',desc:'Watch a short ad',price:0,reward:10,icon:'🎬',ad:true},
@@ -1590,9 +1690,6 @@ function storeBuyCoins(price,reward){if(!spendCoins(price)){showToast('Not enoug
 function storeBuyHints(price,reward){if(!spendCoins(price)){showToast('Not enough coins!');return;}S.hints+=reward;saveS();showToast(`+${reward} hints!`);const b=document.getElementById('g-hints-badge');if(b)b.textContent=S.hints;}
 function storeBuyTheme(id,price,name){if(!spendCoins(price)){showToast('Not enough coins!');return;}S.ownedThemes=[...(S.ownedThemes||[])];if(!S.ownedThemes.includes(id))S.ownedThemes.push(id);applyTheme(id);saveS();showToast(`${name} unlocked!`);renderStore();}
 
-// ═══════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════
 function renderSettings(){
   const keys=['music','sound','haptic','darkMode','notifyDaily','notifyEvents'];
   const togIds={music:'tog-music',sound:'tog-sound',haptic:'tog-haptic',darkMode:'tog-dark',notifyDaily:'tog-notifyDaily',notifyEvents:'tog-notifyEvents'};
@@ -1616,7 +1713,6 @@ function doReset(){if(!confirm('Reset ALL progress? This cannot be undone.'))ret
 // INIT
 // ═══════════════════════════════════════════
 function init(){
-  // Apply saved theme
   if(S.activeTheme&&S.activeTheme!=='default'){document.documentElement.setAttribute('data-theme',S.activeTheme);applyThemeAnim(S.activeTheme);}
   if(S.settings?.darkMode)document.documentElement.classList.add('dark');
 
