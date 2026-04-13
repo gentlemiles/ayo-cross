@@ -639,11 +639,10 @@ html[data-theme="snowy"] .border-outline-variant{border-color:rgba(147,197,253,0
 // ═══════════════════════════════════════════
 // 1. STATE & ROUTING
 // ═══════════════════════════════════════════
-const SK='ayocross_v3';
+const SK='ayocross_final';
 const DEF={
     username:'', avatar:'🦁', vip:false, firstLaunch:true, 
     coins:50, hints:3, pack:'All', mode:'Normal', streak:0, 
-    // UPDATED: Independent Save States for each category
     currentLevels: { 'Nigerian': 0, 'English': 0, 'Global': 0, 'All': 0, 'Daily': 0 },
     levelProgress:{}, lastPlayedDate:'', bestStreak:0, totalLevels:0, totalWords:0, totalCoins:0, 
     dailySolvedDate:'', marathonProgress:0, comebackClaimedDate:'', lastActiveDate:'', 
@@ -662,9 +661,9 @@ function spendCoins(n){if(S.coins<n)return false;S.coins-=n;saveS();updateCoinDi
 function updateCoinDisplays(){['h-coins','g-coins','st-coins','cat-coins'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=S.coins;});}
 loadS();
 
-// Routing logic mapping
 const NAV_SCREENS=['screen-home','screen-leaderboard','screen-events','screen-store','screen-profile'];
 const NAV_MAP={'screen-home':'nb-home','screen-leaderboard':'nb-lb','screen-events':'nb-events','screen-store':'nb-store','screen-profile':'nb-profile'};
+
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('active');});
   const t=document.getElementById(id);if(t){t.style.display='block';t.classList.add('active');}
@@ -674,15 +673,181 @@ function showScreen(id){
   
   if(id==='screen-home') renderHome();
   if(id==='screen-category') renderCatLevelGrid();
+  if(id==='screen-store') renderStore();
+  if(id==='screen-profile') renderProfile();
+  if(id==='screen-leaderboard') renderLeaderboard();
+  if(id==='screen-events') renderEvents();
 }
 
 // ═══════════════════════════════════════════
-// 2. DYNAMIC LEVEL ENGINE (API + LOCAL DB)
+// 2. UTILS, SOUND & TOAST
+// ═══════════════════════════════════════════
+let _toastT;
+function showToast(msg, dur=2200){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('show'),dur);}
+
+const SND = {
+    click: new Audio('assets/sounds/click.mp3'),
+    correct: new Audio('assets/sounds/correct.mp3'),
+    wrong: new Audio('assets/sounds/wrong.mp3'),
+    levelup: new Audio('assets/sounds/levelup.mp3')
+};
+function playSound(name, pitch=1.0) {
+    if(!S.settings||!S.settings.sound) return;
+    try { SND[name].currentTime = 0; SND[name].playbackRate = pitch; SND[name].play().catch(e=>{}); } catch(e){}
+}
+
+function showFloatingText(msg) {
+    const el = document.createElement('div');
+    el.className = 'fixed z-[9999] left-1/2 top-[40%] -translate-x-1/2 font-headline font-black text-2xl text-tertiary drop-shadow-lg pointer-events-none';
+    el.textContent = msg;
+    el.style.animation = 'floatUpFade 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+}
+
+// ═══════════════════════════════════════════
+// 3. ONBOARDING & HOME UI
+// ═══════════════════════════════════════════
+let _obSlide=0,_obAvatar='🦁',_obPack='All';
+
+function obShowSlide(n){
+  document.querySelectorAll('.ob-slide').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('[data-dot]').forEach((d,i)=>{d.className='h-2 rounded-full transition-all '+(i===n?'w-8 bg-primary-container':'w-2 bg-surface-container-high');});
+  const btn=document.getElementById('ob-btn');if(btn)btn.textContent=n===3?'Start Playing!':n===0?'Get Started':'Continue';
+  const skip=document.getElementById('ob-skip');if(skip)skip.style.display=n===3?'none':'block';
+}
+
+function obNext(){
+  if(_obSlide===1){const name=(document.getElementById('ob-name-input')||{}).value?.trim();if(!name){showToast('Please enter your name');return;}S.username=name;S.avatar=_obAvatar;const rn=document.getElementById('ob-ready-name');const ra=document.getElementById('ob-ready-av');if(rn)rn.textContent=name;if(ra)ra.textContent=_obAvatar;}
+  if(_obSlide===2)S.pack=_obPack;
+  if(_obSlide===3){obFinish();return;}
+  _obSlide++;obShowSlide(_obSlide);
+}
+
+function obSkip(){obFinish();}
+function obFinish(){
+  S.firstLaunch=false;
+  S.beginnerBonusExpiry=new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+  S.lastActiveDate=today(); saveS();
+  showScreen('screen-home');
+}
+
+function initObPickers(){
+  document.querySelectorAll('.ob-av').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.ob-av').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/10');b.classList.add('border-transparent');});
+      btn.classList.add('border-primary-container','bg-primary-container/10');btn.classList.remove('border-transparent');_obAvatar=btn.dataset.av;
+    });
+  });
+  document.querySelectorAll('.ob-pack').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.ob-pack').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/5');b.classList.add('border-outline-variant');});
+      btn.classList.add('border-primary-container','bg-primary-container/5');btn.classList.remove('border-outline-variant');_obPack=btn.dataset.pack;
+    });
+  });
+}
+
+function renderHome(){
+  const el=id=>document.getElementById(id);
+  if(el('h-streak'))el('h-streak').textContent=S.streak;
+  if(el('h-coins'))el('h-coins').textContent=S.coins;
+  if(el('h-avatar'))el('h-avatar').textContent=S.avatar||'🦁';
+  if(el('h-total-levels'))el('h-total-levels').textContent=S.totalLevels||0;
+  if(el('h-streak-stat'))el('h-streak-stat').textContent=S.streak||0;
+  if(el('h-total-coins'))el('h-total-coins').textContent=S.totalCoins||0;
+  const ds=S.dailySolvedDate===today();
+  if(el('h-daily-title'))el('h-daily-title').textContent=ds?'Daily Complete!':'Today\'s Puzzle';
+  if(el('h-daily-sub'))el('h-daily-sub').textContent=ds?'Come back tomorrow':'+20 bonus coins · Tap to play';
+  if(el('h-daily-badge'))el('h-daily-badge').textContent=ds?'DONE':'NORMAL';
+}
+
+function startDaily(){
+  if(S.dailySolvedDate===today()){showToast('Daily already solved!');return;}
+  S.pack='Daily'; S.mode='Normal'; saveS();
+  loadLevel(true);
+}
+
+// ═══════════════════════════════════════════
+// 4. CATEGORIES UI & DYNAMIC GRID
+// ═══════════════════════════════════════════
+let _currentCategory='All';
+const MODE_INFO={
+  Normal: {icon:'🎯',color:'border-outline-variant text-on-surface',activeColor:'bg-primary-container text-white border-primary-container'},
+  Timed:  {icon:'⏱',color:'border-outline-variant text-on-surface',activeColor:'bg-primary-container text-white border-primary-container'},
+  Blitz:  {icon:'⚡',color:'border-outline-variant text-on-surface',activeColor:'bg-primary-container text-white border-primary-container'},
+  Survival:{icon:'💀',color:'border-outline-variant text-on-surface',activeColor:'bg-primary-container text-white border-primary-container'},
+  Hard:   {icon:'🔒',color:'border-outline-variant text-on-surface',activeColor:'bg-primary-container text-white border-primary-container'}
+};
+
+function openCategory(pack){
+  _currentCategory=pack; S.pack=pack;
+  if(!S.mode) S.mode='Normal';
+  if(S.currentLevels[pack] === undefined) S.currentLevels[pack] = 0;
+  saveS();
+  
+  const el=id=>document.getElementById(id);
+  const catNames={Nigerian:'🇳🇬 Nigerian',English:'📘 English',Global:'🌍 Global',All:'🎲 All Categories'};
+  if(el('cat-title'))el('cat-title').textContent=catNames[pack]||pack;
+  if(el('cat-coins'))el('cat-coins').textContent=S.coins;
+  
+  const row=el('cat-mode-row');
+  if(row) row.innerHTML=Object.keys(MODE_INFO).map(m=>{
+    const info=MODE_INFO[m]; const active=m===S.mode;
+    return`<button class="shrink-0 px-4 py-2 rounded-full font-label font-bold text-sm border-2 transition-all ${active?info.activeColor:info.color}" onclick="setCatMode('${m}')">${info.icon} ${m}</button>`;
+  }).join('');
+  
+  renderCatLevelGrid();
+  showScreen('screen-category');
+}
+
+function setCatMode(mode){S.mode=mode;saveS();openCategory(_currentCategory);}
+
+function renderCatLevelGrid(){
+  const grid = document.getElementById('cat-level-grid'); if(!grid) return;
+  const cur = S.currentLevels[_currentCategory] || 0;
+  
+  const prog = document.getElementById('cat-progress');
+  if(prog) prog.textContent = `Completed: ${cur} Levels`;
+
+  // Dynamically generate 20 levels relative to current progress
+  let html = '';
+  const startIdx = Math.floor(cur / 20) * 20; 
+  
+  for(let i=0; i<20; i++){
+      const levelNum = startIdx + i;
+      const isUnlocked = levelNum <= cur;
+      const isCur = levelNum === cur;
+      
+      if(!isUnlocked){
+          html += `<div class="bg-surface-container rounded-lg p-4 flex flex-col items-center justify-center aspect-square opacity-50 grayscale border border-outline-variant/10"><span class="material-symbols-outlined text-3xl text-on-surface-variant">lock</span><span class="mt-2 font-headline font-bold text-base text-on-surface-variant">${levelNum+1}</span></div>`;
+      } else if(isCur){
+          html += `<div onclick="startLevelFromCat(${levelNum})" class="bg-tertiary-container rounded-lg p-4 flex flex-col items-center justify-between aspect-square ring-2 ring-tertiary/30 cursor-pointer scale-105 shadow-xl transition-all active:scale-100"><span class="font-headline font-black text-3xl text-on-tertiary-container">${levelNum+1}</span><span class="bg-on-tertiary-container text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase">Play</span></div>`;
+      } else {
+          html += `<div onclick="startLevelFromCat(${levelNum})" class="bg-surface-container-lowest rounded-lg p-4 flex flex-col items-center justify-between aspect-square border border-outline-variant/10 cursor-pointer transition-all active:scale-95"><span class="font-headline font-black text-3xl text-primary-container">${levelNum+1}</span><span class="text-[10px] font-bold text-on-surface-variant uppercase">Done</span></div>`;
+      }
+  }
+  grid.innerHTML = html;
+}
+
+function startLevelFromCat(levelNum){
+  S.currentLevels[_currentCategory] = levelNum; saveS();
+  
+  // Show Rules for special modes once per session
+  if(S.mode!=='Normal' && !S._seenRules[S.mode]){
+      S._seenRules[S.mode] = true; saveS();
+      // Logic for Rules could go here, but for smooth flow we just start
+      loadLevel(true); 
+  } else {
+      loadLevel(true);
+  }
+}
+
+// ═══════════════════════════════════════════
+// 5. DYNAMIC LEVEL ENGINE & API
 // ═══════════════════════════════════════════
 let activeLevelData = null;
 
 const LevelEngine = {
-    // Scales difficulty based on level number
     getDifficulty(levelIndex) {
         if (levelIndex < 10) return { wordCount: 3, minLen: 3, maxLen: 5, rarity: 'common' };
         if (levelIndex < 25) return { wordCount: 4, minLen: 4, maxLen: 7, rarity: 'medium' };
@@ -694,11 +859,8 @@ const LevelEngine = {
         const diff = this.getDifficulty(levelIndex);
         let words = [];
 
-        if (category === 'Nigerian') {
-            words = this.getNigerianWords(diff);
-        } else {
-            words = await this.fetchFromAPI(category, diff);
-        }
+        if (category === 'Nigerian') { words = this.getNigerianWords(diff); } 
+        else { words = await this.fetchFromAPI(category, diff); }
 
         return {
             theme: `Phase ${Math.floor(levelIndex/10) + 1} - Tier ${diff.rarity.toUpperCase()}`,
@@ -711,10 +873,8 @@ const LevelEngine = {
     async fetchFromAPI(category, diff) {
         const topic = category === 'Global' ? 'geography+science+history' : 'general+knowledge';
         try {
-            // Fetch dynamically from Datamuse
             const res = await fetch(`https://api.datamuse.com/words?ml=${topic}&md=d,f&max=100`);
             let data = await res.json();
-            
             data = data.filter(w => w.word.length >= diff.minLen && w.word.length <= diff.maxLen && !w.word.includes(' ') && w.defs);
             data.sort(() => Math.random() - 0.5); 
 
@@ -722,17 +882,14 @@ const LevelEngine = {
                 clue: (w.defs[0].split('\t')[1] || `Related to ${w.word}`).substring(0, 60), 
                 answer: w.word.toUpperCase()
             }));
-            
-            if (selected.length < diff.wordCount) throw new Error("Not enough API words");
+            if (selected.length < diff.wordCount) throw new Error("Fallback needed");
             return selected;
         } catch (e) {
-            console.warn("API Offline, using fallback words");
             return this.getFallbackWords(category, diff);
         }
     },
 
     getNigerianWords(diff) {
-        // Deep Nigerian Cultural Library
         const DB = {
             common: [{c: "Nigerian rice dish", a: "JOLLOF"}, {c: "Capital of Nigeria", a: "ABUJA"}, {c: "Currency", a: "NAIRA"}, {c: "Lagos traffic", a: "GOSLOW"}, {c: "Popular swallow", a: "AMALA"}],
             medium: [{c: "Largest city", a: "LAGOS"}, {c: "Melon seed soup", a: "EGUSI"}, {c: "Roasted meat skewers", a: "SUYA"}, {c: "Burna Boy's genre", a: "AFROBEATS"}, {c: "Danfo conductor's cry", a: "OWAMBE"}],
@@ -743,26 +900,23 @@ const LevelEngine = {
     },
 
     getFallbackWords(cat, diff) {
-        const FB = [
-            {c:'Largest planet', a:'JUPITER'}, {c:'Color of sky', a:'BLUE'}, {c:'Flying vehicle', a:'PLANE'},
-            {c:'Study of mind', a:'PSYCHOLOGY'}, {c:'Longest river', a:'NILE'}, {c:'First man on moon', a:'ARMSTRONG'}
-        ];
+        const FB = [{c:'Largest planet', a:'JUPITER'}, {c:'Color of sky', a:'BLUE'}, {c:'Flying vehicle', a:'PLANE'}, {c:'Study of mind', a:'PSYCHOLOGY'}];
         return FB.sort(() => Math.random() - 0.5).slice(0, diff.wordCount);
     }
 };
 
 // ═══════════════════════════════════════════
-// 3. GAME ENGINE & COMBO JUICE
+// 6. GAME ENGINE & COMBO JUICE
 // ═══════════════════════════════════════════
 let currentGuess=[], scrambledCache={};
 let timerSec=60, timerMax=60, timerInt=null;
 let wrongAnswers=0, hintsUsed=0, survivalLives=3;
-let currentCombo = 0, lastSolveTime = 0; // JUICE: Combo Trackers
+let currentCombo = 0, lastSolveTime = 0;
 
 async function loadLevel(isNewSession = false) {
-  // UI Loading State
+  showScreen('screen-game');
   const c = document.getElementById('words-container');
-  if(c) c.innerHTML = '<div class="flex justify-center p-10"><div class="animate-pulse font-headline text-primary">Generating puzzle...</div></div>';
+  if(c) c.innerHTML = '<div class="flex justify-center p-10"><div class="animate-pulse font-headline text-primary font-bold">Generating puzzle...</div></div>';
 
   const cat = S.pack === 'Daily' ? 'Daily' : S.pack;
   const idx = S.currentLevels[cat] || 0;
@@ -772,11 +926,8 @@ async function loadLevel(isNewSession = false) {
   currentGuess = activeLevelData.words.map(() => []);
   wrongAnswers = 0; hintsUsed = 0;
   
-  if (isNewSession) {
-      survivalLives = 3; currentCombo = 0; scrambledCache = {}; 
-  } else if (S.mode !== 'Survival' && S.mode !== 'Blitz') {
-      scrambledCache = {}; currentCombo = 0;
-  }
+  if (isNewSession) { survivalLives = 3; currentCombo = 0; scrambledCache = {}; } 
+  else if (S.mode !== 'Survival' && S.mode !== 'Blitz') { scrambledCache = {}; currentCombo = 0; }
 
   const el=id=>document.getElementById(id);
   if(el('g-level-lbl')) el('g-level-lbl').textContent = `Level ${idx + 1}`;
@@ -785,7 +936,6 @@ async function loadLevel(isNewSession = false) {
   if(el('g-mode-badge')) el('g-mode-badge').textContent = S.mode.toUpperCase();
   updateProgressLabel();
 
-  // Route to renderer
   if(S.mode==='Hard') renderHardLevel(activeLevelData);
   else renderNormalLevel(activeLevelData);
 }
@@ -797,7 +947,6 @@ function updateProgressLabel(){
   if(el)el.textContent=`${done} / ${activeLevelData.words.length} words`;
 }
 
-// Rendering Logic
 function renderNormalLevel(lv) {
   const c = document.getElementById('words-container'); if (!c) return;
   c.innerHTML = lv.words.map((w, i) => `
@@ -805,9 +954,8 @@ function renderNormalLevel(lv) {
       <p class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Clue</p>
       <p class="font-body text-base font-semibold text-on-surface leading-snug">${w.clue}</p>
       <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${i}"></div>
-      <div class="flex justify-center gap-2 flex-wrap" id="ltrs-${i}"></div>
+      <div class="flex justify-center gap-2 flex-wrap mt-2" id="ltrs-${i}"></div>
     </div>`).join('');
-    
   lv.words.forEach((_, i) => { renderBoxes(i); renderLetters(i); });
 }
 
@@ -819,11 +967,11 @@ function renderBoxes(wi) {
   const el = document.getElementById(`ans-${wi}`); if (!el) return;
   el.innerHTML = word.split('').map((ch, i) => {
     const c = g[i] || '';
-    let cls = 'ans-slot w-11 min-h-[48px] border-2 rounded-sm font-headline font-bold text-xl cursor-pointer select-none transition-all duration-200 ';
+    let cls = 'ans-slot w-11 min-h-[48px] border-2 rounded-sm font-headline font-bold text-xl cursor-pointer select-none transition-all duration-200 flex items-center justify-center ';
     if (done) cls += 'correct bg-tertiary-container border-tertiary text-on-tertiary-container';
     else if (c) cls += 'filled bg-surface-container-lowest border-primary-container text-primary shadow-sm';
-    else cls += 'bg-surface-container-high border-outline-variant/40';
-    return `<div class="${cls}" style="min-width:40px" onclick="eraseLetter(${wi}, ${i})">${c || ''}</div>`;
+    else cls += 'bg-surface-container-high border-outline-variant/40 text-transparent';
+    return `<div class="${cls}" onclick="eraseLetter(${wi}, ${i})">${c || ''}</div>`;
   }).join('');
 }
 
@@ -846,9 +994,9 @@ function renderLetters(wi) {
       const l = btn.dataset.l; btn.textContent = l;
       if (guessCounts[l] > 0) {
           guessCounts[l]--;
-          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl bg-surface-container-high text-on-surface-variant/30 scale-95 pointer-events-none"; 
+          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl bg-surface-container-high text-on-surface-variant/30 scale-95 pointer-events-none transition-all duration-150"; 
       } else {
-          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl bg-surface-container-lowest text-on-surface border border-outline-variant/30 shadow-sm cursor-pointer hover:bg-surface-container-low active:scale-95"; 
+          btn.className = "letter-tile w-12 h-12 rounded-sm flex items-center justify-center font-headline font-extrabold text-xl bg-surface-container-lowest text-on-surface border border-outline-variant/30 shadow-sm cursor-pointer hover:bg-surface-container-low active:scale-95 transition-all duration-150"; 
       }
   });
 }
@@ -856,8 +1004,7 @@ function renderLetters(wi) {
 function setupSwipe(wi) {
   const container = document.getElementById(`ltrs-${wi}`); if (!container) return;
   if (container._swipeAbort) container._swipeAbort.abort();
-  const ac = new AbortController();
-  container._swipeAbort = ac;
+  const ac = new AbortController(); container._swipeAbort = ac;
   let swiping = false;
 
   const handlePick = (btn) => { if (btn && !btn.classList.contains('pointer-events-none')) pickLetter(wi, btn.dataset.l); };
@@ -880,11 +1027,11 @@ function pickLetter(wi, letter) {
   
   let insertIndex = currentGuess[wi].indexOf('');
   if (insertIndex === -1) insertIndex = currentGuess[wi].length;
-  
   if (insertIndex >= word.length || currentGuess[wi].join('') === word) return;
   
   currentGuess[wi][insertIndex] = letter;
   playSound('click'); 
+  if (navigator.vibrate) navigator.vibrate(10);
   renderBoxes(wi); renderLetters(wi); checkAnswer(wi);
 }
 
@@ -897,15 +1044,6 @@ function eraseLetter(wi, idx) {
   renderBoxes(wi); renderLetters(wi); 
 }
 
-// JUICE ENGINE: Combos, Shakes, and Dynamic Feedback
-function showFloatingText(msg) {
-    const el = document.createElement('div');
-    el.className = 'floating-text';
-    el.textContent = msg;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1200);
-}
-
 function checkAnswer(wi) {
   const word = activeLevelData.words[wi].answer;
   const guessArr = currentGuess[wi] || [];
@@ -914,65 +1052,123 @@ function checkAnswer(wi) {
   const guess = guessArr.join('');
   
   if (guess === word) {
-    // 1. COMBO CALCULATION
     const now = Date.now();
-    if (now - lastSolveTime < 5000) currentCombo++; 
-    else currentCombo = 1;
+    if (now - lastSolveTime < 5000) currentCombo++; else currentCombo = 1;
     lastSolveTime = now;
 
-    // 2. REWARD MATH
-    const baseReward = 2;
-    const comboBonus = Math.floor(currentCombo / 2); 
-    const totalEarned = baseReward + comboBonus;
+    const totalEarned = 2 + Math.floor(currentCombo / 2); 
     addCoins(totalEarned);
 
-    // 3. JUICE EXECUTION (Rising Pitch + Haptic + Floating Text)
-    const pitch = Math.min(1.0 + (currentCombo * 0.1), 1.6);
-    playSound('correct', pitch); 
-    
+    playSound('correct', Math.min(1.0 + (currentCombo * 0.1), 1.6)); 
     if (navigator.vibrate) navigator.vibrate([30, 50, 40]);
-    showFloatingText(`+${totalEarned} ${currentCombo > 1 ? '🔥x'+currentCombo : ''}`);
+    showFloatingText(`+${totalEarned} Coins! ${currentCombo > 1 ? '🔥x'+currentCombo : ''}`);
 
     renderBoxes(wi); updateProgressLabel();
     
     const allDone = currentGuess.every((g, i) => g.join('') === activeLevelData.words[i].answer);
-    if (allDone) setTimeout(() => handleLevelComplete(), 400);
+    if (allDone) setTimeout(() => handleLevelComplete(), 600);
   } else {
-    // FAILED: Break combo, violent shake
     currentCombo = 0;
-    playSound('wrong'); 
-    wrongAnswers++; currentGuess[wi] = [];
+    playSound('wrong'); wrongAnswers++; currentGuess[wi] = [];
     
     const isDying = S.mode === 'Survival' && survivalLives === 1;
     const ansEl = document.getElementById(`ans-${wi}`);
-    if (ansEl) { 
-        ansEl.style.animation = 'none'; ansEl.offsetHeight; 
-        ansEl.style.animation = isDying ? 'violent-shake 0.4s ease' : 'shake 0.3s ease'; 
-    }
+    if (ansEl) { ansEl.style.animation = 'none'; ansEl.offsetHeight; ansEl.style.animation = isDying ? 'violent-shake 0.4s ease' : 'shake 0.3s ease'; }
     renderBoxes(wi); renderLetters(wi);
   }
 }
 
 function handleLevelComplete() {
   const cat = activeLevelData.category;
-  const stars = wrongAnswers === 0 && hintsUsed === 0 ? 3 : wrongAnswers <= 1 ? 2 : 1;
+  const earnedStars = wrongAnswers === 0 && hintsUsed === 0 ? 3 : wrongAnswers <= 1 ? 2 : 1;
   
-  // Advance the state for THIS category independently
+  // Advance state
   S.currentLevels[cat] = (S.currentLevels[cat] || 0) + 1;
-  S.totalLevels++;
+  S.totalLevels++; S.totalWords += activeLevelData.words.length;
+  
+  // Save to leaderboard/history
+  const entry = { name: S.username || 'Player', avatar: S.avatar || '🦁', score: S.coins, date: today(), ts: Date.now() };
+  S.leaderboard = [entry, ...(S.leaderboard || [])].sort((a,b) => b.score - a.score).slice(0, 100);
+  S.history = [{ date: today(), theme: activeLevelData.theme, stars: earnedStars, coins: 10, ts: Date.now() }, ...(S.history || [])].slice(0, 30);
   saveS();
   
   playSound('levelup');
+  
   if (S.mode === 'Survival' || S.mode === 'Blitz') {
       showFloatingText(`LEVEL UP!`);
       setTimeout(() => loadLevel(false), 800);
   } else {
-      showScreen('screen-home'); // Route back to grid or show victory
+      // Return to category map to let player breathe
+      openCategory(cat);
+  }
+}
+
+function useHint(){
+  if(S.hints <= 0) { showToast("No hints left!"); return; }
+  S.hints--; saveS();
+  const b = document.getElementById('g-hints-badge'); if (b) b.textContent = S.hints;
+
+  for(let wi=0; wi<activeLevelData.words.length; wi++) {
+    const word = activeLevelData.words[wi].answer;
+    if(!currentGuess[wi]) currentGuess[wi] = [];
+    if(currentGuess[wi].join('') === word) continue;
+    
+    for(let i=0; i<word.length; i++) {
+      if(currentGuess[wi][i] !== word[i]) {
+        currentGuess[wi][i] = word[i];
+        renderBoxes(wi); renderLetters(wi); checkAnswer(wi);
+        showToast('Hint used!'); return;
+      }
+    }
   }
 }
 
 // ═══════════════════════════════════════════
-// 4. THEME ANIMATIONS (ALL 7 UPGRADED)
+// 7. STORE, PROFILE, & LEADERBOARD UI
+// ═══════════════════════════════════════════
+function renderStore(){
+  updateCoinDisplays();
+  const themeList=document.getElementById('st-themes-list');
+  if(themeList){
+    const themeKeys=Object.keys(THEMES).filter(k=>k!=='default');
+    themeList.innerHTML=themeKeys.map(tid=>{
+      const th=THEMES[tid]; const owned=S.vip||(S.ownedThemes||[]).includes(tid); const active=S.activeTheme===tid;
+      const gradients={dark:'from-gray-900 to-purple-900',ocean:'from-blue-700 to-sky-500',sunset:'from-pink-600 to-rose-400',forest:'from-green-800 to-emerald-600',midnight:'from-slate-900 to-indigo-900',desert:'from-amber-600 to-yellow-400',snowy:'from-blue-200 to-indigo-200'};
+      return`<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-lg border ${active?'border-primary-container border-2':'border-outline-variant/10'}">
+        <div class="w-14 h-14 rounded-lg flex-shrink-0 bg-gradient-to-br ${gradients[tid]||'from-gray-400 to-gray-600'} flex items-center justify-center text-2xl relative overflow-hidden"><span class="relative z-10">${th.icon}</span></div>
+        <div class="flex-1"><div class="font-headline font-bold text-on-surface">${th.name}</div><div class="text-xs text-on-surface-variant font-medium mt-0.5">${th.price}🪙</div></div>
+        ${owned?`<div class="flex flex-col items-center gap-1"><span class="text-xs font-headline font-bold text-tertiary bg-tertiary/10 px-2 py-1 rounded-full">Owned</span>${active?'<span class="text-xs text-primary-container font-bold">Active</span>':`<button onclick="applyTheme('${tid}')" class="text-xs underline text-primary">Apply</button>`}</div>`:
+          `<button onclick="storeBuyTheme('${tid}',${th.price},'${th.name}')" class="px-3 py-2 rounded-full bg-primary-container text-white font-headline font-bold text-xs shadow-[0_3px_0_#ea8000] active:translate-y-0.5 transition-all">Buy</button>`}
+      </div>`;
+    }).join('');
+  }
+}
+
+function storeBuyTheme(id,price,name){if(!spendCoins(price)){showToast('Not enough coins!');return;}S.ownedThemes=[...(S.ownedThemes||[])];if(!S.ownedThemes.includes(id))S.ownedThemes.push(id);applyTheme(id);saveS();showToast(`${name} unlocked!`);renderStore();}
+
+function renderProfile(){
+  const el=id=>document.getElementById(id);
+  if(el('p-avatar'))el('p-avatar').textContent=S.avatar||'🦁';
+  if(el('p-name'))el('p-name').textContent=S.username||'Player';
+}
+
+function renderLeaderboard(){
+  const list=document.getElementById('lb-list');
+  if(!list) return;
+  const lb = (S.leaderboard||[]).sort((a,b)=>b.score-a.score);
+  list.innerHTML=lb.length===0?'<div class="text-center py-8 text-on-surface-variant text-sm">No scores yet!</div>':lb.slice(0,20).map((e,i)=>`
+    <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg mb-2">
+        <div class="flex items-center gap-3"><span class="font-bold w-6 text-on-surface-variant">${i+1}</span><span class="text-2xl">${e.avatar}</span><span class="font-bold text-sm">${e.name}</span></div>
+        <span class="font-black text-primary">${e.score}</span>
+    </div>`).join('');
+}
+
+function renderEvents(){
+   // Static stub for events screen rendering
+}
+
+// ═══════════════════════════════════════════
+// 8. THEMES & CANVAS ANIMATIONS
 // ═══════════════════════════════════════════
 const THEMES={
   default:{name:'Default',icon:'🎨',price:0,animType:null},
@@ -996,11 +1192,12 @@ function applyTheme(id){
   S.activeTheme=id; saveS();
   document.documentElement.setAttribute('data-theme',id==='default'?'':id);
   startAnim(THEMES[id]?.animType);
+  if(document.getElementById('screen-store').style.display === 'block') renderStore();
 }
 
 function startAnim(type){
   if(_animFrame) cancelAnimationFrame(_animFrame);
-  if(!ctx || !type) return;
+  if(!ctx || !type) { if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); return; }
   
   _particles=[];
   if(type==='snow') for(let i=0;i<80;i++) _particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*3+1,s:Math.random()*1+0.5});
@@ -1013,7 +1210,6 @@ function startAnim(type){
     time += 0.02;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     
-    // 1. OCEAN (Sine Waves & Depth)
     if(type==='ocean'){
         let g=ctx.createLinearGradient(0,0,0,canvas.height); g.addColorStop(0,'#0284c7'); g.addColorStop(1,'#082f49');
         ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -1023,28 +1219,23 @@ function startAnim(type){
             ctx.lineTo(canvas.width,canvas.height); ctx.fillStyle=`rgba(255,255,255,${0.05*i})`; ctx.fill();
         }
     }
-    // 2. SUNSET (Warm Radial Glow)
     else if(type==='sunset'){
         let g=ctx.createRadialGradient(canvas.width/2,canvas.height,canvas.height*0.1,canvas.width/2,canvas.height,canvas.height);
         g.addColorStop(0,'rgba(253,164,175,0.8)'); g.addColorStop(1,'rgba(225,29,72,0.1)');
         ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
     }
-    // 3. DESERT (Heat Shimmer)
     else if(type==='desert'){
         let g=ctx.createLinearGradient(0,canvas.height*0.6,0,canvas.height);
         g.addColorStop(0,'rgba(251,191,36,0)'); g.addColorStop(0.5,`rgba(251,191,36,${0.1+Math.sin(time)*0.05})`); g.addColorStop(1,'rgba(217,119,6,0.3)');
         ctx.fillStyle=g; ctx.fillRect(0,canvas.height*0.6,canvas.width,canvas.height);
     }
-    // 4. DARK NIGHT (Shooting stars & twinkle)
     else if(type==='sparkle'){
         _particles.forEach(p=>{
             p.l++; if(p.l>p.m){p.l=0;p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;}
             let o=p.l/p.m; o=o<0.5?o*2:(1-o)*2;
             ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle=`rgba(167,139,250,${o})`; ctx.shadowBlur=10; ctx.shadowColor='#a78bfa'; ctx.fill(); ctx.shadowBlur=0;
         });
-        if(Math.random()<0.01){ ctx.beginPath(); let sx=Math.random()*canvas.width, sy=Math.random()*(canvas.height/2); ctx.moveTo(sx,sy); ctx.lineTo(sx-80,sy+80); ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.stroke(); }
     }
-    // 5. FOREST (Falling Leaves)
     else if(type==='leaves'){
         _particles.forEach(p=>{
             p.y+=p.s; p.x+=Math.sin(time+p.r)*1; p.r+=1;
@@ -1053,14 +1244,12 @@ function startAnim(type){
             ctx.beginPath(); ctx.ellipse(0,0,8,4,0,0,Math.PI*2); ctx.fillStyle='rgba(21,128,61,0.6)'; ctx.fill(); ctx.restore();
         });
     }
-    // 6. MIDNIGHT (City Bokeh Lights)
     else if(type==='city'){
         _particles.forEach(p=>{
             p.b+=2; let f=Math.sin(p.b*0.05)*0.5+0.5;
             ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle=`rgba(250,204,21,${0.2*f})`; ctx.shadowBlur=8; ctx.shadowColor='#facc15'; ctx.fill(); ctx.shadowBlur=0;
         });
     }
-    // 7. SNOWY (Falling Snow)
     else if(type==='snow'){
         _particles.forEach(p=>{
             p.y+=p.s; p.x+=Math.sin(time)*0.5;
@@ -1074,29 +1263,19 @@ function startAnim(type){
   loop();
 }
 
-// Sound Helper (Handles standard Audio or Howler if installed)
-const SND = {
-    click: new Audio('assets/sounds/click.mp3'),
-    correct: new Audio('assets/sounds/correct.mp3'),
-    wrong: new Audio('assets/sounds/wrong.mp3'),
-    levelup: new Audio('assets/sounds/levelup.mp3')
-};
-function playSound(name, pitch=1.0) {
-    if(!S.settings||!S.settings.sound) return;
-    try {
-        SND[name].currentTime = 0;
-        SND[name].playbackRate = pitch; // Raises pitch for combos!
-        SND[name].play().catch(e=>{});
-    } catch(e){}
-}
-
 // ═══════════════════════════════════════════
-// INIT APP
+// 9. APP INITIALIZATION
 // ═══════════════════════════════════════════
 function init(){
   applyTheme(S.activeTheme);
-  if(S.firstLaunch) showScreen('screen-onboarding');
-  else showScreen('screen-home');
+  initObPickers();
+  
+  if(S.firstLaunch || !S.username){
+      obShowSlide(0);
+      showScreen('screen-onboarding');
+  } else {
+      showScreen('screen-home');
+  }
 }
 init();
 </script>
