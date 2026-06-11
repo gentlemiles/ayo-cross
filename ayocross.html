@@ -1215,7 +1215,8 @@ function startAnim(type){
         ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
         for(let i=1;i<=3;i++){
             ctx.beginPath(); ctx.moveTo(0,canvas.height);
-            for(let x=0;x<canvas.width;x++) ctx.lineTo(x, Math.sin(x*0.005+time*i)*30*i+(canvas.height*0.5));
+            // Draw waves using a larger step size (20px) to drastically reduce lineTo operations
+            for(let x=0;x<=canvas.width+20;x+=20) ctx.lineTo(x, Math.sin(x*0.005+time*i)*30*i+(canvas.height*0.5));
             ctx.lineTo(canvas.width,canvas.height); ctx.fillStyle=`rgba(255,255,255,${0.05*i})`; ctx.fill();
         }
     }
@@ -1230,32 +1231,46 @@ function startAnim(type){
         ctx.fillStyle=g; ctx.fillRect(0,canvas.height*0.6,canvas.width,canvas.height);
     }
     else if(type==='sparkle'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.shadowBlur=10; ctx.shadowColor='#a78bfa';
         _particles.forEach(p=>{
             p.l++; if(p.l>p.m){p.l=0;p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;}
             let o=p.l/p.m; o=o<0.5?o*2:(1-o)*2;
-            ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle=`rgba(167,139,250,${o})`; ctx.shadowBlur=10; ctx.shadowColor='#a78bfa'; ctx.fill(); ctx.shadowBlur=0;
+            ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle=`rgba(167,139,250,${o})`; ctx.fill();
         });
+        ctx.shadowBlur=0;
     }
     else if(type==='leaves'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.fillStyle='rgba(21,128,61,0.6)';
         _particles.forEach(p=>{
             p.y+=p.s; p.x+=Math.sin(time+p.r)*1; p.r+=1;
             if(p.y>canvas.height){p.y=-20; p.x=Math.random()*canvas.width;}
             ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r*Math.PI/180);
-            ctx.beginPath(); ctx.ellipse(0,0,8,4,0,0,Math.PI*2); ctx.fillStyle='rgba(21,128,61,0.6)'; ctx.fill(); ctx.restore();
+            ctx.beginPath(); ctx.ellipse(0,0,8,4,0,0,Math.PI*2); ctx.fill(); ctx.restore();
         });
     }
     else if(type==='city'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.shadowBlur=8; ctx.shadowColor='#facc15';
         _particles.forEach(p=>{
             p.b+=2; let f=Math.sin(p.b*0.05)*0.5+0.5;
-            ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle=`rgba(250,204,21,${0.2*f})`; ctx.shadowBlur=8; ctx.shadowColor='#facc15'; ctx.fill(); ctx.shadowBlur=0;
+            ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle=`rgba(250,204,21,${0.2*f})`; ctx.fill();
         });
+        ctx.shadowBlur=0;
     }
     else if(type==='snow'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.fillStyle='rgba(255,255,255,0.8)';
+        ctx.beginPath();
+        // Batched path operations across particles
         _particles.forEach(p=>{
             p.y+=p.s; p.x+=Math.sin(time)*0.5;
             if(p.y>canvas.height){p.y=-10; p.x=Math.random()*canvas.width;}
-            ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.fill();
+            ctx.moveTo(p.x+p.r, p.y);
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
         });
+        ctx.fill();
     }
     
     _animFrame=requestAnimationFrame(loop);
