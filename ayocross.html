@@ -287,6 +287,14 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{'primary':'#8c4a00','pr
     <button onclick="nextLevel()" class="text-neutral-600 dark:text-neutral-400 p-4 hover:bg-[#e2e2e1] dark:hover:bg-neutral-800 rounded-full active:scale-90 transition-all duration-300 ease-out">
       <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1">skip_next</span>
     </button>
+  <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-4 py-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-full shadow-[0_10px_40px_rgba(46,47,47,0.12)]">
+    <button onclick="useHint()" aria-label="Use hint" title="Use hint" class="relative flex items-center justify-center p-3 rounded-full bg-primary-container text-white shadow-[0_4px_0_var(--tile-shadow,#ea8000)] active:shadow-none active:translate-y-1 transition-all mr-1">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1" aria-hidden="true">lightbulb</span>
+      <span class="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center text-[9px] font-headline font-black text-primary border border-outline-variant" id="g-hints-badge">3</span>
+    </button>
+    <button onclick="watchAd()" aria-label="Watch ad" title="Watch ad" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl" aria-hidden="true">youtube_ad</span></button>
+    <button onclick="doShuffle()" aria-label="Shuffle letters" title="Shuffle letters" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl" aria-hidden="true">shuffle</span></button>
+    <button onclick="nextLevel()" aria-label="Next level" title="Next level" class="flex items-center justify-center p-3 rounded-full text-on-surface-variant hover:bg-surface-container active:scale-90 transition-all"><span class="material-symbols-outlined text-xl" aria-hidden="true">skip_next</span></button>
   </nav>
 </div>
 
@@ -670,6 +678,27 @@ initSounds();
 // ONBOARDING
 // ═══════════════════════════════════════════
 let _obSlide=0,_obAvatar='🦁',_obPack='All';
+function escapeHTML(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag]));
+}
+
+const SND = {
+    click: new Audio('assets/sounds/click.mp3'),
+    correct: new Audio('assets/sounds/correct.mp3'),
+    wrong: new Audio('assets/sounds/wrong.mp3'),
+    levelup: new Audio('assets/sounds/levelup.mp3')
+};
+function playSound(name, pitch=1.0) {
+    if(!S.settings||!S.settings.sound) return;
+    try { SND[name].currentTime = 0; SND[name].playbackRate = pitch; SND[name].play().catch(e=>{}); } catch(e){}
+}
 
 function showFloatingText(msg) {
     const el = document.createElement('div');
@@ -975,6 +1004,9 @@ function renderNormalLevel(lv) {
       <p class="font-headline font-bold text-lg text-on-surface leading-tight mb-4">${w.clue}</p>
       <div class="flex justify-center gap-2 mb-6" id="ans-${i}"></div>
       <div id="ltrs-${i}" class="grid grid-cols-4 gap-4 max-w-sm mx-auto pt-6 border-t border-outline-variant/10"></div>
+      <p class="font-body text-base font-semibold text-on-surface leading-snug">${escapeHTML(w.clue)}</p>
+      <div class="flex justify-center gap-1.5 flex-wrap" id="ans-${i}"></div>
+      <div class="flex justify-center gap-2 flex-wrap mt-2" id="ltrs-${i}"></div>
     </div>`).join('');
 
   lv.words.forEach((_, i) => { renderBoxes(i); renderLetters(i); });
@@ -1550,6 +1582,15 @@ function openEditModal(){
     btn.onclick=()=>{_modalAvatar=btn.dataset.av;document.querySelectorAll('.mod-av').forEach(b=>{b.classList.remove('border-primary-container','bg-primary-container/10');b.classList.add('border-transparent');});btn.classList.add('border-primary-container','bg-primary-container/10');btn.classList.remove('border-transparent');};
     const active=btn.dataset.av===S.avatar;btn.classList.toggle('border-primary-container',active);btn.classList.toggle('bg-primary-container/10',active);btn.classList.toggle('border-transparent',!active);
   });
+function renderLeaderboard(){
+  const list=document.getElementById('lb-list');
+  if(!list) return;
+  const lb = (S.leaderboard||[]).sort((a,b)=>b.score-a.score);
+  list.innerHTML=lb.length===0?'<div class="text-center py-8 text-on-surface-variant text-sm">No scores yet!</div>':lb.slice(0,20).map((e,i)=>`
+    <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg mb-2">
+        <div class="flex items-center gap-3"><span class="font-bold w-6 text-on-surface-variant">${i+1}</span><span class="text-2xl">${escapeHTML(e.avatar)}</span><span class="font-bold text-sm">${escapeHTML(e.name)}</span></div>
+        <span class="font-black text-primary">${e.score}</span>
+    </div>`).join('');
 }
 function closeEditModal(){const m=document.getElementById('edit-modal');if(m){m.classList.add('hidden');m.style.display='none';}}
 function saveEdit(){const inp=document.getElementById('modal-name-inp');const name=inp?.value?.trim();if(!name){showToast('Please enter a name');return;}S.username=name;S.avatar=_modalAvatar;saveS();closeEditModal();renderProfile();const ha=document.getElementById('h-avatar');if(ha)ha.textContent=S.avatar;showToast('Profile saved!');}
@@ -1637,6 +1678,85 @@ function toggleSetting(key,el){
   if(key==='darkMode'){
     document.documentElement.classList.toggle('dark',newVal);
     if(newVal&&S.activeTheme&&S.activeTheme!=='default'){applyTheme('default');showToast('Theme reset for dark mode');}
+function startAnim(type){
+  if(_animFrame) cancelAnimationFrame(_animFrame);
+  if(!ctx || !type) { if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+  
+  _particles=[];
+  if(type==='snow') for(let i=0;i<80;i++) _particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*3+1,s:Math.random()*1+0.5});
+  if(type==='sparkle') for(let i=0;i<60;i++) _particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:Math.random()*100,m:100});
+  if(type==='leaves') for(let i=0;i<30;i++) _particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*360,s:Math.random()*1+0.5});
+  if(type==='city') for(let i=0;i<50;i++) _particles.push({x:Math.random()*canvas.width,y:canvas.height*0.6+Math.random()*canvas.height*0.4,b:Math.random()*100});
+  
+  let time = 0;
+  function loop() {
+    time += 0.02;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+    if(type==='ocean'){
+        let g=ctx.createLinearGradient(0,0,0,canvas.height); g.addColorStop(0,'#0284c7'); g.addColorStop(1,'#082f49');
+        ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+        for(let i=1;i<=3;i++){
+            ctx.beginPath(); ctx.moveTo(0,canvas.height);
+            // Draw waves using a larger step size (20px) to drastically reduce lineTo operations
+            for(let x=0;x<=canvas.width+20;x+=20) ctx.lineTo(x, Math.sin(x*0.005+time*i)*30*i+(canvas.height*0.5));
+            ctx.lineTo(canvas.width,canvas.height); ctx.fillStyle=`rgba(255,255,255,${0.05*i})`; ctx.fill();
+        }
+    }
+    else if(type==='sunset'){
+        let g=ctx.createRadialGradient(canvas.width/2,canvas.height,canvas.height*0.1,canvas.width/2,canvas.height,canvas.height);
+        g.addColorStop(0,'rgba(253,164,175,0.8)'); g.addColorStop(1,'rgba(225,29,72,0.1)');
+        ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+    else if(type==='desert'){
+        let g=ctx.createLinearGradient(0,canvas.height*0.6,0,canvas.height);
+        g.addColorStop(0,'rgba(251,191,36,0)'); g.addColorStop(0.5,`rgba(251,191,36,${0.1+Math.sin(time)*0.05})`); g.addColorStop(1,'rgba(217,119,6,0.3)');
+        ctx.fillStyle=g; ctx.fillRect(0,canvas.height*0.6,canvas.width,canvas.height);
+    }
+    else if(type==='sparkle'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.shadowBlur=10; ctx.shadowColor='#a78bfa';
+        _particles.forEach(p=>{
+            p.l++; if(p.l>p.m){p.l=0;p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;}
+            let o=p.l/p.m; o=o<0.5?o*2:(1-o)*2;
+            ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle=`rgba(167,139,250,${o})`; ctx.fill();
+        });
+        ctx.shadowBlur=0;
+    }
+    else if(type==='leaves'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.fillStyle='rgba(21,128,61,0.6)';
+        _particles.forEach(p=>{
+            p.y+=p.s; p.x+=Math.sin(time+p.r)*1; p.r+=1;
+            if(p.y>canvas.height){p.y=-20; p.x=Math.random()*canvas.width;}
+            ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r*Math.PI/180);
+            ctx.beginPath(); ctx.ellipse(0,0,8,4,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+        });
+    }
+    else if(type==='city'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.shadowBlur=8; ctx.shadowColor='#facc15';
+        _particles.forEach(p=>{
+            p.b+=2; let f=Math.sin(p.b*0.05)*0.5+0.5;
+            ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle=`rgba(250,204,21,${0.2*f})`; ctx.fill();
+        });
+        ctx.shadowBlur=0;
+    }
+    else if(type==='snow'){
+        // Hoisted context state changes outside loop to reduce overhead
+        ctx.fillStyle='rgba(255,255,255,0.8)';
+        ctx.beginPath();
+        // Batched path operations across particles
+        _particles.forEach(p=>{
+            p.y+=p.s; p.x+=Math.sin(time)*0.5;
+            if(p.y>canvas.height){p.y=-10; p.x=Math.random()*canvas.width;}
+            ctx.moveTo(p.x+p.r, p.y);
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        });
+        ctx.fill();
+    }
+    
+    _animFrame=requestAnimationFrame(loop);
   }
   saveS();
 }

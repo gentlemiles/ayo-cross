@@ -1,0 +1,3 @@
+## 2026-06-11 - Adding ARIA Labels to Material Icons
+**Learning:** Material icons using ligatures (like "lightbulb") will be read aloud literally by screen readers unless hidden. Adding `aria-label` to the parent button without hiding the icon span causes the screen reader to read both the label and the ligature.
+**Action:** When adding `aria-label` to icon-only buttons using ligature icon fonts, always add `aria-hidden="true"` to the inner `<span>` containing the icon text to prevent redundant or confusing screen reader announcements.
