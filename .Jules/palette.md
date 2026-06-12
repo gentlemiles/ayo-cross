@@ -1,3 +1,3 @@
-## 2026-06-11 - Adding ARIA Labels to Material Icons
-**Learning:** Material icons using ligatures (like "lightbulb") will be read aloud literally by screen readers unless hidden. Adding `aria-label` to the parent button without hiding the icon span causes the screen reader to read both the label and the ligature.
-**Action:** When adding `aria-label` to icon-only buttons using ligature icon fonts, always add `aria-hidden="true"` to the inner `<span>` containing the icon text to prevent redundant or confusing screen reader announcements.
+## 2024-05-18 - Missing Context on Prominent Floating Action Buttons
+**Learning:** Prominent floating action buttons (like center bottom-nav icons) are often designed without visible text labels to maintain a clean aesthetic, but this severely degrades the experience for screen reader users by removing context completely.
+**Action:** Always add `aria-label` (and often a standard tooltip via `title`) alongside appropriate focus indicators (`focus-visible`) for any interactive element that lacks visible text. Inner decorative icons should receive `aria-hidden="true"`.
