@@ -1069,6 +1069,8 @@ function setupSwipe(wi) {
   const ac = new AbortController();
   container._swipeAbort = ac;
   let swiping = false;
+  // ⚡ Bolt: Cache button bounding rects on pointerdown to avoid elementFromPoint layout thrashing
+  let btnRects = [];
 
   const handlePick = (btn) => {
       if (!btn || btn.classList.contains('pointer-events-none')) return;
@@ -1076,17 +1078,29 @@ function setupSwipe(wi) {
   };
 
   container.addEventListener('pointerdown', e => {
-      e.preventDefault(); swiping = true; handlePick(e.target.closest('[data-l]'));
+      e.preventDefault(); swiping = true;
+      btnRects = Array.from(container.querySelectorAll('[data-l]')).map(btn => ({
+          btn,
+          rect: btn.getBoundingClientRect()
+      }));
+      handlePick(e.target.closest('[data-l]'));
   }, { signal: ac.signal, passive: false });
 
   container.addEventListener('pointermove', e => {
       if (!swiping) return;
       const touch = e.touches ? e.touches[0] : e;
-      const el = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (el) { const btn = el.closest('[data-l]'); if (btn && container.contains(btn)) handlePick(btn); }
+      const x = touch.clientX;
+      const y = touch.clientY;
+      // ⚡ Bolt: Find hovered button using cached rects in O(N) memory/math time instead of DOM layout reflows
+      for (const {btn, rect} of btnRects) {
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+              handlePick(btn);
+              break;
+          }
+      }
   }, { signal: ac.signal });
 
-  const endSwipe = () => { swiping = false; };
+  const endSwipe = () => { swiping = false; btnRects = []; };
   window.addEventListener('pointerup', endSwipe, { signal: ac.signal });
   window.addEventListener('pointercancel', endSwipe, { signal: ac.signal });
 }
