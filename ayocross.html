@@ -1403,7 +1403,7 @@ function submitHard(wi){
 function renderDuelLevel(lv){
   const c=document.getElementById('words-container');if(!c)return;
   const wi=duelTurn%lv.words.length;const word=lv.words[wi];const p=duelTurn%2===0;
-  const p1=_duelP1Name||'Player 1';const p2=_duelP2Name||'Player 2';
+  const p1=escapeHTML(_duelP1Name||'Player 1');const p2=escapeHTML(_duelP2Name||'Player 2');
   c.innerHTML=`
     <div class="flex justify-center gap-4 mb-2">
       <div class="flex flex-col items-center px-5 py-3 rounded-lg transition-colors ${p?'bg-primary-container text-white shadow-md scale-105':'bg-surface-container-high text-on-surface opacity-70'}"><span class="font-headline font-black text-2xl">${duelScores[0]}</span><span class="font-label font-bold text-xs uppercase opacity-80">${p1}</span></div>
@@ -1452,7 +1452,7 @@ function renderLeaderboard(){
     const top3=lb.slice(0,3);const order=[top3[1],top3[0],top3[2]];
     const medals=['#94a3b8','#fd8b00','#cd7f32'];const sizes=['w-20 h-20','w-28 h-28','w-20 h-20'];const yOff=['','translate-y-[-24px]',''];
     podium.innerHTML=order.map((e,pos)=>{if(!e)return`<div class="flex-1"></div>`;const rank=pos===0?2:pos===1?1:3;const isMe=e.name===(S.username||'Anonymous');
-      return`<div class="flex flex-col items-center flex-1 ${yOff[pos]}"><div class="relative mb-2">${rank===1?`<span class="material-symbols-outlined text-primary-container text-3xl absolute -top-8 left-1/2 -translate-x-1/2" style="font-variation-settings:'FILL' 1">emoji_events</span>`:''}<div class="${sizes[pos]} rounded-full bg-surface-container flex items-center justify-center text-4xl border-4" style="border-color:${medals[rank-1]}">${e.avatar||'🦁'}</div><div class="absolute -bottom-2 -right-1 w-7 h-7 rounded-full flex items-center justify-center border-2 border-surface text-xs font-headline font-black text-white" style="background:${medals[rank-1]}">${rank}</div></div><span class="font-headline font-bold text-sm text-center truncate w-full ${isMe?'text-primary':''}">${e.name}${isMe?' (you)':''}</span><span class="font-headline font-bold text-xs text-primary-container">${e.score}</span></div>`;
+      return`<div class="flex flex-col items-center flex-1 ${yOff[pos]}"><div class="relative mb-2">${rank===1?`<span class="material-symbols-outlined text-primary-container text-3xl absolute -top-8 left-1/2 -translate-x-1/2" style="font-variation-settings:'FILL' 1">emoji_events</span>`:''}<div class="${sizes[pos]} rounded-full bg-surface-container flex items-center justify-center text-4xl border-4" style="border-color:${medals[rank-1]}">${escapeHTML(e.avatar||'🦁')}</div><div class="absolute -bottom-2 -right-1 w-7 h-7 rounded-full flex items-center justify-center border-2 border-surface text-xs font-headline font-black text-white" style="background:${medals[rank-1]}">${rank}</div></div><span class="font-headline font-bold text-sm text-center truncate w-full ${isMe?'text-primary':''}">${escapeHTML(e.name)}${isMe?' (you)':''}</span><span class="font-headline font-bold text-xs text-primary-container">${e.score}</span></div>`;
     }).join('');
   }
   const list=document.getElementById('lb-list');
@@ -1460,7 +1460,7 @@ function renderLeaderboard(){
     const rest=lb.slice(3);
     if(!rest.length&&!lb.length){list.innerHTML='<div class="text-center py-8 text-on-surface-variant font-medium text-sm">No scores yet. Play some levels!</div>';return;}
     list.innerHTML=rest.map((e,i)=>{const rank=i+4;const isMe=e.name===(S.username||'Anonymous');
-      return`<div class="flex items-center justify-between p-4 rounded-lg ${isMe?'bg-primary-container/10 border-2 border-primary-container/20':'bg-surface-container-lowest'}"><div class="flex items-center gap-3"><span class="w-6 font-headline font-bold text-outline text-sm text-center">${rank}</span><span class="text-2xl">${e.avatar||'🦁'}</span><div><div class="font-headline font-bold text-sm ${isMe?'text-primary':''}">${e.name}${isMe?' (you)':''}</div><div class="text-xs text-on-surface-variant">${e.theme||''}</div></div></div><span class="font-headline font-black text-sm ${isMe?'text-primary':'text-on-surface-variant'}">${e.score}</span></div>`;
+      return`<div class="flex items-center justify-between p-4 rounded-lg ${isMe?'bg-primary-container/10 border-2 border-primary-container/20':'bg-surface-container-lowest'}"><div class="flex items-center gap-3"><span class="w-6 font-headline font-bold text-outline text-sm text-center">${rank}</span><span class="text-2xl">${escapeHTML(e.avatar||'🦁')}</span><div><div class="font-headline font-bold text-sm ${isMe?'text-primary':''}">${escapeHTML(e.name)}${isMe?' (you)':''}</div><div class="text-xs text-on-surface-variant">${escapeHTML(e.theme||'')}</div></div></div><span class="font-headline font-black text-sm ${isMe?'text-primary':'text-on-surface-variant'}">${e.score}</span></div>`;
     }).join('');
   }
   const myName=S.username||'Anonymous';const myIdx=lb.findIndex(e=>e.name===myName);const meEl=document.getElementById('lb-me');
@@ -1568,7 +1568,7 @@ function renderProfile(){
 
   const ph=el('p-history');
   const h=S.history||[];
-  if(ph)ph.innerHTML=h.length===0?'<p class="text-on-surface-variant font-medium text-sm text-center py-4">No history yet. Play some levels!</p>':h.slice(0,10).map(e=>`<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg"><div><div class="font-headline font-semibold text-sm text-on-surface">${e.theme||'Level'}</div><div class="text-xs text-on-surface-variant">${e.date}</div></div><div class="flex items-center gap-1">${e.stars?[1,2,3].map(n=>`<span class="material-symbols-outlined text-sm ${n<=(e.stars||0)?'text-primary-container':'text-outline-variant'}" style="font-variation-settings:'FILL' ${n<=(e.stars||0)?1:0}">star</span>`).join(''):''}<span class="ml-1 font-headline font-bold text-sm text-primary-container">+${e.coins||0}</span></div></div>`).join('');
+  if(ph)ph.innerHTML=h.length===0?'<p class="text-on-surface-variant font-medium text-sm text-center py-4">No history yet. Play some levels!</p>':h.slice(0,10).map(e=>`<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg"><div><div class="font-headline font-semibold text-sm text-on-surface">${escapeHTML(e.theme||'Level')}</div><div class="text-xs text-on-surface-variant">${escapeHTML(e.date||'')}</div></div><div class="flex items-center gap-1">${e.stars?[1,2,3].map(n=>`<span class="material-symbols-outlined text-sm ${n<=(e.stars||0)?'text-primary-container':'text-outline-variant'}" style="font-variation-settings:'FILL' ${n<=(e.stars||0)?1:0}">star</span>`).join(''):''}<span class="ml-1 font-headline font-bold text-sm text-primary-container">+${e.coins||0}</span></div></div>`).join('');
 
   document.querySelectorAll('.mod-av').forEach(btn=>{const active=btn.dataset.av===S.avatar;btn.classList.toggle('border-primary-container',active);btn.classList.toggle('bg-primary-container/10',active);btn.classList.toggle('border-transparent',!active);});
 }

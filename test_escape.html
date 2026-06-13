@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function escapeHTML(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag]));
+}
+
+function test() {
+    console.log("Testing escapeHTML:");
+    console.log(escapeHTML('<script>alert("XSS")</script>'));
+}
+window.onload = test;
+</script>
+</head>
+<body></body>
+</html>
