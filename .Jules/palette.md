@@ -1,3 +1,6 @@
 ## 2024-05-18 - Missing Context on Prominent Floating Action Buttons
 **Learning:** Prominent floating action buttons (like center bottom-nav icons) are often designed without visible text labels to maintain a clean aesthetic, but this severely degrades the experience for screen reader users by removing context completely.
 **Action:** Always add `aria-label` (and often a standard tooltip via `title`) alongside appropriate focus indicators (`focus-visible`) for any interactive element that lacks visible text. Inner decorative icons should receive `aria-hidden="true"`.
+## 2025-02-18 - Accessibility for Custom UI Components
+**Learning:** Custom UI components like CSS-styled `<button>` toggles require `role="switch"` and dynamically updated `aria-checked` attributes to be announced correctly by screen readers. Similarly, dynamic feedback components like Toast notifications require `role="status"` and `aria-live="polite"` so screen readers are aware when new content pops up without shifting focus.
+**Action:** When building custom interactive components (like toggles or switches) instead of using native input checkboxes, always explicitly map their state to ARIA attributes (`aria-checked`). For temporary notifications or toasts, always use `aria-live` or `role="status"` to ensure they aren't missed by users relying on assistive technology.
